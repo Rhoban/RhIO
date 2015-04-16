@@ -22,9 +22,14 @@ class IONode final : public ValueNode
     public:
 
         /**
-         * Initialization
+         * Empty initialization
          */
         IONode();
+
+        /**
+         * Initialization with node name and parent
+         */
+        IONode(const std::string& name, IONode* parent);
 
         /**
          * Return Node name
@@ -56,6 +61,13 @@ class IONode final : public ValueNode
          */
         const IONode& child(const std::string& name) const;
         IONode& child(const std::string& name);
+
+        /**
+         * Create a new child or complete branch with 
+         * given relative name
+         * Do nothing if given hierarchy already exist
+         */
+        void newChild(const std::string& name);
 
         /**
          * Direct read access to children Nodes
@@ -93,9 +105,12 @@ class IONode final : public ValueNode
          * to this Node is returned and newName is set to the 
          * given name converted relatively to returned Node.
          * If given name is invalid, throw logic_error exception.
+         * unless createBranch is true. Missing Nodes are then
+         * created.
          */
         IONode* forwardChildren(
-            const std::string& name, std::string& newName);
+            const std::string& name, std::string& newName,
+            bool createBranch);
 };
 
 }

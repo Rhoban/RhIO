@@ -5,7 +5,7 @@ namespace RhIO {
 /**
  * Main instance global allocation
  */
-IONode Root;
+IONode Root("ROOT", nullptr);
 
 }
 

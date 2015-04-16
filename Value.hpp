@@ -75,6 +75,89 @@ enum ValueType {
     TypeStr = 4
 };
 
+/**
+ * Proxy class used to configure optional
+ * value parameters
+ */
+template <typename T>
+class ValueBuilder final
+{
+    public:
+
+        /**
+         * Initialization with builded
+         * value reference and flag indicating if
+         * the underlying value is brand new or not
+         */
+        ValueBuilder(Value<T>& val, bool isExisting) :
+            _isExisting(isExisting),
+            _value(val)
+        {
+            //Default value parameters
+            if (!isExisting) {
+                _value.comment = "";
+                _value.hasMin = false;
+                _value.hasMax = false;
+                _value.value = T();
+                _value.persisted = false;
+            }
+        }
+
+        /**
+         * Optional parameters setters
+         */
+        ValueBuilder* comment(const std::string& str)
+        {
+            _value.comment = str;
+            return this;
+        }
+        ValueBuilder* minimum(T val)
+        {
+            _value.hasMin = true;
+            _value.min = val;
+            return this;
+        }
+        ValueBuilder* maximum(T val)
+        {
+            _value.hasMax = true;
+            _value.max = val;
+            return this;
+        }
+        ValueBuilder* defaultValue(T val)
+        {
+            if (!_isExisting) {
+                _value.value = val;
+            }
+            return this;
+        }
+        ValueBuilder* isPersisted(bool flag)
+        {
+            _value.persisted = flag;
+            return this;
+        }
+
+    private:
+
+        /**
+         * True if we are dealing with already
+         * existing value. Thus no update.
+         */
+        bool _isExisting;
+
+        /**
+         * Internal builded reference instance
+         */
+        Value<T>& _value;
+};
+
+/**
+ * Typedef for ValueBuilder
+ */
+typedef ValueBuilder<bool> ValueBuilderBool;
+typedef ValueBuilder<long> ValueBuilderInt;
+typedef ValueBuilder<double> ValueBuilderFloat;
+typedef ValueBuilder<std::string> ValueBuilderStr;
+
 }
 
 #endif

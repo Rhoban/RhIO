@@ -31,13 +31,13 @@ class BaseNode
          * If given name is referring to a child Node, a pointer
          * to this Node is returned and newName is set to the 
          * given name converted relatively to returned Node.
-         * If given name is invalid, throw logic_error exception.
+         * If given name is invalid, throw logic_error exception unless
+         * createBranch is true and missing Node are created.
          */
         typedef std::function<T*(
-            const std::string& name, std::string& newName)> ForwardFunc;
-
-    protected:
-
+            const std::string& name, std::string& newName, 
+            bool createBranch)> ForwardFunc;
+        
         /**
          * Initialize and store the forward function
          */
@@ -46,10 +46,12 @@ class BaseNode
         {
         }
 
+    protected:
+
         /**
          * Hold forward function for derived class
          */
-        const ForwardFunc forwardFunc;
+        ForwardFunc forwardFunc;
 };
 
 }
