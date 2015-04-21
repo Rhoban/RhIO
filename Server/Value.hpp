@@ -6,20 +6,9 @@
 
 namespace RhIO {
 
-/**
- * Value
- *
- * Generic value holder
- * for parameters and monitor
- */
-template <typename T>
-struct Value final
-{
-    /**
-     * Typedef value type
-     */
-    typedef T Type;
 
+struct ValueBase
+{
     /**
      * Value name
      */
@@ -31,16 +20,8 @@ struct Value final
     std::string comment;
 
     /**
-     * Value value
+     * Flags indicating min & max presence
      */
-    T value;
-
-    /**
-     * Value min and max bounds
-     * and flags indicating if bounds are defined
-     */
-    T min;
-    T max;
     bool hasMin;
     bool hasMax;
 
@@ -54,6 +35,32 @@ struct Value final
      * saved in config files
      */
     bool persisted;
+};
+
+/**
+ * Value
+ *
+ * Generic value holder
+ * for parameters and monitor
+ */
+template <typename T>
+struct Value : public ValueBase
+{
+    /**
+     * Typedef value type
+     */
+    typedef T Type;
+
+    /**
+     * Value value
+     */
+    T value;
+
+    /**
+     * Value min and max bounds
+     */
+    T min;
+    T max;
 };
 
 /**
@@ -76,11 +83,11 @@ enum ValueType {
 };
 
 /**
- * Proxy class used to configure optional
+ * Proxy struct used to configure optional
  * value parameters
  */
 template <typename T>
-class ValueBuilder final
+struct ValueBuilder final
 {
     public:
 
