@@ -4,11 +4,12 @@
 
 namespace RhIO
 {
-    class HelpCommand : public Command
+    class CdCommand : public Command
     {
         public:
             virtual std::string getName();
             virtual std::string getDesc();
+            virtual std::string getUsage();
             virtual void process(std::vector<std::string> args);
     };
 }

@@ -13,6 +13,8 @@ option (CURSES "Enable curses" ON)
 set (SOURCES
     Command.cpp
     HelpCommand.cpp
+    LsCommand.cpp
+    CdCommand.cpp
     Shell.cpp
     Terminal.cpp
 
@@ -22,6 +24,8 @@ set (SOURCES
 # Adding rhio subdirectory
 add_subdirectory (${RHIO_DIR} rhiolib)
 include_directories ("${RHIO_DIR}/Client")
+include_directories ("${RHIO_DIR}/Common")
+include_directories ("${RHIO_DIR}/Server")
 
 set (EXTRA_LIBS
     RhIOClient

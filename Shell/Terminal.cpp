@@ -1,6 +1,6 @@
 #include "Terminal.h"
 
-namespace Rhio
+namespace RhIO
 {
     void Terminal::clear()
     {

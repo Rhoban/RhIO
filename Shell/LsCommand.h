@@ -4,7 +4,7 @@
 
 namespace RhIO
 {
-    class HelpCommand : public Command
+    class LsCommand : public Command
     {
         public:
             virtual std::string getName();

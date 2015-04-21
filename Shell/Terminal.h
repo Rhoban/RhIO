@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace Rhio
+namespace RhIO
 {
     class Terminal
     {

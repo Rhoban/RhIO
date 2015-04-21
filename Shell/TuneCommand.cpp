@@ -2,7 +2,7 @@
 #include "Shell.h"
 #include "TuneCommand.h"
 
-namespace Rhio
+namespace RhIO
 {
     std::string TuneCommand::getName()
     {
@@ -19,7 +19,7 @@ namespace Rhio
         return "tune [var1] [var2] [var3]...";
     }
 
-    void TuneCommand::process(std::list<std::string> args)
+    void TuneCommand::process(std::vector<std::string> args)
     {
         if (!args.size()) {
             Terminal::setColor("red", true);

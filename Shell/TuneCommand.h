@@ -2,7 +2,7 @@
 
 #include "Command.h"
 
-namespace Rhio
+namespace RhIO
 {
     class TuneCommand : public Command
     {
@@ -10,6 +10,6 @@ namespace Rhio
             virtual std::string getName();
             virtual std::string getDesc();
             virtual std::string getUsage();
-            virtual void process(std::list<std::string> args);
+            virtual void process(std::vector<std::string> args);
     };
 }
