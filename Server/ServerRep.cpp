@@ -68,6 +68,18 @@ void ServerRep::handleRequest()
         case MsgSetStr:
               setStr(req);
               return;
+        case MsgAskMetaBool:
+              valMetaBool(req);
+              return;
+        case MsgAskMetaInt:
+              valMetaInt(req);
+              return;
+        case MsgAskMetaFloat:
+              valMetaFloat(req);
+              return;
+        case MsgAskMetaStr:
+              valMetaStr(req);
+              return;
         default:
             //Unknown message type
             error("Message type not implemented");
@@ -380,6 +392,124 @@ void ServerRep::setStr(DataBuffer& buffer)
     //Send reply
     _socket.send(reply);
 }
+
+void ServerRep::valMetaBool(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Check value name
+    if (RhIO::Root.getValueType(name) != TypeBool) {
+        error("Unknown value name: " + name);
+        return;
+    }
+
+    ValueBool val = RhIO::Root.getValueBool(name);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + val.comment.length()
+        + 3*sizeof(uint8_t) + 2*sizeof(uint8_t));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgValMetaBool);
+    rep.writeStr(val.comment);
+    rep.writeBool(val.hasMin);
+    rep.writeBool(val.hasMax);
+    rep.writeBool(val.persisted);
+    
+    rep.writeBool(val.min);
+    rep.writeBool(val.max);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::valMetaInt(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Check value name
+    if (RhIO::Root.getValueType(name) != TypeInt) {
+        error("Unknown value name: " + name);
+        return;
+    }
+
+    ValueInt val = RhIO::Root.getValueInt(name);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + val.comment.length()
+        + 3*sizeof(uint8_t) + 2*sizeof(long));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgValMetaInt);
+    rep.writeStr(val.comment);
+    rep.writeBool(val.hasMin);
+    rep.writeBool(val.hasMax);
+    rep.writeBool(val.persisted);
+    
+    rep.writeInt(val.min);
+    rep.writeInt(val.max);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::valMetaFloat(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Check value name
+    if (RhIO::Root.getValueType(name) != TypeFloat) {
+        error("Unknown value name: " + name);
+        return;
+    }
+
+    ValueFloat val = RhIO::Root.getValueFloat(name);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + val.comment.length()
+        + 3*sizeof(uint8_t) + 2*sizeof(double));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgValMetaFloat);
+    rep.writeStr(val.comment);
+    rep.writeBool(val.hasMin);
+    rep.writeBool(val.hasMax);
+    rep.writeBool(val.persisted);
+    
+    rep.writeFloat(val.min);
+    rep.writeFloat(val.max);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::valMetaStr(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Check value name
+    if (RhIO::Root.getValueType(name) != TypeStr) {
+        error("Unknown value name: " + name);
+        return;
+    }
+
+    ValueStr val = RhIO::Root.getValueStr(name);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + val.comment.length()
+        + 3*sizeof(uint8_t) + 2*sizeof(long) 
+        + val.min.length() + val.max.length());
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgValMetaStr);
+    rep.writeStr(val.comment);
+    rep.writeBool(val.hasMin);
+    rep.writeBool(val.hasMax);
+    rep.writeBool(val.persisted);
+    
+    rep.writeStr(val.min);
+    rep.writeStr(val.max);
+
+    //Send reply
+    _socket.send(reply);
+}
         
 void ServerRep::error(const std::string& msg)
 {
@@ -402,7 +532,7 @@ void ServerRep::error(const std::string& msg)
 RhIO::IONode* ServerRep::getNode(const std::string& name)
 {
     RhIO::IONode* node = &RhIO::Root;
-    if (name != "" && name != "ROOT") {
+    if (name != "" && name != "ROOT" && name != "/") {
         if (RhIO::Root.childExist(name)) {
             node = &(RhIO::Root.child(name));
         } else {

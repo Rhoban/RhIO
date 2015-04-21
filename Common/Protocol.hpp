@@ -58,6 +58,17 @@ enum MsgType : uint8_t {
     MsgSetFloat,
     MsgSetStr,
     /**
+     * Client.
+     * Ask for value meta data for type
+     * Bool, Int, Float and Str
+     * Args:
+     * String: absolute value name to update
+     */
+    MsgAskMetaBool,
+    MsgAskMetaInt,
+    MsgAskMetaFloat,
+    MsgAskMetaStr,
+    /**
      * Server.
      * An error has occured.
      * Args:
@@ -94,10 +105,36 @@ enum MsgType : uint8_t {
     MsgValStr,
     /**
      * Server.
-     * Acknolege the requested set
+     * Acknowledge the requested set
      * No arguments
      */
     MsgSetOk,
+    /**
+     * Server.
+     * Return all asked value meta information
+     * for type Bool, Int, Float and Str
+     * Args:
+     * String: value comment
+     * Bool: has minimum
+     * Bool: has maximum
+     * Bool: is persisted
+     *
+     * Bool: minimum value
+     * Bool: maximum value
+     * or
+     * Int: minimum value
+     * Int: maximum value
+     * or
+     * Float: minimum value
+     * Float: maximum value
+     * or
+     * Str: minimum value
+     * Str: maximum value
+     */
+    MsgValMetaBool,
+    MsgValMetaInt,
+    MsgValMetaFloat,
+    MsgValMetaStr,
 };
 
 }

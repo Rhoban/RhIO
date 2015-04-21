@@ -46,6 +46,36 @@ int main()
     client.setStr("test/test3/paramStr", "cool!");
     assert(client.getStr("test/test3/paramStr") == "cool!");
 
+    RhIO::ValueBool valBool = client.metaValueBool("test/paramBool");
+    assert(valBool.comment == "");
+    assert(valBool.hasMin == false);
+    assert(valBool.hasMax == false);
+    assert(valBool.persisted == false);
+    
+    RhIO::ValueInt valInt = client.metaValueInt("test/test3/paramInt");
+    assert(valInt.comment == "");
+    assert(valInt.hasMin == true);
+    assert(valInt.hasMax == true);
+    assert(valInt.persisted == false);
+    assert(valInt.min == -1);
+    assert(valInt.max == 10);
+    
+    /*
+    RhIO::ValueFloat valFloat = client.metaValueFloat("test/paramFloat");
+    assert(valFloat.comment == "this is a test float");
+    assert(valFloat.hasMin == false);
+    assert(valFloat.hasMax == false);
+    assert(valFloat.persisted == true);
+    */
+    
+    /*
+    RhIO::ValueStr valStr = client.metaValueStr("test/test3/paramStr");
+    assert(valStr.comment == "");
+    assert(valStr.hasMin == false);
+    assert(valStr.hasMax == false);
+    assert(valStr.persisted == false);
+    */
+
     return 0;
 }
 

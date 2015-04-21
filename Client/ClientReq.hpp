@@ -6,6 +6,7 @@
 #include <zmq.hpp>
 #include "DataBuffer.hpp"
 #include "Protocol.hpp"
+#include "Value.hpp"
 
 namespace RhIO {
 
@@ -63,6 +64,17 @@ class ClientReq
         void setFloat(const std::string& name, double val);
         void setStr(const std::string& name, 
             const std::string& val);
+
+        /**
+         * Retrieve value meta information for each type 
+         * with given absolute name.
+         * Only name, comment, min, max, hasMin, hasMax and
+         * persisted is set.
+         */
+        ValueBool metaValueBool(const std::string& name);
+        ValueInt metaValueInt(const std::string& name);
+        ValueFloat metaValueFloat(const std::string& name);
+        ValueStr metaValueStr(const std::string& name);
 
     private:
 

@@ -179,6 +179,115 @@ void ClientReq::setStr(const std::string& name,
     zmq::message_t reply;
     waitReply(reply, MsgSetOk);
 }
+
+ValueBool ClientReq::metaValueBool(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskMetaBool);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgValMetaBool);
+    //Parse reply
+    ValueBool val;
+    val.name = name;
+    val.comment = rep.readStr();
+    val.hasMin = rep.readBool();
+    val.hasMax = rep.readBool();
+    val.persisted = rep.readBool();
+    val.min = rep.readBool();
+    val.max = rep.readBool();
+
+    return val;
+}
+ValueInt ClientReq::metaValueInt(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskMetaInt);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgValMetaInt);
+    //Parse reply
+    ValueInt val;
+    val.name = name;
+    val.comment = rep.readStr();
+    val.hasMin = rep.readBool();
+    val.hasMax = rep.readBool();
+    val.persisted = rep.readBool();
+    val.min = rep.readInt();
+    val.max = rep.readInt();
+
+    return val;
+}
+ValueFloat ClientReq::metaValueFloat(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskMetaFloat);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgValMetaFloat);
+    //Parse reply
+    ValueFloat val;
+    val.name = name;
+    val.comment = rep.readStr();
+    val.hasMin = rep.readBool();
+    val.hasMax = rep.readBool();
+    val.persisted = rep.readBool();
+    val.min = rep.readFloat();
+    val.max = rep.readFloat();
+
+    return val;
+}
+ValueStr ClientReq::metaValueStr(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskMetaStr);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgValMetaStr);
+    //Parse reply
+    ValueStr val;
+    val.name = name;
+    val.comment = rep.readStr();
+    val.hasMin = rep.readBool();
+    val.hasMax = rep.readBool();
+    val.persisted = rep.readBool();
+    val.min = rep.readStr();
+    val.max = rep.readStr();
+
+    return val;
+}
         
 DataBuffer ClientReq::waitReply
     (zmq::message_t& reply, MsgType expectedType)

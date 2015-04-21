@@ -22,7 +22,6 @@ class ServerRep
         /**
          * Initialization with the bind
          * endpoint string
-         * Start 
          */
         ServerRep(const std::string& endpoint);
 
@@ -80,6 +79,15 @@ class ServerRep
         void setInt(DataBuffer& buffer);
         void setFloat(DataBuffer& buffer);
         void setStr(DataBuffer& buffer);
+
+        /**
+         * Implement MsgAskMeta for Bool, Int, Float, Str
+         * (MsgValMeta)
+         */
+        void valMetaBool(DataBuffer& buffer);
+        void valMetaInt(DataBuffer& buffer);
+        void valMetaFloat(DataBuffer& buffer);
+        void valMetaStr(DataBuffer& buffer);
 
         /**
          * Implement MsgError with given error message
