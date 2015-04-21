@@ -27,7 +27,11 @@ namespace RhIO
 
         // Reading lines from stdin
         while (!terminate && !feof(stdin)) {
-            Terminal::setColor("green", true);
+            Terminal::setColor("yellow", true);
+            std::cout << "RhIO";
+            Terminal::clear();
+            std::cout << ":";
+            Terminal::setColor("blue", true);
             std::cout << getPath();
             Terminal::clear();
             std::cout << "# " << std::flush;

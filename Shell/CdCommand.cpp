@@ -26,7 +26,9 @@ namespace RhIO
         } else {
             auto target = args.front();
 
-            if (target == "..") {
+            if (target == "/") {
+                shell->rootPath();
+            } else if (target == "..") {
                 shell->upPath();
             } else {
                 auto path = shell->getPath();

@@ -20,6 +20,12 @@ namespace RhIO
             printf("\x1b[%d;33m", bold);
         } else if (name == "blue") {
             printf("\x1b[%d;34m", bold);
+        } else if (name == "magenta") {
+            printf("\x1b[%d;35m", bold);
+        } else if (name == "darkblue") {
+            printf("\x1b[%d;36m", bold);
+        } else if (name == "grey") {
+            printf("\x1b[%d;30m", bold);
         } else  {
             printf("\x1b[%dm", bold);
         }

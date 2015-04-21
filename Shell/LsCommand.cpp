@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Shell.h"
 #include "LsCommand.h"
+#include "Values.h"
 
 namespace RhIO
 {
@@ -18,12 +19,36 @@ namespace RhIO
     {
         auto path = shell->getPath();
 
-        Terminal::setColor("blue", true);
+        // Listing sub directories
         auto children = shell->getClient()->listChildren(path);
         for (auto child : children) {
-            std::cout << child << std::endl;
-
+            Terminal::setColor("blue", true);
+            std::cout << child;
+            Terminal::clear();
+            std::cout << "/" << std::endl;
         }
-        Terminal::clear();
+
+        Values values(shell->getClient(), path);
+
+        for (auto val : values.getAll()) 
+        {
+            Terminal::setColor("grey", false);
+            printf("%6s ", Values::getType(val).c_str());
+            Terminal::clear();
+            printf("%-15s", val->name.c_str());
+            std::cout << " ";
+            Terminal::setColor("grey", false);
+            std::cout << "val: ";
+            Terminal::clear();
+            printf("%12s ", Values::toString(val).c_str());
+
+            if (val->comment != "") {
+                Terminal::setColor("grey", false);
+                std::cout << " desc: ";
+                Terminal::clear();
+                std::cout << val->comment;
+            }
+            std::cout << std::endl;
+        }
     }
 }

@@ -17,6 +17,7 @@ set (SOURCES
     CdCommand.cpp
     Shell.cpp
     Terminal.cpp
+    Values.cpp
 
     main.cpp
     )
