@@ -11,8 +11,8 @@ cd zeromq-4.0.5 &&
 ./configure --prefix=$dir/ZeroMQ &&
 make &&
 make install &&
-rm -rf zeromq-4.0.5.tar.gz
 cd ..
+rm -rf zeromq-4.0.5.tar.gz
 
 echo "Installing CPPZMQ..." &&
 git clone https://github.com/zeromq/cppzmq.git &&
