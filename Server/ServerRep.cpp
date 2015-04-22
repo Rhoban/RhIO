@@ -101,20 +101,19 @@ void ServerRep::listChildren(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size_t sizeChildren = 0;
     size += sizeof(long);
-    for (const auto& c : node->accessChildren()) {
-        size += sizeof(long) + c.first.length();
-        sizeChildren++;
+    std::vector<std::string> list = node->listChildren();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
     }
 
     //Allocate message data
     zmq::message_t reply(size);
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgListNames);
-    rep.writeInt(sizeChildren);
-    for (const auto& c : node->accessChildren()) {
-        rep.writeStr(c.first);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
     }
 
     //Send reply
@@ -130,20 +129,19 @@ void ServerRep::listValuesBool(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size_t sizeNames = 0;
     size += sizeof(long);
-    for (const auto& c : node->accessValuesBool()) {
-        size += sizeof(long) + c.first.length();
-        sizeNames++;
+    std::vector<std::string> list = node->listValuesBool();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
     }
 
     //Allocate message data
     zmq::message_t reply(size);
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgListNames);
-    rep.writeInt(sizeNames);
-    for (const auto& c : node->accessValuesBool()) {
-        rep.writeStr(c.first);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
     }
 
     //Send reply
@@ -158,20 +156,19 @@ void ServerRep::listValuesInt(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size_t sizeNames = 0;
     size += sizeof(long);
-    for (const auto& c : node->accessValuesInt()) {
-        size += sizeof(long) + c.first.length();
-        sizeNames++;
+    std::vector<std::string> list = node->listValuesInt();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
     }
 
     //Allocate message data
     zmq::message_t reply(size);
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgListNames);
-    rep.writeInt(sizeNames);
-    for (const auto& c : node->accessValuesInt()) {
-        rep.writeStr(c.first);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
     }
 
     //Send reply
@@ -186,20 +183,19 @@ void ServerRep::listValuesFloat(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size_t sizeNames = 0;
     size += sizeof(long);
-    for (const auto& c : node->accessValuesFloat()) {
-        size += sizeof(long) + c.first.length();
-        sizeNames++;
+    std::vector<std::string> list = node->listValuesFloat();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
     }
 
     //Allocate message data
     zmq::message_t reply(size);
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgListNames);
-    rep.writeInt(sizeNames);
-    for (const auto& c : node->accessValuesFloat()) {
-        rep.writeStr(c.first);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
     }
 
     //Send reply
@@ -214,20 +210,19 @@ void ServerRep::listValuesStr(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size_t sizeNames = 0;
     size += sizeof(long);
-    for (const auto& c : node->accessValuesStr()) {
-        size += sizeof(long) + c.first.length();
-        sizeNames++;
+    std::vector<std::string> list = node->listValuesStr();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
     }
 
     //Allocate message data
     zmq::message_t reply(size);
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgListNames);
-    rep.writeInt(sizeNames);
-    for (const auto& c : node->accessValuesStr()) {
-        rep.writeStr(c.first);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
     }
 
     //Send reply

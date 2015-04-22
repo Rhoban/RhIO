@@ -11,7 +11,8 @@ IONode::IONode() :
     _name("ERROR"),
     _pwd("ERROR"),
     _parent(nullptr),
-    _children()
+    _children(),
+    _mutex()
 {
 }
 
@@ -24,7 +25,8 @@ IONode::IONode(const std::string& name, IONode* parent) :
     _name(name),
     _pwd(""),
     _parent(parent),
-    _children()
+    _children(),
+    _mutex()
 {
     if (_parent != nullptr) {
         if (_parent->_name != "ROOT") {
@@ -45,7 +47,8 @@ IONode::IONode(const IONode& node) :
     _name(node._name),
     _pwd(node._pwd),
     _parent(node._parent),
-    _children(node._children)
+    _children(node._children),
+    _mutex()
 {
     BaseNode<ValueNode>::pwd = _pwd;
 }
@@ -118,11 +121,15 @@ IONode& IONode::root()
         
 bool IONode::childExist(const std::string& name) const
 {
-    //Forward to subtree
-    std::string tmpName;
-    const IONode* child = const_cast<IONode*>(this)
-        ->forwardChildren(name, tmpName, false);
-    if (child != nullptr) return child->childExist(tmpName);
+    try {
+        //Forward to subtree
+        std::string tmpName;
+        const IONode* child = const_cast<IONode*>(this)
+            ->forwardChildren(name, tmpName, false);
+        if (child != nullptr) return child->childExist(tmpName);
+    } catch (const std::logic_error& e) {
+        return false;
+    }
 
     return (_children.count(name) > 0);
 }
@@ -165,14 +172,21 @@ void IONode::newChild(const std::string& name)
         return;
     }
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_children.count(name) == 0) {
         _children[name] = IONode(name, this);
     }
 }
         
-const std::map<std::string, IONode>& IONode::accessChildren() const
+std::vector<std::string> IONode::listChildren() const
 {
-    return _children;
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list;
+    for (const auto& c : _children) {
+        list.push_back(c.first);
+    }
+    
+    return list;
 }
         
 IONode* IONode::forwardChildren(
@@ -201,10 +215,13 @@ IONode* IONode::forwardChildren(
             }
             std::string part = name.substr(pos, p-pos);
             pos = p+1;
-            if (pt->_children.count(part) == 0) {
-                if (createBranch) {
+            if (createBranch) {
+                std::lock_guard<std::mutex> lock(pt->_mutex);
+                if (pt->_children.count(part) == 0) {
                     pt->_children[part] = IONode(part, pt);
-                } else {
+                }
+            } else {
+                if (pt->_children.count(part) == 0) {
                     throw std::logic_error(
                         "RhIO unknown node name: " + part);
                 }
