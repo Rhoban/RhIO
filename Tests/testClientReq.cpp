@@ -17,6 +17,13 @@ int main()
     list = client.listChildren("test2");
     assert(list.size() == 1);
     assert(list[0] == "pouet");
+    
+    try {
+        list = client.listChildren("test/nonode");
+        assert(0);
+    } catch (const std::runtime_error& e) {
+        assert(1);
+    }
 
     list = client.listValuesBool("test");
     assert(list.size() == 1);

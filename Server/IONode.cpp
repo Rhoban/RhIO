@@ -192,7 +192,12 @@ IONode* IONode::forwardChildren(
         } else {
             isSubNode = true;
             if (p == 0) {
-                throw std::logic_error("RhIO invalid name: " + name);
+                if (_parent == nullptr) {
+                    pos++;
+                    continue;
+                } else {
+                    throw std::logic_error("RhIO invalid name: " + name);
+                }
             }
             std::string part = name.substr(pos, p-pos);
             pos = p+1;
