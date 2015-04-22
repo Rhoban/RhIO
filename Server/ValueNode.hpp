@@ -54,17 +54,17 @@ class ValueNode : public BaseNode<ValueNode>
          * does not exist
          */
         void setBool(const std::string& name, bool val,
-            std::chrono::system_clock::time_point timestamp 
-            = std::chrono::system_clock::now());
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
         void setInt(const std::string& name, long val,
-            std::chrono::system_clock::time_point timestamp 
-            = std::chrono::system_clock::now());
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
         void setFloat(const std::string& name, double val,
-            std::chrono::system_clock::time_point timestamp 
-            = std::chrono::system_clock::now());
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
         void setStr(const std::string& name, const std::string& val,
-            std::chrono::system_clock::time_point timestamp 
-            = std::chrono::system_clock::now());
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
 
         /**
          * Declare a new value with given relative name for each type.
