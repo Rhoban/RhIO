@@ -15,10 +15,13 @@ set (SOURCES
     ClearCommand.cpp
     HelpCommand.cpp
     LsCommand.cpp
+    WatchCommand.cpp
     CdCommand.cpp
     Shell.cpp
     Terminal.cpp
     Node.cpp
+    NodePool.cpp
+    Stream.cpp
 
     main.cpp
     )

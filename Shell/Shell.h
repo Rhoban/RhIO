@@ -11,6 +11,7 @@
 
 namespace RhIO
 {
+    class Stream;
     class Shell
     {
         public:
@@ -68,12 +69,15 @@ namespace RhIO
             std::vector<std::string> pathToParts(std::string spath);
             void goToPath(std::string path);
             std::string getPath();
+
+            Stream *getStream();
             
             Node *tree;
 
         protected:
             ClientReq *client;
             ClientSub *clientSub;
+            Stream *stream;
             bool terminate;
             std::map<std::string, Command*> commands;
             std::list<std::string> path;

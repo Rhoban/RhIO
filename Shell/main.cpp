@@ -1,5 +1,6 @@
 #include "HelpCommand.h"
 #include "LsCommand.h"
+#include "WatchCommand.h"
 #include "CdCommand.h"
 #include "ClearCommand.h"
 #ifdef HAS_CURSES
@@ -22,6 +23,7 @@ int main(int argc, char *argv[])
     shell.registerCommand(new LsCommand);
     shell.registerCommand(new CdCommand);
     shell.registerCommand(new ClearCommand);
+    shell.registerCommand(new WatchCommand);
 #ifdef HAS_CURSES
     shell.registerCommand(new TuneCommand);
 #endif
