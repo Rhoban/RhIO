@@ -19,71 +19,76 @@ void ServerRep::handleRequest()
     zmq::message_t request;
     _socket.recv(&request);
 
-    //Parsing it
-    DataBuffer req(request.data(), request.size());
-    //Check empty message
-    if (req.size() == 0) {
-        error("Empty message");
-        return;
-    }
-    //Select answer with message type
-    MsgType type = (MsgType)req.readType();
-    switch (type) {
-        case MsgAskChildren:
-            listChildren(req);
+    //Forward all possible exception to client
+    try {
+        //Parsing it
+        DataBuffer req(request.data(), request.size());
+        //Check empty message
+        if (req.size() == 0) {
+            error("Empty message");
             return;
-        case MsgAskValuesBool:
-            listValuesBool(req);
-            return;
-        case MsgAskValuesInt:
-            listValuesInt(req);
-            return;
-        case MsgAskValuesFloat:
-            listValuesFloat(req);
-            return;
-        case MsgAskValuesStr:
-            listValuesStr(req);
-            return;
-        case MsgGetBool:
-            getBool(req);
-            return;
-        case MsgGetInt:
-            getInt(req);
-            return;
-        case MsgGetFloat:
-            getFloat(req);
-            return;
-        case MsgGetStr:
-            getStr(req);
-            return;
-        case MsgSetBool:
-              setBool(req);
-              return;
-        case MsgSetInt:
-              setInt(req);
-              return;
-        case MsgSetFloat:
-              setFloat(req);
-              return;
-        case MsgSetStr:
-              setStr(req);
-              return;
-        case MsgAskMetaBool:
-              valMetaBool(req);
-              return;
-        case MsgAskMetaInt:
-              valMetaInt(req);
-              return;
-        case MsgAskMetaFloat:
-              valMetaFloat(req);
-              return;
-        case MsgAskMetaStr:
-              valMetaStr(req);
-              return;
-        default:
-            //Unknown message type
-            error("Message type not implemented");
-            return;
+        }
+        //Select answer with message type
+        MsgType type = (MsgType)req.readType();
+        switch (type) {
+            case MsgAskChildren:
+                listChildren(req);
+                return;
+            case MsgAskValuesBool:
+                listValuesBool(req);
+                return;
+            case MsgAskValuesInt:
+                listValuesInt(req);
+                return;
+            case MsgAskValuesFloat:
+                listValuesFloat(req);
+                return;
+            case MsgAskValuesStr:
+                listValuesStr(req);
+                return;
+            case MsgGetBool:
+                getBool(req);
+                return;
+            case MsgGetInt:
+                getInt(req);
+                return;
+            case MsgGetFloat:
+                getFloat(req);
+                return;
+            case MsgGetStr:
+                getStr(req);
+                return;
+            case MsgSetBool:
+                  setBool(req);
+                  return;
+            case MsgSetInt:
+                  setInt(req);
+                  return;
+            case MsgSetFloat:
+                  setFloat(req);
+                  return;
+            case MsgSetStr:
+                  setStr(req);
+                  return;
+            case MsgAskMetaBool:
+                  valMetaBool(req);
+                  return;
+            case MsgAskMetaInt:
+                  valMetaInt(req);
+                  return;
+            case MsgAskMetaFloat:
+                  valMetaFloat(req);
+                  return;
+            case MsgAskMetaStr:
+                  valMetaStr(req);
+                  return;
+            default:
+                //Unknown message type
+                error("Message type not implemented");
+                return;
+        }
+    } catch (const std::logic_error& e) {
+        error("RhIOServer exception: " + std::string(e.what()));
     }
 }
         
