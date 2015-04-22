@@ -11,6 +11,19 @@ namespace RhIO {
  */
 extern IONode Root;
 
+/**
+ * Internal pointer to the instance of
+ * the publisher server runngin in its thread
+ */
+class ServerPub;
+extern ServerPub* ServerStream;
+
+/**
+ * Server replier and Server publisher port
+ */
+constexpr char ServerRepPort[] = "9999";
+constexpr char ServerPubPort[] = "9998";
+
 }
 
 #endif

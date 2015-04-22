@@ -46,6 +46,11 @@ class IONode final : public ValueNode
         const std::string& name() const;
 
         /**
+         * Return absolute node name
+         */
+        const std::string& pwd() const;
+
+        /**
          * Return Node parent and return self
          * if this is the root
          */
@@ -89,6 +94,11 @@ class IONode final : public ValueNode
          * Node name
          */
         std::string _name;
+
+        /**
+         * Node absolute name
+         */
+        std::string _pwd;
 
         /**
          * Pointer to parent Node

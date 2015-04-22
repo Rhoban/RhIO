@@ -9,6 +9,7 @@ IONode::IONode() :
         std::placeholders::_2, 
         std::placeholders::_3)),
     _name("ERROR"),
+    _pwd("ERROR"),
     _parent(nullptr),
     _children()
 {
@@ -21,9 +22,18 @@ IONode::IONode(const std::string& name, IONode* parent) :
         std::placeholders::_2, 
         std::placeholders::_3)),
     _name(name),
+    _pwd(""),
     _parent(parent),
     _children()
 {
+    if (_parent != nullptr) {
+        if (_parent->_name != "ROOT") {
+            _pwd = _parent->_pwd + separator + name;
+        } else {
+            _pwd = name;
+        }
+    }
+    BaseNode<ValueNode>::pwd = _pwd;
 }
         
 IONode::IONode(const IONode& node) :
@@ -33,14 +43,17 @@ IONode::IONode(const IONode& node) :
         std::placeholders::_2, 
         std::placeholders::_3)),
     _name(node._name),
+    _pwd(node._pwd),
     _parent(node._parent),
     _children(node._children)
 {
+    BaseNode<ValueNode>::pwd = _pwd;
 }
 IONode& IONode::operator=(const IONode& node)
 {
     ValueNode::operator=(node);
     _name = node._name;
+    _pwd = node._pwd;
     _parent = node._parent;
     _children = node._children;
     BaseNode<ValueNode>::forwardFunc = std::bind(
@@ -48,6 +61,7 @@ IONode& IONode::operator=(const IONode& node)
         this, std::placeholders::_1, 
         std::placeholders::_2, 
         std::placeholders::_3);
+    BaseNode<ValueNode>::pwd = _pwd;
 
     return *this;
 }
@@ -55,6 +69,11 @@ IONode& IONode::operator=(const IONode& node)
 const std::string& IONode::name() const
 {
     return _name;
+}
+        
+const std::string& IONode::pwd() const
+{
+    return _pwd;
 }
 
 const IONode& IONode::parent() const

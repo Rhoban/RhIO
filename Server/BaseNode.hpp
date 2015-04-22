@@ -52,6 +52,11 @@ class BaseNode
          * Hold forward function for derived class
          */
         ForwardFunc forwardFunc;
+
+        /**
+         * Hold Node absolute name
+         */
+        std::string pwd;
 };
 
 }

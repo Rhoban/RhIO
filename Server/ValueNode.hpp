@@ -5,6 +5,7 @@
 #include <string>
 #include <functional>
 #include <memory>
+#include <chrono>
 
 #include "Value.hpp"
 #include "BaseNode.hpp"
@@ -47,13 +48,23 @@ class ValueNode : public BaseNode<ValueNode>
          * Values setters for each type
          * associated with given relative name 
          * from this Node
+         * Optional time_point can be given if the value
+         * was update before now
          * Throw logic_error exception if asked values name
          * does not exist
          */
-        void setBool(const std::string& name, bool val);
-        void setInt(const std::string& name, long val);
-        void setFloat(const std::string& name, double val);
-        void setStr(const std::string& name, const std::string& val);
+        void setBool(const std::string& name, bool val,
+            std::chrono::system_clock::time_point timestamp 
+            = std::chrono::system_clock::now());
+        void setInt(const std::string& name, long val,
+            std::chrono::system_clock::time_point timestamp 
+            = std::chrono::system_clock::now());
+        void setFloat(const std::string& name, double val,
+            std::chrono::system_clock::time_point timestamp 
+            = std::chrono::system_clock::now());
+        void setStr(const std::string& name, const std::string& val,
+            std::chrono::system_clock::time_point timestamp 
+            = std::chrono::system_clock::now());
 
         /**
          * Declare a new value with given relative name for each type.

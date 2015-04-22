@@ -23,6 +23,7 @@ link_directories(${ZMQ_DIRECTORY}/lib)
 set(SOURCES_FILES_SERVER
     Server/IONode.cpp
     Server/RhIO.cpp
+    Server/ServerPub.cpp
     Server/ServerRep.cpp
     Server/ValueNode.cpp
 )
@@ -31,6 +32,7 @@ set(SOURCES_FILES_COMMON
 )
 set(SOURCES_FILES_CLIENT
     Client/ClientReq.cpp
+    Client/ClientSub.cpp
 )
 
 #Needed Libraries
@@ -54,11 +56,18 @@ target_link_libraries(RhIOClient ${RHIO_LIBRARIES})
 if (BUILD_RHIO_TESTS)
     add_executable(testTree Tests/testTree.cpp)
     target_link_libraries(testTree RhIO)
+    
     add_executable(testValue Tests/testValue.cpp)
     target_link_libraries(testValue RhIO)
-    add_executable(testServer Tests/testServer.cpp)
-    target_link_libraries(testServer RhIO)
-    add_executable(testClient Tests/testClient.cpp)
-    target_link_libraries(testClient RhIOClient)
+    
+    add_executable(testServerRep Tests/testServerRep.cpp)
+    target_link_libraries(testServerRep RhIO)
+    add_executable(testClientReq Tests/testClientReq.cpp)
+    target_link_libraries(testClientReq RhIOClient)
+    
+    add_executable(testServerPub Tests/testServerPub.cpp)
+    target_link_libraries(testServerPub RhIO)
+    add_executable(testClientSub Tests/testClientSub.cpp)
+    target_link_libraries(testClientSub RhIOClient)
 endif (BUILD_RHIO_TESTS)
 

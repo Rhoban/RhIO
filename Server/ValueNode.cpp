@@ -1,5 +1,8 @@
 #include <stdexcept>
+#include <chrono>
 #include "ValueNode.hpp"
+#include "ServerPub.hpp"
+#include "RhIO.hpp"
 
 namespace RhIO {
         
@@ -76,13 +79,14 @@ const std::string& ValueNode::getStr(const std::string& name) const
     }
 }
 
-void ValueNode::setBool(const std::string& name, bool val)
+void ValueNode::setBool(const std::string& name, bool val,
+    std::chrono::system_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setBool(tmpName, val);
+        child->setBool(tmpName, val, timestamp);
         return;
     }
 
@@ -90,15 +94,20 @@ void ValueNode::setBool(const std::string& name, bool val)
         throw std::logic_error("RhIO unknown value Bool name: " + name);
     } else {
         _valuesBool[name].value = val;
+        _valuesBool[name].timestamp = timestamp;
+        ServerStream->publishBool(BaseNode::pwd + separator + name, val,
+            std::chrono::duration_cast<std::chrono::milliseconds>
+                (timestamp.time_since_epoch()).count());
     }
 }
-void ValueNode::setInt(const std::string& name, long val)
+void ValueNode::setInt(const std::string& name, long val,
+    std::chrono::system_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setInt(tmpName, val);
+        child->setInt(tmpName, val, timestamp);
         return;
     }
 
@@ -106,15 +115,20 @@ void ValueNode::setInt(const std::string& name, long val)
         throw std::logic_error("RhIO unknown value Int name: " + name);
     } else {
         _valuesInt[name].value = val;
+        _valuesInt[name].timestamp = timestamp;
+        ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
+            std::chrono::duration_cast<std::chrono::milliseconds>
+                (timestamp.time_since_epoch()).count());
     }
 }
-void ValueNode::setFloat(const std::string& name, double val)
+void ValueNode::setFloat(const std::string& name, double val,
+    std::chrono::system_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setFloat(tmpName, val);
+        child->setFloat(tmpName, val, timestamp);
         return;
     }
 
@@ -122,15 +136,20 @@ void ValueNode::setFloat(const std::string& name, double val)
         throw std::logic_error("RhIO unknown value Float name: " + name);
     } else {
         _valuesFloat[name].value = val;
+        _valuesFloat[name].timestamp = timestamp;
+        ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
+            std::chrono::duration_cast<std::chrono::milliseconds>
+                (timestamp.time_since_epoch()).count());
     }
 }
-void ValueNode::setStr(const std::string& name, const std::string& val)
+void ValueNode::setStr(const std::string& name, const std::string& val,
+    std::chrono::system_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setStr(tmpName, val);
+        child->setStr(tmpName, val, timestamp);
         return;
     }
 
@@ -138,6 +157,10 @@ void ValueNode::setStr(const std::string& name, const std::string& val)
         throw std::logic_error("RhIO unknown value Str name: " + name);
     } else {
         _valuesStr[name].value = val;
+        _valuesStr[name].timestamp = timestamp;
+        ServerStream->publishStr(BaseNode::pwd + separator + name, val,
+            std::chrono::duration_cast<std::chrono::milliseconds>
+                (timestamp.time_since_epoch()).count());
     }
 }
 

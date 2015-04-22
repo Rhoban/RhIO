@@ -135,6 +135,25 @@ enum MsgType : uint8_t {
     MsgValMetaInt,
     MsgValMetaFloat,
     MsgValMetaStr,
+    /**
+     * Server.
+     * Return streamed values for type 
+     * Bool, Int, Float, Str
+     * Args:
+     * String: value absolute name
+     * Int: timestamp
+     * Bool: value
+     * or
+     * Int: value
+     * or
+     * Float: value
+     * or
+     * Str: value
+     */
+    MsgStreamBool,
+    MsgStreamInt,
+    MsgStreamFloat,
+    MsgStreamStr,
 };
 
 }

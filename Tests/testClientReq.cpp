@@ -5,7 +5,8 @@
 
 int main() 
 {
-    RhIO::ClientReq client("tcp://localhost:9999");
+    RhIO::ClientReq client(
+        std::string("tcp://localhost:") + RhIO::ServerRepPort);
     
     std::vector<std::string> list;
     
@@ -60,21 +61,17 @@ int main()
     assert(valInt.min == -1);
     assert(valInt.max == 10);
     
-    /*
     RhIO::ValueFloat valFloat = client.metaValueFloat("test/paramFloat");
     assert(valFloat.comment == "this is a test float");
     assert(valFloat.hasMin == false);
     assert(valFloat.hasMax == false);
     assert(valFloat.persisted == true);
-    */
     
-    /*
     RhIO::ValueStr valStr = client.metaValueStr("test/test3/paramStr");
     assert(valStr.comment == "");
     assert(valStr.hasMin == false);
     assert(valStr.hasMax == false);
     assert(valStr.persisted == false);
-    */
 
     return 0;
 }

@@ -17,6 +17,7 @@ int main()
     assert(RhIO::Root.parent().name() == "ROOT");
     assert(RhIO::Root.root().name() == "ROOT");
     assert(RhIO::Root.childExist("test") == false);
+    assert(RhIO::Root.pwd() == "");
     
     RhIO::Root.newChild("test");
     assert(RhIO::Root.name() == "ROOT");
@@ -28,6 +29,7 @@ int main()
     assert(RhIO::Root.child("test").parent().name() == "ROOT");
     assert(RhIO::Root.child("test").root().name() == "ROOT");
     assert(RhIO::Root.child("test").accessChildren().size() == 0);
+    assert(RhIO::Root.child("test").pwd() == "test");
     
     RhIO::Root.newChild("test2/pouet");
     assert(RhIO::Root.name() == "ROOT");
@@ -50,6 +52,7 @@ int main()
     assert(RhIO::Root.child("test2/pouet").parent().name() == "test2");
     assert(RhIO::Root.child("test2/pouet").root().name() == "ROOT");
     assert(RhIO::Root.child("test2/pouet").accessChildren().size() == 0);
+    assert(RhIO::Root.child("test2/pouet").pwd() == "test2/pouet");
 
     std::cout << "Display Tree" << std::endl;
     printTree(RhIO::Root); 

@@ -4,6 +4,7 @@
 #include <string>
 #include <thread>
 #include <zmq.hpp>
+#include "RhIO.hpp"
 #include "IONode.hpp"
 #include "DataBuffer.hpp"
 
@@ -23,7 +24,8 @@ class ServerRep
          * Initialization with the bind
          * endpoint string
          */
-        ServerRep(const std::string& endpoint);
+        ServerRep(const std::string& 
+            endpoint = std::string("tcp://*:") + ServerRepPort);
 
         /**
          * Wait for next Client request
