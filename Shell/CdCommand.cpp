@@ -31,17 +31,7 @@ namespace RhIO
             } else if (target == "..") {
                 shell->upPath();
             } else {
-                auto path = shell->getPath();
-                auto children = shell->getClient()->listChildren(path);
-                for (auto child : children) {
-                    if (target == child) {
-                        shell->enterPath(child);
-                        return;
-                    }
-                }
-                Terminal::setColor("red", true);
-                std::cout << "No such directory: " << target << std::endl;
-                Terminal::clear();
+                shell->goToPath(shell->getPath() + "/" + target);
             }
         }
     }

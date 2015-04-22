@@ -98,18 +98,32 @@ namespace RhIO
                 }
                 commands[command]->process(argsV);
             } else {
-                Terminal::setColor("red", true);
-                std::cout << "Unknown command: " << command << std::endl;
-                Terminal::clear();
+                auto node = getCurrentNode();
+                auto value = node->getValue(command);
+
+                if (value) {
+                    std::cout << command << "=" << Values::toString(this, value) << std::endl;
+                } else {
+                    Terminal::setColor("red", true);
+                    std::cout << "Unknown command: " << command << std::endl;
+                    Terminal::clear();
+                }
             }
         }
     }
 
     void Shell::set(std::string lvalue, std::string rvalue)
     {
-        Terminal::setColor("yellow", true);
-        std::cout << "[Not implemented] Setting " << lvalue << " to " << rvalue << std::endl;
-        Terminal::clear();
+        auto node = getCurrentNode();
+        auto value = node->getValue(lvalue);
+
+        if (value) {
+            Values::setFromString(this, value, rvalue);
+        } else {
+            Terminal::setColor("red", true);
+            std::cout << "Unknown parameter: " << lvalue << std::endl;
+            Terminal::clear();
+        }
     }
 
     void Shell::registerCommand(Command *command)

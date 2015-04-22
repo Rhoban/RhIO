@@ -7,6 +7,7 @@
 
 namespace RhIO
 {
+    class Shell;
     class Values
     {
         public:
@@ -20,13 +21,17 @@ namespace RhIO
             std::map<std::string, Values*> children;
 
             Values *getChild(std::string name);
+            ValueBase *getValue(std::string name);
     
             static ValueBool *asBool(ValueBase *value);
             static ValueInt *asInt(ValueBase *value);
             static ValueFloat *asFloat(ValueBase *value);
             static ValueStr *asString(ValueBase *value);
-            static std::string toString(ValueBase *value);
+
+            static std::string toString(Shell *shell, ValueBase *value);
             static std::string getType(ValueBase *value);
+
+            static void setFromString(Shell *shell, ValueBase *value, std::string str);
 
             std::vector<ValueBase*> getAll();
     };

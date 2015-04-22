@@ -32,11 +32,17 @@ namespace RhIO
 
         for (auto val : values->getAll()) 
         {
+            printf("%-15s", val->name.c_str());
+            std::cout << " ";
+            
             Terminal::setColor("grey", false);
             printf("%6s ", Values::getType(val).c_str());
             Terminal::clear();
-            printf("%-15s", val->name.c_str());
-            std::cout << " ";
+
+            Terminal::setColor("grey", false);
+            std::cout << " val: ";
+            Terminal::clear();
+            printf("%-8s", Values::toString(shell, val).c_str());
 
             if (val->comment != "") {
                 Terminal::setColor("grey", false);

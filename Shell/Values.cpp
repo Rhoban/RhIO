@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include "Values.h"
+#include "Shell.h"
 
 namespace RhIO
 {       
@@ -46,6 +47,19 @@ namespace RhIO
         
         return NULL;
     }
+            
+    ValueBase *Values::getValue(std::string name)
+    {
+        auto all = getAll();
+
+        for (auto entry : all) {
+            if (entry->name == name) {
+                return entry;
+            }
+        }
+
+        return NULL;
+    }
 
     std::vector<ValueBase*> Values::getAll()
     {
@@ -79,20 +93,27 @@ namespace RhIO
         return dynamic_cast<ValueStr*>(value);
     }
 
-    std::string Values::toString(ValueBase *value)
+    std::string Values::toString(Shell *shell, ValueBase *value)
     {
+        auto client = shell->getClient();
+        auto name = shell->getPath() + "/" + value->name;
+
         if (auto val = asBool(value)) {
-            return val->value ? "true" : "false";
+            auto v = client->getBool(name);
+            return v ? "true" : "false";
         } else if (auto val = asInt(value)) {
+            auto v = client->getInt(name);
             std::stringstream ss;
-            ss << val->value;
+            ss << v;
             return ss.str();
         } else if (auto val = asFloat(value)) {
+            auto v = client->getFloat(name);
             std::stringstream ss;
-            ss << val->value;
+            ss << v;
             return ss.str();
         } else if (auto val = asString(value)) {
-            return val->value;
+            auto v = client->getStr(name);
+            return v;
         } else {
             return "?";
         }
@@ -111,5 +132,21 @@ namespace RhIO
         } else {
             return "?";
         }
+    }
+            
+    void Values::setFromString(Shell *shell, ValueBase *value, std::string str)
+    {
+        auto client = shell->getClient();
+        auto name = shell->getPath() + "/" + value->name;
+
+        if (asBool(value)) {
+            client->setBool(name, (str == "1" || str == "true"));
+        } else if (asInt(value)) {
+            client->setInt(name, atoi(str.c_str()));
+        } else if (asFloat(value)) {
+            client->setFloat(name, atof(str.c_str()));
+        } else if (asString(value)) {
+            client->setStr(name, str);
+        } 
     }
 }
