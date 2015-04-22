@@ -6,6 +6,16 @@
 
 namespace RhIO {
         
+ValueNode& ValueNode::operator=(const ValueNode& node)
+{
+    _valuesBool = node._valuesBool;
+    _valuesInt = node._valuesInt;
+    _valuesFloat = node._valuesFloat;
+    _valuesStr = node._valuesStr;
+
+    return *this;
+}
+        
 ValueType ValueNode::getValueType(const std::string& name) const
 {
     //Forward to subtree
@@ -184,6 +194,7 @@ std::unique_ptr<ValueBuilderBool> ValueNode::newBool(const std::string& name)
         }
     } else {
         //Creating a really new value
+        std::lock_guard<std::mutex> lock(_mutex);
         _valuesBool[name] = ValueBool();
         _valuesBool[name].name = name;
         return std::unique_ptr<ValueBuilderBool>(
@@ -210,6 +221,7 @@ std::unique_ptr<ValueBuilderInt> ValueNode::newInt(const std::string& name)
         }
     } else {
         //Creating a really new value
+        std::lock_guard<std::mutex> lock(_mutex);
         _valuesInt[name] = ValueInt();
         _valuesInt[name].name = name;
         return std::unique_ptr<ValueBuilderInt>(
@@ -236,6 +248,7 @@ std::unique_ptr<ValueBuilderFloat> ValueNode::newFloat(const std::string& name)
         }
     } else {
         //Creating a really new value
+        std::lock_guard<std::mutex> lock(_mutex);
         _valuesFloat[name] = ValueFloat();
         _valuesFloat[name].name = name;
         return std::unique_ptr<ValueBuilderFloat>(
@@ -262,6 +275,7 @@ std::unique_ptr<ValueBuilderStr> ValueNode::newStr(const std::string& name)
         }
     } else {
         //Creating a really new value
+        std::lock_guard<std::mutex> lock(_mutex);
         _valuesStr[name] = ValueStr();
         _valuesStr[name].name = name;
         return std::unique_ptr<ValueBuilderStr>(
@@ -322,21 +336,45 @@ const ValueStr& ValueNode::getValueStr(const std::string& name) const
     }
 }
 
-const std::map<std::string, ValueBool>& ValueNode::accessValuesBool() const
+std::vector<std::string> ValueNode::listValuesBool() const
 {
-    return _valuesBool;
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list;
+    for (const auto& v : _valuesBool) {
+        list.push_back(v.first);
+    }
+
+    return list;
 }
-const std::map<std::string, ValueInt>& ValueNode::accessValuesInt() const
+std::vector<std::string> ValueNode::listValuesInt() const
 {
-    return _valuesInt;
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list;
+    for (const auto& v : _valuesInt) {
+        list.push_back(v.first);
+    }
+
+    return list;
 }
-const std::map<std::string, ValueFloat>& ValueNode::accessValuesFloat() const
+std::vector<std::string> ValueNode::listValuesFloat() const
 {
-    return _valuesFloat;
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list;
+    for (const auto& v : _valuesFloat) {
+        list.push_back(v.first);
+    }
+
+    return list;
 }
-const std::map<std::string, ValueStr>& ValueNode::accessValuesStr() const
+std::vector<std::string> ValueNode::listValuesStr() const
 {
-    return _valuesStr;
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list;
+    for (const auto& v : _valuesStr) {
+        list.push_back(v.first);
+    }
+
+    return list;
 }
 
 }

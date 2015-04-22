@@ -14,7 +14,7 @@ int main()
     assert(list.size() == 2);
     assert(list[0] == "test");
     assert(list[1] == "test2");
-    list = client.listChildren("test2");
+    list = client.listChildren("/test2");
     assert(list.size() == 1);
     assert(list[0] == "pouet");
     
@@ -30,7 +30,7 @@ int main()
     assert(list[0] == "paramBool");
     list = client.listValuesBool("test2");
     assert(list.size() == 0);
-    list = client.listValuesInt("test/test3");
+    list = client.listValuesInt("/test/test3");
     assert(list.size() == 1);
     assert(list[0] == "paramInt");
     list = client.listValuesFloat("test");
