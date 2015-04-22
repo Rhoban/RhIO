@@ -22,7 +22,8 @@ namespace RhIO
         std::cout << "Rhoban I/O shell, welcome!" << std::endl;
         std::cout << "Connecting to " << server << std::endl;
         client = new ClientReq(server);
-        auto dummy = client->listChildren("/");
+        std::cout << "Downloading the tree..." << std::endl;
+        tree = new Values(client, "");
         Terminal::clear();
 
         // Reading lines from stdin
@@ -30,7 +31,7 @@ namespace RhIO
             Terminal::setColor("yellow", true);
             std::cout << "RhIO";
             Terminal::clear();
-            std::cout << ":";
+            std::cout << ":/";
             Terminal::setColor("blue", true);
             std::cout << getPath();
             Terminal::clear();
@@ -126,7 +127,7 @@ namespace RhIO
     {
         return client;
     }
-
+            
     void Shell::enterPath(std::string path_)
     {
         path.push_back(path_);
@@ -139,9 +140,16 @@ namespace RhIO
         }
     }
 
-    void Shell::rootPath()
+    void Shell::goToPath(std::string spath)
     {
-        path.clear();
+        if (getNode(spath)) {
+            auto parts = pathToParts(spath);
+
+            path.clear();
+            for (auto part : parts) {
+                path.push_back(part);
+            }
+        }
     }
 
     std::string Shell::getPath()
@@ -156,9 +164,42 @@ namespace RhIO
         }
 
         if (p == "") {
-            p = "/";
+            p = "";
         }
 
         return p;
+    }
+
+    std::vector<std::string> Shell::pathToParts(std::string spath)
+    {
+        auto parts = split(spath, '/');
+        std::vector<std::string> path;
+
+        for (auto part : parts) {
+            if (part != "") {
+                path.push_back(part);
+            }
+        }
+        
+        return path;
+    }
+
+    Values *Shell::getNode(std::string spath)
+    {
+        auto path = pathToParts(spath);
+
+        Values *node = tree;
+        for (auto part : path) {
+            node = node->getChild(part);
+            if (node == NULL) {
+                return NULL;
+            }
+        }
+        return node;
+    }
+            
+    Values *Shell::getCurrentNode()
+    {
+        return getNode(getPath());
     }
 }

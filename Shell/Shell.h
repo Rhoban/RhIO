@@ -6,6 +6,7 @@
 #include <ClientReq.hpp>
 #include "Command.h"
 #include "Terminal.h"
+#include "Values.h"
 
 namespace RhIO
 {
@@ -50,12 +51,21 @@ namespace RhIO
             ClientReq *getClient();
 
             /**
+             * Get Values for a given path
+             */
+            Values *getNode(std::string path);
+            Values *getCurrentNode();
+
+            /**
              * Current directory
              */
             void enterPath(std::string path);
             void upPath();
-            void rootPath();
+            std::vector<std::string> pathToParts(std::string spath);
+            void goToPath(std::string path);
             std::string getPath();
+            
+            Values *tree;
 
         protected:
             ClientReq *client;

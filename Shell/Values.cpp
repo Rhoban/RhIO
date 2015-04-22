@@ -1,3 +1,4 @@
+#include <iostream>
 #include <sstream>
 #include "Values.h"
 
@@ -5,34 +6,45 @@ namespace RhIO
 {       
     Values::Values(ClientReq *client, std::string path)
     {
-        for (auto name : client->listValuesBool(path)) {
-            auto fullName = path+"/"+name;
-            auto meta = client->metaValueBool(fullName);
-            meta.value = client->getBool(fullName);
-            meta.name = name;
-            bools.push_back(meta);
+        std::string slashed = path;
+        if (path != "") {
+            slashed += "/";
         }
-        for (auto name : client->listValuesInt(path)) {
-            auto fullName = path+"/"+name;
-            auto meta = client->metaValueInt(fullName);
-            meta.value = client->getInt(fullName);
-            meta.name = name;
-            ints.push_back(meta);
+
+#define GET_CHILDREN(type, vect)                                 \
+        for (auto name : client->listValues ## type (path)) {    \
+            auto fullName = slashed+name;                       \
+            auto meta = client->metaValue ## type (fullName);    \
+            meta.value = client->get ## type (fullName);         \
+            meta.name = name;                                    \
+            vect.push_back(meta);                                \
         }
-        for (auto name : client->listValuesFloat(path)) {
-            auto fullName = path+"/"+name;
-            auto meta = client->metaValueFloat(fullName);
-            meta.value = client->getFloat(fullName);
-            meta.name = name;
-            floats.push_back(meta);
+
+        GET_CHILDREN(Bool, bools)
+        GET_CHILDREN(Float, floats)
+        GET_CHILDREN(Int, ints)
+        GET_CHILDREN(Str, strings)
+
+        // Getting childrens
+        for (auto name : client->listChildren(path)) {
+            children[name] = new Values(client, slashed+name);
         }
-        for (auto name : client->listValuesStr(path)) {
-            auto fullName = path+"/"+name;
-            auto meta = client->metaValueStr(fullName);
-            meta.value = client->getStr(fullName);
-            meta.name = name;
-            strings.push_back(meta);
+    }
+
+    Values::~Values()
+    {
+        for (auto entry : children) {
+            delete entry.second;
         }
+    }
+            
+    Values *Values::getChild(std::string name)
+    {
+        if (children.count(name)) {
+            return children[name];
+        }
+        
+        return NULL;
     }
 
     std::vector<ValueBase*> Values::getAll()

@@ -14,6 +14,8 @@ namespace RhIO {
  */
 struct ValueBase
 {
+    virtual ~ValueBase() {};
+
     /**
      * Value name
      */
