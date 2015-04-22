@@ -67,7 +67,7 @@ namespace RhIO
             void enterPath(std::string path);
             void upPath();
             std::vector<std::string> pathToParts(std::string spath);
-            void goToPath(std::string path);
+            bool goToPath(std::string path);
             std::string getPath();
 
             Stream *getStream();

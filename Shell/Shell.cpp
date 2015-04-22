@@ -167,7 +167,7 @@ namespace RhIO
         }
     }
 
-    void Shell::goToPath(std::string spath)
+    bool Shell::goToPath(std::string spath)
     {
         if (auto node = getNode(spath)) {
             auto parts = pathToParts(node->getPath());
@@ -176,6 +176,9 @@ namespace RhIO
             for (auto part : parts) {
                 path.push_back(part);
             }
+            return true;
+        } else {
+            return false;
         }
     }
 
