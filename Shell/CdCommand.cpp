@@ -26,12 +26,10 @@ namespace RhIO
         } else {
             auto target = args.front();
 
-            if (target[0] == '/') {
-                shell->goToPath(target.substr(1));
-            } else if (target == "..") {
+            if (target == "..") {
                 shell->upPath();
             } else {
-                shell->goToPath(shell->getPath() + "/" + target);
+                shell->goToPath(target);
             }
         }
     }

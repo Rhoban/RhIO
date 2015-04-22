@@ -11,7 +11,7 @@ using namespace RhIO;
 
 int main(int argc, char *argv[])
 {
-    std::string server = "tcp://localhost:9999";
+    std::string server = "localhost";
 
     if (argc > 1) {
         server = std::string(argv[1]);
