@@ -2,6 +2,7 @@
 #include "Shell.h"
 #include "LsCommand.h"
 #include "Node.h"
+#include "NodePool.h"
 
 namespace RhIO
 {
@@ -37,31 +38,12 @@ namespace RhIO
                 Terminal::clear();
             }
 
-            for (auto nodeVal : values->getAll()) 
-            {
-                auto val = nodeVal.value;
-
-                printf("%-15s", val->name.c_str());
-                std::cout << " ";
-                
-                Terminal::setColor("grey", false);
-                printf("%6s ", Node::getType(val).c_str());
-                Terminal::clear();
-
-                Terminal::setColor("grey", false);
-                std::cout << " val: ";
-                Terminal::clear();
+            NodePool pool;
+            for (auto nodeVal : values->getAll()) {
                 Node::get(shell, nodeVal);
-                printf("%-8s", Node::toString(val).c_str());
-
-                if (val->comment != "") {
-                    Terminal::setColor("grey", false);
-                    std::cout << " desc: ";
-                    Terminal::clear();
-                    std::cout << val->comment;
-                }
-                std::cout << std::endl;
+                pool.push_back(nodeVal);
             }
+            pool.draw();
         }
     }
 }

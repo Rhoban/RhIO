@@ -5,12 +5,13 @@
 #include <string>
 #include <ClientReq.hpp>
 #include <ClientSub.hpp>
-#include "Command.h"
+#include "commands/Command.h"
 #include "Terminal.h"
 #include "Node.h"
 
 namespace RhIO
 {
+    class Stream;
     class Shell
     {
         public:
@@ -66,14 +67,17 @@ namespace RhIO
             void enterPath(std::string path);
             void upPath();
             std::vector<std::string> pathToParts(std::string spath);
-            void goToPath(std::string path);
+            bool goToPath(std::string path);
             std::string getPath();
+
+            Stream *getStream();
             
             Node *tree;
 
         protected:
             ClientReq *client;
             ClientSub *clientSub;
+            Stream *stream;
             bool terminate;
             std::map<std::string, Command*> commands;
             std::list<std::string> path;
