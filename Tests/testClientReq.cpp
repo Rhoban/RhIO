@@ -39,6 +39,13 @@ int main()
     list = client.listValuesStr("test/test3");
     assert(list.size() == 1);
     assert(list[0] == "paramStr");
+    
+    try {
+        list = client.listValuesBool("test//nonode");
+        assert(0);
+    } catch (const std::runtime_error& e) {
+        assert(1);
+    }
 
     assert(client.getBool("test/paramBool") == false);
     assert(client.getInt("test/test3/paramInt") == 0);
