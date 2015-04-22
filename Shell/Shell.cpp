@@ -81,8 +81,9 @@ namespace RhIO
         std::string line("");
         bool done=false;
         bool esc_mode=false;
-        std::deque<std::string>::iterator hist_it=shell_history.begin();
+        std::deque<std::string>::iterator hist_it=shell_history.end();
         int cursorpos=0;
+        std::string lastcmd("");
 
         while(!done)
         {
@@ -94,31 +95,69 @@ namespace RhIO
 
                         putchar(c);
                         done=true;
-                        shell_history.push_back(line);
-                        if(shell_history.size()>MAX_HISTORY)
-                            shell_history.pop_front();
-                        hist_it=shell_history.begin();
-                        // for(int i=0;i<shell_history.size();i++)
-                        //     std::cout<<"DEBUG "<<shell_history.at(i)<<std::endl;
+
+                        lastcmd="";
+                        if(shell_history.size()>0)
+                            lastcmd=shell_history.back();
+
+                        if(line.compare("")!=0 and line.compare(lastcmd)!=0) //store in history if non null and different than the last cmd
+                        {
+                            shell_history.push_back(line);
+                            if(shell_history.size()>MAX_HISTORY)
+                                shell_history.pop_front();
+                            hist_it=shell_history.begin();
+                        }
                         return line;
                         break;//useless
 
+                    case 0x01: //Ctrl-a goto begin of line
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+                        cursorpos=0;
+                        if(line.size()>0)
+                            Terminal::cursorNLeft(line.size());
+
+                        break;
+
+                    case 0x05: //Ctrl-e goto end of line
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+
+                        if(cursorpos<line.size())
+                        {
+                            Terminal::cursorNRight(line.size()-cursorpos);
+                            cursorpos=line.size();
+                        }
+
+                        break;
+
+                    case 0xc: //Ctrl-l clear screen
+                        Terminal::clearScreen();
+                        Terminal::clearLine();
+                        Terminal::initCursor();
+                        displayPrompt();
+                        line="";
+                        cursorpos=0;
+                        break;
+
                     case 0x1b: //begin break mode (arrows)
                         esc_mode=true;
-                        // std::cout<<"DEBUG special: "<<(int)c<<std::endl;
+
                         break;
-                    case 0x5b: //just avec 0x1b
-                        // if(esc_mode)
-                        //     std::cout<<"DEBUG 5b"<<std::endl;
+
+                    case 0x5b: //just after 0x1b
+
                         break;
 
                     case 0x41: //up
                         if(esc_mode)
                         {
 
-                            if(shell_history.size()>0 and hist_it!= shell_history.end())
+                            if(shell_history.size()>0 and hist_it!= shell_history.begin())
                             {
-                                line=*hist_it++;
+                                line=*--hist_it;
                                 cursorpos=line.size();
                                 Terminal::clearLine();
                                 displayPrompt();
@@ -131,13 +170,20 @@ namespace RhIO
                     case 0x42: //down
                         if(esc_mode)
                         {
-                            if(shell_history.size()>0 and hist_it!= shell_history.begin())
+                            if(shell_history.size()>0 and hist_it!= shell_history.end())
                             {
-                                line=*--hist_it;
+                                line=*hist_it++;
                                 cursorpos=line.size();
                                 Terminal::clearLine();
                                 displayPrompt();
                                 std::cout<<line;
+                            }
+                            else if( hist_it== shell_history.end())
+                            {
+                                Terminal::clearLine();
+                                displayPrompt();
+                                line="";
+                                cursorpos=0;
                             }
 
                             esc_mode=false;

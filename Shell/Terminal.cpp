@@ -9,6 +9,16 @@ namespace RhIO
 #endif
     }
 
+    void Terminal::clearScreen()
+    {
+        printf("\033[2J");
+    }
+
+    void Terminal::initCursor()
+    {
+        printf("\033[1;1H");
+    }
+
     void Terminal::setColor(std::string name, bool bold)
     {
 #ifdef HAS_COLORS
