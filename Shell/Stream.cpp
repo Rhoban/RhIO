@@ -33,6 +33,7 @@ namespace RhIO
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
+                        pool->timestamp = timestamp;
                     }
                 }
             }
@@ -49,6 +50,7 @@ namespace RhIO
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
+                        pool->timestamp = timestamp;
                     }
                 }
             }
@@ -65,6 +67,7 @@ namespace RhIO
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
+                        pool->timestamp = timestamp;
                     }
                 }
             }
@@ -81,6 +84,7 @@ namespace RhIO
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
+                        pool->timestamp = timestamp;
                     }
                 }
             }

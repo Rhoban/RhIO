@@ -5,7 +5,7 @@
 namespace RhIO
 {
     NodePool::NodePool()
-        : dirty(false), handler(PoolUpdateHandler())
+        : dirty(false), handler(PoolUpdateHandler()), timestamp(0)
     {
     }
             

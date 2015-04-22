@@ -17,7 +17,9 @@ set (SOURCES
     commands/LsCommand.cpp
     commands/WatchCommand.cpp
     commands/CdCommand.cpp
+    commands/LogCommand.cpp
     Shell.cpp
+    CSV.cpp
     Terminal.cpp
     Node.cpp
     NodePool.cpp

@@ -21,33 +21,36 @@ namespace RhIO
 
     void WatchCommand::process(std::vector<std::string> args)
     {
-        std::string dir = "";
-
-        if (args.size()) {
-            dir = args[0];
-        }
-        
-        Node *values = shell->getNode(dir);
-        if (values == NULL) {
-            Terminal::setColor("red", true);
-            std::cout << "Unable to get node " << dir << std::endl;
-            Terminal::clear();
-        } else {
-            NodePool pool;
+        NodePool pool;
+        if (args.size() == 0) {
+            Node *values = shell->getNode();
             for (auto nodeVal : values->getAll()) {
                 Node::get(shell, nodeVal);
                 pool.push_back(nodeVal);
             }
-            pool.setCallback(std::bind(&WatchCommand::update, this, _1));
-        
-            system("clear");
-            pool.draw();
-
-            shell->getStream()->addPool(&pool);
-            std::string line;
-            std::getline(std::cin, line);
-            shell->getStream()->removePool(&pool);
+        } else {
+            for (int k=0; k<args.size(); k++) {
+                auto val = shell->getNodeValue(args[k]);
+                if (val.value == NULL) {
+                    Terminal::setColor("red", true);
+                    std::cout << "Unknown parameter: " << args[k] << std::endl;
+                    Terminal::clear();
+                    return;
+                }
+                pool.push_back(val);
+            }
         }
+
+
+        pool.setCallback(std::bind(&WatchCommand::update, this, _1));
+    
+        system("clear");
+        pool.draw();
+
+        shell->getStream()->addPool(&pool);
+        std::string line;
+        std::getline(std::cin, line);
+        shell->getStream()->removePool(&pool);
     }
 
     void WatchCommand::update(NodePool *pool)

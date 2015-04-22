@@ -14,6 +14,7 @@ namespace RhIO
             void setCallback(PoolUpdateHandler handler);
             void update();
             bool dirty;
+            long timestamp;
 
             void draw();
 
