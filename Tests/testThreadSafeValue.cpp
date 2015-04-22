@@ -6,7 +6,7 @@
 
 void printTree(const RhIO::IONode& node, std::string prefix = "")
 {
-    std::cout << prefix << "--" << node.name() << std::endl;
+    std::cerr << prefix << "--" << node.name() << std::endl;
     for (const auto& child : node.listChildren()) {
         printTree(node.child(child), prefix + "  ");
     }
@@ -107,7 +107,124 @@ void function3()
     }
     
     for (size_t i=0;i<list.size();i++) {
-        std::cout << "- " << list[i] << std::endl;
+        std::cerr << "- " << list[i] << std::endl;
+    }
+}
+
+void function4()
+{
+    std::vector<std::string> list;
+    if (RhIO::Root.getValueType("test/bool1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool1")));
+    }
+    if (RhIO::Root.getValueType("test/int1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int1")));
+    }
+    if (RhIO::Root.getValueType("test/float1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float1")));
+    }
+    if (RhIO::Root.getValueType("test/str1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str1")));
+    }
+    if (RhIO::Root.getValueType("test/bool2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool2")));
+    }
+    if (RhIO::Root.getValueType("test/int2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int2")));
+    }
+    if (RhIO::Root.getValueType("test/float2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float2")));
+    }
+    if (RhIO::Root.getValueType("test/str2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str2")));
+    }
+    if (RhIO::Root.getValueType("test/bool3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool3")));
+    }
+    if (RhIO::Root.getValueType("test/int3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int3")));
+    }
+    if (RhIO::Root.getValueType("test/float3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float3")));
+    }
+    if (RhIO::Root.getValueType("test/str3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str3")));
+    }
+    if (RhIO::Root.getValueType("test/bool1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool1")));
+    }
+    if (RhIO::Root.getValueType("test/int1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int1")));
+    }
+    if (RhIO::Root.getValueType("test/float1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float1")));
+    }
+    if (RhIO::Root.getValueType("test/str1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str1")));
+    }
+    if (RhIO::Root.getValueType("test/bool2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool2")));
+    }
+    if (RhIO::Root.getValueType("test/int2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int2")));
+    }
+    if (RhIO::Root.getValueType("test/float2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float2")));
+    }
+    if (RhIO::Root.getValueType("test/str2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str2")));
+    }
+    if (RhIO::Root.getValueType("test/bool3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool3")));
+    }
+    if (RhIO::Root.getValueType("test/int3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int3")));
+    }
+    if (RhIO::Root.getValueType("test/float3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float3")));
+    }
+    if (RhIO::Root.getValueType("test/str3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str3")));
+    }
+    if (RhIO::Root.getValueType("test/bool1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool1")));
+    }
+    if (RhIO::Root.getValueType("test/int1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int1")));
+    }
+    if (RhIO::Root.getValueType("test/float1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float1")));
+    }
+    if (RhIO::Root.getValueType("test/str1") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str1")));
+    }
+    if (RhIO::Root.getValueType("test/bool2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool2")));
+    }
+    if (RhIO::Root.getValueType("test/int2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int2")));
+    }
+    if (RhIO::Root.getValueType("test/float2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float2")));
+    }
+    if (RhIO::Root.getValueType("test/str2") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str2")));
+    }
+    if (RhIO::Root.getValueType("test/bool3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/bool3")));
+    }
+    if (RhIO::Root.getValueType("test/int3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/int3")));
+    }
+    if (RhIO::Root.getValueType("test/float3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/float3")));
+    }
+    if (RhIO::Root.getValueType("test/str3") == RhIO::TypeBool) {
+        list.push_back(std::to_string(RhIO::Root.getBool("test/str3")));
+    }
+    
+    for (size_t i=0;i<list.size();i++) {
+        std::cerr << "- " << list[i] << std::endl;
     }
 }
 
@@ -118,12 +235,14 @@ int main()
     std::thread t1(function1);
     std::thread t2(function2);
     std::thread t3(function3);
+    std::thread t4(function4);
     
     t1.join();
     t2.join();
     t3.join();
+    t4.join();
     
-    std::cout << "Display Tree" << std::endl;
+    std::cerr << "Display Tree" << std::endl;
     printTree(RhIO::Root); 
 
     return 0;
