@@ -3,11 +3,16 @@
 #include <list>
 #include <iostream>
 #include <string>
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <RhIO.hpp>
 #include "Shell.h"
 #include "utils.h"
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
 
 namespace RhIO
 {
@@ -16,8 +21,33 @@ namespace RhIO
     {
     }
 
+    void Shell::terminal_set_ioconfig() {
+        struct termios custom;
+        int fd=fileno(stdin);
+        tcgetattr(fd, &termsave);
+        custom=termsave;
+        custom.c_lflag &= ~(ICANON|ECHO);
+        tcsetattr(fd,TCSANOW,&custom);
+        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)|O_NONBLOCK);
+    }
+
+    void Shell::displayPrompt()
+    {
+        Terminal::setColor("yellow", true);
+        std::cout << "RhIO";
+        Terminal::clear();
+        std::cout << ":";
+        Terminal::setColor("blue", true);
+        std::cout << getPath();
+        Terminal::clear();
+        std::cout << "# " << std::flush;
+    }
+
     void Shell::run()
     {
+
+        terminal_set_ioconfig();
+
         std::string reqServer = "tcp://"+server+":"+ServerRepPort;
         std::string subServer = "tcp://"+server+":"+ServerPubPort;
         terminate = false;
@@ -31,22 +61,151 @@ namespace RhIO
         Terminal::clear();
 
         // Reading lines from stdin
-        while (!terminate && !feof(stdin)) {
-            Terminal::setColor("yellow", true);
-            std::cout << "RhIO";
-            Terminal::clear();
-            std::cout << ":";
-            Terminal::setColor("blue", true);
-            std::cout << getPath();
-            Terminal::clear();
-            std::cout << "# " << std::flush;
+        while (!terminate ) {
+            displayPrompt();
             std::string line;
-            std::getline(std::cin, line);
+            // std::getline(std::cin, line);
+            line=getLine();
             parse(line);
         }
-        if (feof(stdin)) {
-            std::cout << std::endl << std::flush;
+
+        tcsetattr(fileno(stdin),TCSANOW,&termsave);
+        std::cout << std::endl << std::flush;
+
+    }
+
+    std::string Shell::getLine()
+    {
+
+        char c;
+        std::string line("");
+        bool done=false;
+        bool esc_mode=false;
+        std::deque<std::string>::iterator hist_it=shell_history.begin();
+        int cursorpos=0;
+
+        while(!done)
+        {
+            if ((c = getchar())>0)
+            {
+                switch(c)
+                {
+                    case 0x0a: //enter
+
+                        putchar(c);
+                        done=true;
+                        shell_history.push_back(line);
+                        if(shell_history.size()>MAX_HISTORY)
+                            shell_history.pop_front();
+                        hist_it=shell_history.begin();
+                        // for(int i=0;i<shell_history.size();i++)
+                        //     std::cout<<"DEBUG "<<shell_history.at(i)<<std::endl;
+                        return line;
+                        break;//useless
+
+                    case 0x1b: //begin break mode (arrows)
+                        esc_mode=true;
+                        // std::cout<<"DEBUG special: "<<(int)c<<std::endl;
+                        break;
+                    case 0x5b: //just avec 0x1b
+                        // if(esc_mode)
+                        //     std::cout<<"DEBUG 5b"<<std::endl;
+                        break;
+
+                    case 0x41: //up
+                        if(esc_mode)
+                        {
+
+                            if(shell_history.size()>0 and hist_it!= shell_history.end())
+                            {
+                                line=*hist_it++;
+                                cursorpos=line.size();
+                                Terminal::clearLine();
+                                displayPrompt();
+                                std::cout<<line;
+                            }
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x42: //down
+                        if(esc_mode)
+                        {
+                            if(shell_history.size()>0 and hist_it!= shell_history.begin())
+                            {
+                                line=*--hist_it;
+                                cursorpos=line.size();
+                                Terminal::clearLine();
+                                displayPrompt();
+                                std::cout<<line;
+                            }
+
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x43: //right
+                        if(esc_mode)
+                        {
+
+                            if(cursorpos<line.size())
+                            {
+                                Terminal::cursorRight();
+                                cursorpos++;
+                            }
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x44: //left
+                        if(esc_mode)
+                        {
+
+                            if(cursorpos>0)
+                            {
+                                Terminal::cursorLeft();
+                                cursorpos--;
+                            }
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x7f: //backspace
+                        if(line.size()>0)
+                        {
+                            line.pop_back();
+                            Terminal::clearLine();
+                            displayPrompt();
+                            cursorpos--;
+                            std::cout<<line;
+                        }
+                        break;
+
+                    default:
+
+                        if(line.size()>0)
+                        {
+                            std::string tmp("");
+                            tmp+=c;
+                            line.insert(cursorpos,tmp);
+                        }
+                        else{
+                            line+=c;
+                        }
+                        cursorpos++;
+                        Terminal::clearLine();
+                        displayPrompt();
+
+                        std::cout<<line;
+
+                        if(line.size()-cursorpos>0)
+                            Terminal::cursorNLeft(line.size()-cursorpos);
+
+                        break;
+                }
+            }
         }
+
     }
 
     void Shell::parse(std::string line)
@@ -147,7 +306,7 @@ namespace RhIO
     {
         return client;
     }
-            
+
     void Shell::enterPath(std::string path_)
     {
         path.push_back(path_);
@@ -196,7 +355,7 @@ namespace RhIO
                 path.push_back(part);
             }
         }
-        
+
         return path;
     }
 
@@ -221,7 +380,7 @@ namespace RhIO
         }
         return node;
     }
-            
+
     NodeValue Shell::getNodeValue(std::string path)
     {
         auto parts = pathToParts(path);
@@ -252,12 +411,12 @@ namespace RhIO
 
         return node->getNodeValue(name);
     }
-    
+
     ValueBase *Shell::getValue(std::string path)
     {
         return getNodeValue(path).value;
     }
-            
+
     Node *Shell::getCurrentNode()
     {
         return getNode();

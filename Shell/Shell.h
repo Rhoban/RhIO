@@ -8,6 +8,10 @@
 #include "Command.h"
 #include "Terminal.h"
 #include "Node.h"
+#include <termios.h>
+#include <deque>
+
+#define MAX_HISTORY 100
 
 namespace RhIO
 {
@@ -20,6 +24,15 @@ namespace RhIO
              * Runs the interactive shell, will get lines from stdin
              */
             void run();
+
+            void terminal_set_ioconfig();
+
+            void displayPrompt();
+
+            /**
+             * Read the command line
+             */
+            std::string getLine();
 
             /**
              * Parse a command line typed by the user
@@ -40,7 +53,7 @@ namespace RhIO
              * Register a command to the shell
              */
             void registerCommand(Command *command);
-            
+
             /**
              * Get the list of commands
              */
@@ -68,8 +81,11 @@ namespace RhIO
             std::vector<std::string> pathToParts(std::string spath);
             void goToPath(std::string path);
             std::string getPath();
-            
+
             Node *tree;
+            struct termios termsave;
+            std::deque<std::string> shell_history;
+
 
         protected:
             ClientReq *client;

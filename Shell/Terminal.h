@@ -11,6 +11,11 @@ namespace RhIO
              * Handle format of the terminal
              */
             static void clear();
+            static void clearLine();
+            static void cursorRight();
+            static void cursorLeft();
+            static void cursorNLeft(int n);
+            static void cursorNRight(int n);
             static void setColor(std::string name, bool bold=false);
     };
 }

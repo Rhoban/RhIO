@@ -31,4 +31,33 @@ namespace RhIO
         }
 #endif
     }
+
+    void Terminal::clearLine()
+    {
+        printf("%c[2K\r", 27);
+    }
+
+// - Move the cursor forward N columns:
+//   \033[<N>C
+// - Move the cursor backward N columns:
+//   \033[<N>D
+
+
+    void Terminal::cursorRight()
+    {
+        printf("\033[C");
+    }
+
+    void Terminal::cursorLeft()
+    {
+        printf("\033[D");
+    }
+    void Terminal::cursorNLeft(int n)
+    {
+        printf("\033[%dD",n);
+    }
+    void Terminal::cursorNRight(int n)
+    {
+        printf("\033[%dC",n);
+    }
 }
