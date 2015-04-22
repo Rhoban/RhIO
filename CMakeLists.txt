@@ -64,6 +64,8 @@ if (BUILD_RHIO_TESTS)
     target_link_libraries(testThreadSafeTree RhIO)
     add_executable(testThreadSafeValue Tests/testThreadSafeValue.cpp)
     target_link_libraries(testThreadSafeValue RhIO)
+    add_executable(testThreadSafeValueUpdate Tests/testThreadSafeValueUpdate.cpp)
+    target_link_libraries(testThreadSafeValueUpdate RhIO)
     
     add_executable(testServerRep Tests/testServerRep.cpp)
     target_link_libraries(testServerRep RhIO)

@@ -23,6 +23,7 @@ ValueType ValueNode::getValueType(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getValueType(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) > 0) {
         return TypeBool;
     } else if (_valuesInt.count(name) > 0) {
@@ -43,6 +44,7 @@ bool ValueNode::getBool(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getBool(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Bool name: " + name);
     } else {
@@ -56,6 +58,7 @@ long ValueNode::getInt(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getInt(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
         throw std::logic_error("RhIO unknown Int value name: " + name);
     } else {
@@ -69,6 +72,7 @@ double ValueNode::getFloat(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getFloat(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
         throw std::logic_error("RhIO unknown Float value name: " + name);
     } else {
@@ -82,6 +86,7 @@ const std::string& ValueNode::getStr(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getStr(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
         throw std::logic_error("RhIO unknown Str value name: " + name);
     } else {
@@ -100,6 +105,7 @@ void ValueNode::setBool(const std::string& name, bool val,
         return;
     }
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Bool name: " + name);
     } else {
@@ -121,6 +127,7 @@ void ValueNode::setInt(const std::string& name, long val,
         return;
     }
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Int name: " + name);
     } else {
@@ -142,6 +149,7 @@ void ValueNode::setFloat(const std::string& name, double val,
         return;
     }
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Float name: " + name);
     } else {
@@ -163,6 +171,7 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
         return;
     }
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Str name: " + name);
     } else {
@@ -290,6 +299,7 @@ const ValueBool& ValueNode::getValueBool(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getValueBool(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Bool name: " + name);
     } else {
@@ -303,6 +313,7 @@ const ValueInt& ValueNode::getValueInt(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getValueInt(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Int name: " + name);
     } else {
@@ -316,6 +327,7 @@ const ValueFloat& ValueNode::getValueFloat(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getValueFloat(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Float name: " + name);
     } else {
@@ -329,6 +341,7 @@ const ValueStr& ValueNode::getValueStr(const std::string& name) const
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) return child->getValueStr(tmpName);
 
+    std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Str name: " + name);
     } else {

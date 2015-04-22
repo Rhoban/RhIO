@@ -91,6 +91,7 @@ class ValueNode : public BaseNode<ValueNode>
          * from this Node
          * Throw logic_error exception if asked values name
          * does not exist
+         * READ VALUE IS NOT HTREAD SAFE (use only for meta information)
          */
         const ValueBool& getValueBool(const std::string& name) const;
         const ValueInt& getValueInt(const std::string& name) const;
