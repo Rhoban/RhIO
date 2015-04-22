@@ -1,10 +1,10 @@
-#include "HelpCommand.h"
-#include "LsCommand.h"
-#include "WatchCommand.h"
-#include "CdCommand.h"
-#include "ClearCommand.h"
+#include "commands/HelpCommand.h"
+#include "commands/LsCommand.h"
+#include "commands/WatchCommand.h"
+#include "commands/CdCommand.h"
+#include "commands/ClearCommand.h"
 #ifdef HAS_CURSES
-#include "TuneCommand.h"
+#include "commands/TuneCommand.h"
 #endif
 #include "Shell.h"
 

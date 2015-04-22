@@ -5,7 +5,7 @@
 #include <string>
 #include <ClientReq.hpp>
 #include <ClientSub.hpp>
-#include "Command.h"
+#include "commands/Command.h"
 #include "Terminal.h"
 #include "Node.h"
 

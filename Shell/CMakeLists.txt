@@ -11,12 +11,12 @@ option (COLORS "Enable colors" ON)
 option (CURSES "Enable curses" ON)
 
 set (SOURCES
-    Command.cpp
-    ClearCommand.cpp
-    HelpCommand.cpp
-    LsCommand.cpp
-    WatchCommand.cpp
-    CdCommand.cpp
+    commands/Command.cpp
+    commands/ClearCommand.cpp
+    commands/HelpCommand.cpp
+    commands/LsCommand.cpp
+    commands/WatchCommand.cpp
+    commands/CdCommand.cpp
     Shell.cpp
     Terminal.cpp
     Node.cpp
@@ -28,6 +28,7 @@ set (SOURCES
 
 # Adding rhio subdirectory
 add_subdirectory (${RHIO_DIR} rhiolib)
+include_directories ("${CMAKE_SOURCE_DIR}")
 include_directories ("${RHIO_DIR}/Client")
 include_directories ("${RHIO_DIR}/Common")
 include_directories ("${RHIO_DIR}/Server")
@@ -48,7 +49,7 @@ if (CURSES)
     add_definitions(-DHAS_CURSES)
     set (SOURCES
         ${SOURCES}
-        TuneCommand.cpp
+        commands/TuneCommand.cpp
         Curse.cpp
         )
     set (EXTRA_LIBS
