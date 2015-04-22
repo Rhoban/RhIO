@@ -28,19 +28,15 @@ namespace RhIO
             std::cout << "/" << std::endl;
         }
 
-        Values values(shell->getClient(), path);
+        Values *values = shell->getCurrentNode();
 
-        for (auto val : values.getAll()) 
+        for (auto val : values->getAll()) 
         {
             Terminal::setColor("grey", false);
             printf("%6s ", Values::getType(val).c_str());
             Terminal::clear();
             printf("%-15s", val->name.c_str());
             std::cout << " ";
-            Terminal::setColor("grey", false);
-            std::cout << "val: ";
-            Terminal::clear();
-            printf("%12s ", Values::toString(val).c_str());
 
             if (val->comment != "") {
                 Terminal::setColor("grey", false);

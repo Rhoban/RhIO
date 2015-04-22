@@ -45,6 +45,7 @@ if (CURSES)
     set (SOURCES
         ${SOURCES}
         TuneCommand.cpp
+        ClearCommand.cpp
         )
     set (EXTRA_LIBS
         ${EXTRA_LIBS}
