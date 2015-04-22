@@ -5,25 +5,29 @@
 #include <string>
 #include <algorithm> 
 #include <functional> 
+#include <RhIO.hpp>
 #include "Shell.h"
 #include "utils.h"
 
 namespace RhIO
 {
     Shell::Shell(std::string server_)
-        : server(server_), client(NULL)
+        : server(server_), client(NULL), clientSub(NULL)
     {
     }
 
     void Shell::run()
     {
+        std::string reqServer = "tcp://"+server+":"+ServerRepPort;
+        std::string subServer = "tcp://"+server+":"+ServerPubPort;
         terminate = false;
         Terminal::setColor("white", true);
         std::cout << "Rhoban I/O shell, welcome!" << std::endl;
         std::cout << "Connecting to " << server << std::endl;
-        client = new ClientReq(server);
+        client = new ClientReq(reqServer);
+        clientSub = new ClientSub(subServer);
         std::cout << "Downloading the tree..." << std::endl;
-        tree = new Values(client, "");
+        tree = new Node(client, "");
         Terminal::clear();
 
         // Reading lines from stdin
@@ -31,7 +35,7 @@ namespace RhIO
             Terminal::setColor("yellow", true);
             std::cout << "RhIO";
             Terminal::clear();
-            std::cout << ":/";
+            std::cout << ":";
             Terminal::setColor("blue", true);
             std::cout << getPath();
             Terminal::clear();
@@ -98,18 +102,34 @@ namespace RhIO
                 }
                 commands[command]->process(argsV);
             } else {
-                Terminal::setColor("red", true);
-                std::cout << "Unknown command: " << command << std::endl;
-                Terminal::clear();
+                auto nodeValue = getNodeValue(command);
+                auto value = nodeValue.value;
+
+                if (value) {
+                    Node::get(this, nodeValue);
+                    std::cout << command << "=" << Node::toString(value) << std::endl;
+                } else {
+                    Terminal::setColor("red", true);
+                    std::cout << "Unknown command: " << command << std::endl;
+                    Terminal::clear();
+                }
             }
         }
     }
 
     void Shell::set(std::string lvalue, std::string rvalue)
     {
-        Terminal::setColor("yellow", true);
-        std::cout << "[Not implemented] Setting " << lvalue << " to " << rvalue << std::endl;
-        Terminal::clear();
+        auto node = getCurrentNode();
+        auto nodeValue = getNodeValue(lvalue);
+        auto value = nodeValue.value;
+
+        if (value) {
+            Node::setFromString(this, nodeValue, rvalue);
+        } else {
+            Terminal::setColor("red", true);
+            std::cout << "Unknown parameter: " << lvalue << std::endl;
+            Terminal::clear();
+        }
     }
 
     void Shell::registerCommand(Command *command)
@@ -142,8 +162,8 @@ namespace RhIO
 
     void Shell::goToPath(std::string spath)
     {
-        if (getNode(spath)) {
-            auto parts = pathToParts(spath);
+        if (auto node = getNode(spath)) {
+            auto parts = pathToParts(node->getPath());
 
             path.clear();
             for (auto part : parts) {
@@ -163,10 +183,6 @@ namespace RhIO
             p += part;
         }
 
-        if (p == "") {
-            p = "";
-        }
-
         return p;
     }
 
@@ -184,11 +200,19 @@ namespace RhIO
         return path;
     }
 
-    Values *Shell::getNode(std::string spath)
+    Node *Shell::getNode(std::string spath)
     {
+        if (spath.size()==0 || spath[0]!='/') {
+            auto myPath = getPath();
+            if (myPath != "") {
+                myPath += "/";
+            }
+            spath = myPath + spath;
+        }
+
         auto path = pathToParts(spath);
 
-        Values *node = tree;
+        Node *node = tree;
         for (auto part : path) {
             node = node->getChild(part);
             if (node == NULL) {
@@ -198,8 +222,44 @@ namespace RhIO
         return node;
     }
             
-    Values *Shell::getCurrentNode()
+    NodeValue Shell::getNodeValue(std::string path)
     {
-        return getNode(getPath());
+        auto parts = pathToParts(path);
+
+        if (parts.size() == 0) {
+            return NodeValue(NULL, NULL);
+        }
+
+        // Child name
+        auto name = parts[parts.size()-1];
+        parts.pop_back();
+
+        // Creating value path
+        std::string prefix = "";
+        for (auto part : parts) {
+            if (prefix != "") prefix += "/";
+            prefix += part;
+        }
+        if (path[0] == '/') {
+            prefix = "/" + prefix;
+        }
+
+        // Getting node
+        auto node = getNode(prefix);
+        if (node == NULL) {
+            return NodeValue(NULL, NULL);
+        }
+
+        return node->getNodeValue(name);
+    }
+    
+    ValueBase *Shell::getValue(std::string path)
+    {
+        return getNodeValue(path).value;
+    }
+            
+    Node *Shell::getCurrentNode()
+    {
+        return getNode();
     }
 }

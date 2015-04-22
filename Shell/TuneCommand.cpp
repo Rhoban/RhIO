@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Shell.h"
 #include "TuneCommand.h"
+#include "Curse.h"
 
 namespace RhIO
 {
@@ -22,10 +23,23 @@ namespace RhIO
     void TuneCommand::process(std::vector<std::string> args)
     {
         if (!args.size()) {
-            Terminal::setColor("red", true);
-            std::cout << getUsage();
+            errorUsage();
         } else {
+            Curse curse;
 
+            for (auto arg : args) {
+                auto val = shell->getNodeValue(arg);
+                if (val.value == NULL) {
+                    Terminal::setColor("red", true);
+                    std::cout << "Unknown parameter: " << arg << std::endl;
+                    Terminal::clear();
+                    return;
+                }
+                curse.values.push_back(val);
+            }
+
+            curse.shell = shell;
+            curse.run();
         }
     }
 }

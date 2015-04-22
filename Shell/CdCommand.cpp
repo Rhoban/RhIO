@@ -26,22 +26,10 @@ namespace RhIO
         } else {
             auto target = args.front();
 
-            if (target[0] == '/') {
-                shell->goToPath(target.substr(1));
-            } else if (target == "..") {
+            if (target == "..") {
                 shell->upPath();
             } else {
-                auto path = shell->getPath();
-                auto children = shell->getClient()->listChildren(path);
-                for (auto child : children) {
-                    if (target == child) {
-                        shell->enterPath(child);
-                        return;
-                    }
-                }
-                Terminal::setColor("red", true);
-                std::cout << "No such directory: " << target << std::endl;
-                Terminal::clear();
+                shell->goToPath(target);
             }
         }
     }

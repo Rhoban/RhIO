@@ -74,5 +74,8 @@ if (BUILD_RHIO_TESTS)
     target_link_libraries(testServerPub RhIO)
     add_executable(testClientSub Tests/testClientSub.cpp)
     target_link_libraries(testClientSub RhIOClient)
+    
+    add_executable(testServer Tests/testServer.cpp)
+    target_link_libraries(testServer RhIO)
 endif (BUILD_RHIO_TESTS)
 

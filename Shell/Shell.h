@@ -4,9 +4,10 @@
 #include <list>
 #include <string>
 #include <ClientReq.hpp>
+#include <ClientSub.hpp>
 #include "Command.h"
 #include "Terminal.h"
-#include "Values.h"
+#include "Node.h"
 
 namespace RhIO
 {
@@ -49,12 +50,15 @@ namespace RhIO
              * Get the remote client
              */
             ClientReq *getClient();
+            ClientSub *getClientSub();
 
             /**
-             * Get Values for a given path
+             * Get Node for a given path
              */
-            Values *getNode(std::string path);
-            Values *getCurrentNode();
+            Node *getNode(std::string path="");
+            Node *getCurrentNode();
+            ValueBase *getValue(std::string path);
+            NodeValue getNodeValue(std::string path);
 
             /**
              * Current directory
@@ -65,10 +69,11 @@ namespace RhIO
             void goToPath(std::string path);
             std::string getPath();
             
-            Values *tree;
+            Node *tree;
 
         protected:
             ClientReq *client;
+            ClientSub *clientSub;
             bool terminate;
             std::map<std::string, Command*> commands;
             std::list<std::string> path;

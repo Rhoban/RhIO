@@ -12,12 +12,13 @@ option (CURSES "Enable curses" ON)
 
 set (SOURCES
     Command.cpp
+    ClearCommand.cpp
     HelpCommand.cpp
     LsCommand.cpp
     CdCommand.cpp
     Shell.cpp
     Terminal.cpp
-    Values.cpp
+    Node.cpp
 
     main.cpp
     )
@@ -45,7 +46,7 @@ if (CURSES)
     set (SOURCES
         ${SOURCES}
         TuneCommand.cpp
-        ClearCommand.cpp
+        Curse.cpp
         )
     set (EXTRA_LIBS
         ${EXTRA_LIBS}
