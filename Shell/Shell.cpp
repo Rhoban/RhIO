@@ -8,9 +8,10 @@
 #include "Shell.h"
 #include "utils.h"
 
-namespace Rhio
+namespace RhIO
 {
-    Shell::Shell()
+    Shell::Shell(std::string server_)
+        : server(server_), client(NULL)
     {
     }
 
@@ -19,10 +20,20 @@ namespace Rhio
         terminate = false;
         Terminal::setColor("white", true);
         std::cout << "Rhoban I/O shell, welcome!" << std::endl;
+        std::cout << "Connecting to " << server << std::endl;
+        client = new ClientReq(server);
+        auto dummy = client->listChildren("/");
         Terminal::clear();
 
         // Reading lines from stdin
         while (!terminate && !feof(stdin)) {
+            Terminal::setColor("yellow", true);
+            std::cout << "RhIO";
+            Terminal::clear();
+            std::cout << ":";
+            Terminal::setColor("blue", true);
+            std::cout << getPath();
+            Terminal::clear();
             std::cout << "# " << std::flush;
             std::string line;
             std::getline(std::cin, line);
@@ -80,7 +91,11 @@ namespace Rhio
         } else {
             // Checking for the command in the list
             if (commands.count(command)) {
-                commands[command]->process(args);
+                std::vector<std::string> argsV;
+                for (auto part : args) {
+                    argsV.push_back(part);
+                }
+                commands[command]->process(argsV);
             } else {
                 Terminal::setColor("red", true);
                 std::cout << "Unknown command: " << command << std::endl;
@@ -105,5 +120,45 @@ namespace Rhio
     std::map<std::string, Command*> Shell::getCommands()
     {
         return commands;
+    }
+
+    ClientReq *Shell::getClient()
+    {
+        return client;
+    }
+
+    void Shell::enterPath(std::string path_)
+    {
+        path.push_back(path_);
+    }
+
+    void Shell::upPath()
+    {
+        if (path.size()) {
+            path.pop_back();
+        }
+    }
+
+    void Shell::rootPath()
+    {
+        path.clear();
+    }
+
+    std::string Shell::getPath()
+    {
+        std::string p = "";
+
+        for (auto part : path) {
+            if (p != "") {
+                p += "/";
+            }
+            p += part;
+        }
+
+        if (p == "") {
+            p = "/";
+        }
+
+        return p;
     }
 }

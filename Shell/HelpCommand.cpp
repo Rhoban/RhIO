@@ -2,7 +2,7 @@
 #include "Shell.h"
 #include "HelpCommand.h"
 
-namespace Rhio
+namespace RhIO
 {
     std::string HelpCommand::getName()
     {
@@ -14,7 +14,7 @@ namespace Rhio
         return "Lists all commands";
     }
 
-    void HelpCommand::process(std::list<std::string> args)
+    void HelpCommand::process(std::vector<std::string> args)
     {
         auto commands = shell->getCommands();
 

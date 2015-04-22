@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Rhio
+namespace RhIO
 {
     class Client
     {

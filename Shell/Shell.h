@@ -3,15 +3,16 @@
 #include <map>
 #include <list>
 #include <string>
+#include <ClientReq.hpp>
 #include "Command.h"
 #include "Terminal.h"
 
-namespace Rhio
+namespace RhIO
 {
     class Shell
     {
         public:
-            Shell();
+            Shell(std::string server);
 
             /**
              * Runs the interactive shell, will get lines from stdin
@@ -43,8 +44,24 @@ namespace Rhio
              */
             std::map<std::string, Command*> getCommands();
 
+            /**
+             * Get the remote client
+             */
+            ClientReq *getClient();
+
+            /**
+             * Current directory
+             */
+            void enterPath(std::string path);
+            void upPath();
+            void rootPath();
+            std::string getPath();
+
         protected:
+            ClientReq *client;
             bool terminate;
             std::map<std::string, Command*> commands;
+            std::list<std::string> path;
+            std::string server;
     };
 }

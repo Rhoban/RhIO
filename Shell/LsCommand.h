@@ -1,10 +1,12 @@
 #pragma once
 
+#include <iostream>
 #include "Command.h"
+#include <Value.hpp>
 
 namespace RhIO
 {
-    class HelpCommand : public Command
+    class LsCommand : public Command
     {
         public:
             virtual std::string getName();
