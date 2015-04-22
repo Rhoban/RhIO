@@ -6,7 +6,12 @@
 
 namespace RhIO {
 
-
+/**
+ * ValueBase
+ *
+ * Factorize non type specific 
+ * field of Value
+ */
 struct ValueBase
 {
     /**
@@ -28,7 +33,7 @@ struct ValueBase
     /**
      * Last updated value timestamp
      */
-    std::chrono::system_clock::time_point timestamp;
+    std::chrono::steady_clock::time_point timestamp;
 
     /**
      * If false, the value will not be

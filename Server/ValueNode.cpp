@@ -80,7 +80,7 @@ const std::string& ValueNode::getStr(const std::string& name) const
 }
 
 void ValueNode::setBool(const std::string& name, bool val,
-    std::chrono::system_clock::time_point timestamp)
+    std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
@@ -101,7 +101,7 @@ void ValueNode::setBool(const std::string& name, bool val,
     }
 }
 void ValueNode::setInt(const std::string& name, long val,
-    std::chrono::system_clock::time_point timestamp)
+    std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
@@ -122,7 +122,7 @@ void ValueNode::setInt(const std::string& name, long val,
     }
 }
 void ValueNode::setFloat(const std::string& name, double val,
-    std::chrono::system_clock::time_point timestamp)
+    std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
@@ -143,7 +143,7 @@ void ValueNode::setFloat(const std::string& name, double val,
     }
 }
 void ValueNode::setStr(const std::string& name, const std::string& val,
-    std::chrono::system_clock::time_point timestamp)
+    std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
