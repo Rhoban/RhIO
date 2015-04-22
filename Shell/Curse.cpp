@@ -111,7 +111,7 @@ namespace RhIO
 
                 int center_x = SLIDER_WIDTH*(pos+1)-(SLIDER_WIDTH/2)-2;
 
-                if (Node::asInt(value) || Node::asFloat(value)) {
+                if (Node::asInt(value) || Node::asFloat(value)) {
                     float min, max, cvalue;
                     getMinMax(value, &min, &max);
 
@@ -170,7 +170,7 @@ namespace RhIO
                 if (selected >= values.size()) selected = values.size()-1;
             }
             
-            if (Node::asInt(value) || Node::asFloat(value)) {
+            if (Node::asInt(value) || Node::asFloat(value)) {
                 float min, max;
                 getMinMax(value, &min, &max);
 
