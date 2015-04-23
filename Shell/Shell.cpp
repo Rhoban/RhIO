@@ -136,7 +136,8 @@ namespace RhIO
 
                         if(cursorpos<line.size() )
                         {
-                            Terminal::cursorNRight(line.size()-cursorpos);
+                            // Terminal::cursorNLeft(cursorpos);
+                            // Terminal::cursorNRight(line.size());
                             cursorpos=line.size();
                         }
 
@@ -256,10 +257,13 @@ namespace RhIO
                         if(line.size()-cursorpos>0)
                             Terminal::cursorNLeft(line.size()-cursorpos);
 
+
                         break;
                 }
             }
         }
+        line="";
+        return line;
     }
 
     void Shell::parse(std::string line)
