@@ -6,13 +6,14 @@
 #include <algorithm> 
 #include <functional> 
 #include <RhIO.hpp>
+#include "Stream.h"
 #include "Shell.h"
 #include "utils.h"
 
 namespace RhIO
 {
     Shell::Shell(std::string server_)
-        : server(server_), client(NULL), clientSub(NULL)
+        : server(server_), client(NULL), clientSub(NULL), stream(NULL)
     {
     }
 
@@ -26,6 +27,7 @@ namespace RhIO
         std::cout << "Connecting to " << server << std::endl;
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
+        stream = new Stream(this);
         std::cout << "Downloading the tree..." << std::endl;
         tree = new Node(client, "");
         Terminal::clear();
@@ -147,6 +149,11 @@ namespace RhIO
     {
         return client;
     }
+    
+    ClientSub *Shell::getClientSub()
+    {
+        return clientSub;
+    }        
             
     void Shell::enterPath(std::string path_)
     {
@@ -160,7 +167,7 @@ namespace RhIO
         }
     }
 
-    void Shell::goToPath(std::string spath)
+    bool Shell::goToPath(std::string spath)
     {
         if (auto node = getNode(spath)) {
             auto parts = pathToParts(node->getPath());
@@ -169,6 +176,9 @@ namespace RhIO
             for (auto part : parts) {
                 path.push_back(part);
             }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -251,6 +261,11 @@ namespace RhIO
         }
 
         return node->getNodeValue(name);
+    }
+            
+    Stream *Shell::getStream()
+    {
+        return stream;
     }
     
     ValueBase *Shell::getValue(std::string path)

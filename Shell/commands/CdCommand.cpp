@@ -29,7 +29,11 @@ namespace RhIO
             if (target == "..") {
                 shell->upPath();
             } else {
-                shell->goToPath(target);
+                if (!shell->goToPath(target)) {
+                    Terminal::setColor("red", true);
+                    std::cout << "Unknown node: " << target << std::endl;
+                    Terminal::clear();
+                }
             }
         }
     }

@@ -2,10 +2,12 @@
 #define RHIO_VALUENODE_HPP
 
 #include <map>
+#include <vector>
 #include <string>
 #include <functional>
 #include <memory>
 #include <chrono>
+#include <mutex>
 
 #include "Value.hpp"
 #include "BaseNode.hpp"
@@ -25,6 +27,12 @@ class ValueNode : public BaseNode<ValueNode>
          * Inherit BaseNode constructor
          */
         using BaseNode<ValueNode>::BaseNode;
+
+        /**
+         * Custom assignement operator
+         * (because std::mutex is non copyable)
+         */
+        ValueNode& operator=(const ValueNode& node);
 
         /**
          * Return value type of given relative name
@@ -83,6 +91,7 @@ class ValueNode : public BaseNode<ValueNode>
          * from this Node
          * Throw logic_error exception if asked values name
          * does not exist
+         * READ VALUE IS NOT HTREAD SAFE (use only for meta information)
          */
         const ValueBool& getValueBool(const std::string& name) const;
         const ValueInt& getValueInt(const std::string& name) const;
@@ -90,13 +99,13 @@ class ValueNode : public BaseNode<ValueNode>
         const ValueStr& getValueStr(const std::string& name) const;
 
         /**
-         * Direct read access to Values
-         * container for tree traversal
+         * Return the relative name list of all registered
+         * values for each type
          */
-        const std::map<std::string, ValueBool>& accessValuesBool() const;
-        const std::map<std::string, ValueInt>& accessValuesInt() const;
-        const std::map<std::string, ValueFloat>& accessValuesFloat() const;
-        const std::map<std::string, ValueStr>& accessValuesStr() const;
+        std::vector<std::string> listValuesBool() const;
+        std::vector<std::string> listValuesInt() const;
+        std::vector<std::string> listValuesFloat() const;
+        std::vector<std::string> listValuesStr() const;
 
     private:
 
@@ -107,6 +116,11 @@ class ValueNode : public BaseNode<ValueNode>
         std::map<std::string, ValueInt> _valuesInt;
         std::map<std::string, ValueFloat> _valuesFloat;
         std::map<std::string, ValueStr> _valuesStr;
+
+        /**
+         * Mutex protecting concurent values creation
+         */
+        mutable std::mutex _mutex;
 };
 
 }

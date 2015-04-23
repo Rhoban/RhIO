@@ -2,7 +2,9 @@
 #define RHIO_IONODE_HPP
 
 #include <map>
+#include <vector>
 #include <string>
+#include <mutex>
 #include "ValueNode.hpp"
 
 namespace RhIO {
@@ -84,10 +86,10 @@ class IONode final : public ValueNode
         void newChild(const std::string& name);
 
         /**
-         * Direct read access to children Nodes
-         * container for tree traversal
+         * Return a list of Node children relative names
          */
-        const std::map<std::string, IONode>& accessChildren() const; 
+        std::vector<std::string> listChildren() const;
+    
     private:
 
         /**
@@ -110,12 +112,12 @@ class IONode final : public ValueNode
          * Children Nodes container 
          */
         std::map<std::string, IONode> _children;
-
+        
         /**
-         * Optional prefix to force the subtree to save
-         * inside specific config file
+         * Mutex protecting concurent branch children
+         * modification
          */
-        //std::string _configFilePrefix; TODO
+        mutable std::mutex _mutex;
 
         /**
          * If given name is referring to this Node, nullptr

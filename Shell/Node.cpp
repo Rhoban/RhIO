@@ -173,6 +173,19 @@ namespace RhIO
         }
     }
             
+    double Node::toNumber(ValueBase *value)
+    {
+        if (auto val = asBool(value)) {
+            return val->value;
+        } else if (auto val = asInt(value)) {
+            return val->value;
+        } else if (auto val = asFloat(value)) {
+            return val->value;
+        }
+
+        return 0;
+    }
+            
     std::string Node::getType(ValueBase *value)
     {
         if (asBool(value)) {
