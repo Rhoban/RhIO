@@ -175,8 +175,26 @@ namespace RhIO
 
                         break;
 
+
+                    case 0x7f: //backspace
+                        if(line.size()>0)
+                        {
+                            line.pop_back();
+                            Terminal::clearLine();
+                            displayPrompt();
+                            cursorpos--;
+                            std::cout<<line;
+                        }
+                        break;
+
+
+                    case 0x09: //TAB
+                        break;
+
+
+                            // if not esc_mode -> fall to default
                     case 0x41: //up
-                        if(esc_mode)
+                        if(esc_mode && c==0x41)
                         {
 
                             if(shell_history.size()>0 && hist_it!= shell_history.begin())
@@ -188,11 +206,12 @@ namespace RhIO
                                 std::cout<<line;
                             }
                             esc_mode=false;
+                            break;
                         }
-                        break;
+
 
                     case 0x42: //down
-                        if(esc_mode)
+                        if(esc_mode && c==0x42)
                         {
                             if(shell_history.size()>0 && hist_it!= shell_history.end())
                             {
@@ -211,11 +230,12 @@ namespace RhIO
                             }
 
                             esc_mode=false;
+                            break;
                         }
-                        break;
+                        // break;
 
                     case 0x43: //right
-                        if(esc_mode)
+                        if(esc_mode && c==0x43)
                         {
 
                             if(cursorpos<line.size())
@@ -224,11 +244,12 @@ namespace RhIO
                                 cursorpos++;
                             }
                             esc_mode=false;
+                            break;
                         }
-                        break;
+                        // break;
 
                     case 0x44: //left
-                        if(esc_mode)
+                        if(esc_mode && c==0x44)
                         {
 
                             if(cursorpos>0)
@@ -237,19 +258,10 @@ namespace RhIO
                                 cursorpos--;
                             }
                             esc_mode=false;
+                            break;
                         }
-                        break;
+                        // break;
 
-                    case 0x7f: //backspace
-                        if(line.size()>0)
-                        {
-                            line.pop_back();
-                            Terminal::clearLine();
-                            displayPrompt();
-                            cursorpos--;
-                            std::cout<<line;
-                        }
-                        break;
 
                     default:
 
