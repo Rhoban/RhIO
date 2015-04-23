@@ -92,6 +92,12 @@ class ServerRep
         void valMetaStr(DataBuffer& buffer);
 
         /**
+         * Implement MsgAskSave ans MsgAskLoad (MsgPersistOK)
+         */
+        void save(DataBuffer& buffer);
+        void load(DataBuffer& buffer);
+
+        /**
          * Implement MsgError with given error message
          */
         void error(const std::string& msg);

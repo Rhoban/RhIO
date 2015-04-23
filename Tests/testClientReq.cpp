@@ -66,6 +66,7 @@ int main()
     assert(valBool.hasMin == false);
     assert(valBool.hasMax == false);
     assert(valBool.persisted == false);
+    assert(valBool.valuePersisted == false);
     
     RhIO::ValueInt valInt = client.metaValueInt("test/test3/paramInt");
     assert(valInt.comment == "");
@@ -74,18 +75,24 @@ int main()
     assert(valInt.persisted == false);
     assert(valInt.min == -1);
     assert(valInt.max == 10);
+    assert(valInt.valuePersisted == 0);
     
     RhIO::ValueFloat valFloat = client.metaValueFloat("test/paramFloat");
     assert(valFloat.comment == "this is a test float");
     assert(valFloat.hasMin == false);
     assert(valFloat.hasMax == false);
     assert(valFloat.persisted == true);
+    assert(valFloat.valuePersisted == 42.0);
     
     RhIO::ValueStr valStr = client.metaValueStr("test/test3/paramStr");
     assert(valStr.comment == "");
     assert(valStr.hasMin == false);
     assert(valStr.hasMax == false);
     assert(valStr.persisted == false);
+    assert(valStr.valuePersisted == "");
+
+    //client.save("/", "/tmp/root");
+    //client.load("/", "/tmp/root");
 
     return 0;
 }

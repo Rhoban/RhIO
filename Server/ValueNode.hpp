@@ -107,6 +107,18 @@ class ValueNode : public BaseNode<ValueNode>
         std::vector<std::string> listValuesFloat() const;
         std::vector<std::string> listValuesStr() const;
 
+    protected:
+
+        /**
+         * Save all values into given path
+         */
+        void saveValues(const std::string& path) const;
+
+        /**
+         * Parse and load all values into given path
+         */
+        void loadValues(const std::string& path);
+
     private:
 
         /**

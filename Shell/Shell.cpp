@@ -140,6 +140,7 @@ namespace RhIO
         std::vector<std::string> splitted_cmd;
         std::string cur_comp_line;
         std::string lastcmd;
+        bool lastisspace=false;
 
         while(!done)
         {
@@ -228,31 +229,48 @@ namespace RhIO
                         splitted_cmd.clear();
                         cur_comp_line="";
                         lastcmd="";
-
+                        lastisspace=false;
                             //look at the line and split all the commands separated by a space
                             //work on the last one
 
                         if(line.size()>0)
                         {
+                            if(line.back()==' '){
+                                // cur_comp_line="";
+                                lastisspace=true;
+                                // std::cout<<"DEBUG last is space"<<std::endl;
+                                line.pop_back();
+                                lastcmd=line;
+                            }
                             splitted_cmd=Completion::split(line,' ');
+                            std::cout<<"DEBUG nb split: "<<splitted_cmd.size()<<std::endl;
                             if(splitted_cmd.size()>1)
                             {
+                                std::cout<<"FUCK";
                                 line="";
                                 for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
                                     line+=*it+" ";
                                 cur_comp_line=splitted_cmd.back();
+                                // lastcmd=splitted_cmd.back();
+                                splitted_cmd.pop_back();
                             }
+                            else{
+                                cur_comp_line=line;
+                                line="";
+                            }
+
                         }
                         else{
                             cur_comp_line="";
                         }
-                        std::cout<<"DEBUG "<<line<<" + "<<cur_comp_line<<std::endl;
+                        if(lastisspace){
+                            cur_comp_line="";
+                            line=lastcmd+' ';
+                            std::cout<<"DEBUG if lastisspace "<<line<<" + "<<cur_comp_line<<std::endl;
+                        }
+                        std::cout<<"DEBUG line "<<line<<" + "<<cur_comp_line<<std::endl;
 
 
-
-                        //     /////////////////////////
-                        // if(line.size()>0)
-                        // {
 
                         //     splitted_cmd=Completion::split(line,' ');
 
@@ -279,52 +297,54 @@ namespace RhIO
                         // std::cout<<"DEBUG line "<<line<<" "<<cur_comp_line<<std::endl;
 
 
-                        //     // simple completion on commands
+                            // simple completion on commands
 
-                        //     // look for matching on commands
-                        // for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
-                        // {
-                        //     if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
-                        //         completion_matches.push_back(cmd_it->first);
-                        // }
-
-
-
-                        // if(completion_matches.size()==1) //one solution, we are done
-                        // {
-                        //     std::cout<<"DEBUG one soluce "<<std::endl;
-                        //     cur_comp_line=completion_matches[0];
-                        //     // if(splitted_cmd.size()>0)
-                        //     // {
-                        //         line="";
-                        //         for(std::vector<std::string>::iterator it=splitted_cmd.begin(); it!=splitted_cmd.end();++it)
-                        //             line+=*it+" ";
-                        //         line+=cur_comp_line;
-                        //     // }
-                        //     // else
-                        //     //     line=cur_comp_line;
-
-                        //     // line+=cur_comp_line;
-                        //     Terminal::clearLine();
-                        //     displayPrompt();
-                        //     std::cout<<line;
-                        //     break;
-                        // }
+                            // look for matching on commands
+                        for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
+                        {
+                            if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                                completion_matches.push_back(cmd_it->first);
+                        }
 
 
 
-                        // std::cout<<std::endl;
-                        // for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
-                        //     std::cout<<*it<<'\t';
-                        // std::cout<<std::endl;
+                        if(completion_matches.size()==1) //one solution, we are done
+                        {
+                            std::cout<<"DEBUG one soluce "<<std::endl;
+                            cur_comp_line=completion_matches[0];
+                            // if(splitted_cmd.size()>0)
+                            // {
+                            //     line="";
+                            //     for(std::vector<std::string>::iterator it=splitted_cmd.begin(); it!=splitted_cmd.end();++it)
+                            //         line+=*it+" ";
 
-                        //     //lazy longest common substring (there is almost 2 elements)
-                        // cur_comp_line=Completion::getSubstring(completion_matches);
+                            //     line+=cur_comp_line;
+                            // }
+                            // else
+                            //     line=cur_comp_line;
+
+                            line+=cur_comp_line;
+                            Terminal::clearLine();
+                            displayPrompt();
+                            std::cout<<line;
+                            cursorpos=line.size();
+                            break;
+                        }
+
+
+
+                        std::cout<<std::endl;
+                        for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
+                            std::cout<<*it<<'\t';
+                        std::cout<<std::endl;
+
+                            //lazy longest common substring (there is almost 2 elements)
+                        cur_comp_line=Completion::getSubstring(completion_matches);
 
 
                         // line="";
 
-                        // if(splitted_cmd.size()>0)
+                        // if(splitted_cmd.size()>1)
                         // {
                         //     for(std::vector<std::string>::iterator it=splitted_cmd.begin(); it!=splitted_cmd.end();++it)
                         //     {
@@ -335,12 +355,14 @@ namespace RhIO
                         // else
                         //     line+=lastcmd;
 
-                        // line+=cur_comp_line;
-                        // std::cout<<"DEBUG gnin "<<cur_comp_line<<" "<<line<<std::endl;
-                        // Terminal::clearLine();
-                        // displayPrompt();
-                        // std::cout<<line;
-                        // cursorpos=line.size();
+                        line+=cur_comp_line;
+                        // if(lastisspace)
+                        //     line+=' ';
+                        std::cout<<"DEBUG gnin "<<cur_comp_line<<" "<<line<<std::endl;
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+                        cursorpos=line.size();
 
                         break;
 
