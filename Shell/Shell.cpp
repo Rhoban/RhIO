@@ -239,6 +239,7 @@ namespace RhIO
                             line=completion_matches[0];
                             Terminal::clearLine();
                             displayPrompt();
+                            cursorpos=line.size();
                             std::cout<<line;
                             break;
                         }
