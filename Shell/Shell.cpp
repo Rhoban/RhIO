@@ -204,11 +204,21 @@ namespace RhIO
                     case 0x7f: //backspace
                         if(line.size()>0)
                         {
-                            line.pop_back();
+
+
+                            if(cursorpos>0)
+                                line.erase(cursorpos-1,1);
                             Terminal::clearLine();
                             displayPrompt();
-                            cursorpos--;
+
+
                             std::cout<<line;
+
+                            Terminal::cursorNLeft(line.size()+1);
+
+                            Terminal::cursorNRight(cursorpos);
+                            if(cursorpos>0)
+                                cursorpos--;
                         }
                         break;
 
