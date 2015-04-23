@@ -226,6 +226,52 @@ namespace RhIO
                         }
                         break;
 
+                    case 0x12: //Ctrl-r history completion
+
+                            //TODO
+                        cur_comp_line=line;
+                        line="";
+                        for(std::deque<std::string>::iterator cmd_it=shell_history.begin(); cmd_it!=shell_history.end();++cmd_it)
+                        {
+                            if((*cmd_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                                completion_matches.push_back(*cmd_it);
+                        }
+
+
+
+                        if(completion_matches.size()==1) //one solution, we are done
+                        {
+
+                            cur_comp_line=completion_matches[0];
+
+                            line+=cur_comp_line;
+                            Terminal::clearLine();
+                            displayPrompt();
+                            std::cout<<line;
+                            cursorpos=line.size();
+                            break;
+                        }
+
+
+
+                        std::cout<<std::endl;
+                        for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
+                            std::cout<<*it<<'\t';
+                        std::cout<<std::endl;
+
+                            //lazy longest common substring (there is almost 2 elements)
+                        cur_comp_line=Completion::getSubstring(completion_matches);
+
+
+                        line+=cur_comp_line;
+
+
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+                        cursorpos=line.size();
+
+                        break;
 
                     case 0x09: //TAB completion
                             //completion_mode
@@ -257,8 +303,6 @@ namespace RhIO
                                 splitted_cmd.pop_back();
                                 for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
                                     line+=*it+" ";
-
-
 
                             }
                             else{
