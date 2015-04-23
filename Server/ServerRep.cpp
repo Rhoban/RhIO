@@ -82,13 +82,21 @@ void ServerRep::handleRequest()
             case MsgAskMetaStr:
                   valMetaStr(req);
                   return;
+            case MsgAskSave:
+                  save(req);
+                  return;
+            case MsgAskLoad:
+                  load(req);
+                  return;
             default:
                 //Unknown message type
                 error("Message type not implemented");
                 return;
         }
     } catch (const std::logic_error& e) {
-        error("RhIOServer exception: " + std::string(e.what()));
+        error("RhIOServer logic exception: " + std::string(e.what()));
+    } catch (const std::runtime_error& e) {
+        error("RhIOServer runtime exception: " + std::string(e.what()));
     }
 }
         
@@ -408,7 +416,7 @@ void ServerRep::valMetaBool(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 2*sizeof(uint8_t));
+        + 3*sizeof(uint8_t) + 3*sizeof(uint8_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaBool);
     rep.writeStr(val.comment);
@@ -418,6 +426,7 @@ void ServerRep::valMetaBool(DataBuffer& buffer)
     
     rep.writeBool(val.min);
     rep.writeBool(val.max);
+    rep.writeBool(val.valuePersisted);
 
     //Send reply
     _socket.send(reply);
@@ -437,7 +446,7 @@ void ServerRep::valMetaInt(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 2*sizeof(long));
+        + 3*sizeof(uint8_t) + 3*sizeof(long));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaInt);
     rep.writeStr(val.comment);
@@ -447,6 +456,7 @@ void ServerRep::valMetaInt(DataBuffer& buffer)
     
     rep.writeInt(val.min);
     rep.writeInt(val.max);
+    rep.writeInt(val.valuePersisted);
 
     //Send reply
     _socket.send(reply);
@@ -466,7 +476,7 @@ void ServerRep::valMetaFloat(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 2*sizeof(double));
+        + 3*sizeof(uint8_t) + 3*sizeof(double));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaFloat);
     rep.writeStr(val.comment);
@@ -476,6 +486,7 @@ void ServerRep::valMetaFloat(DataBuffer& buffer)
     
     rep.writeFloat(val.min);
     rep.writeFloat(val.max);
+    rep.writeFloat(val.valuePersisted);
 
     //Send reply
     _socket.send(reply);
@@ -495,8 +506,8 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 2*sizeof(long) 
-        + val.min.length() + val.max.length());
+        + 3*sizeof(uint8_t) + 3*sizeof(long) 
+        + val.min.length() + val.max.length() + val.valuePersisted.length());
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaStr);
     rep.writeStr(val.comment);
@@ -506,6 +517,52 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
     
     rep.writeStr(val.min);
     rep.writeStr(val.max);
+    rep.writeStr(val.valuePersisted);
+
+    //Send reply
+    _socket.send(reply);
+}
+    
+void ServerRep::save(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Get path
+    std::string path = buffer.readStr();
+    
+    //Get asked node
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Config save
+    node->save(path);
+    
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgPersistOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::load(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Get path
+    std::string path = buffer.readStr();
+    
+    //Get asked node
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Config load
+    node->load(path);
+    
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgPersistOK);
 
     //Send reply
     _socket.send(reply);

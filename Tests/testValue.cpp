@@ -56,7 +56,7 @@ int main()
     RhIO::Root.child("test").newFloat("paramFloat")
         ->comment("this is a test float")
         ->defaultValue(42.0)
-        ->isPersisted(true);
+        ->persisted(true);
     assert(RhIO::Root.child("test").listValuesFloat().size() == 1);
     assert(RhIO::Root.child("test").listValuesFloat()[0] == "paramFloat");
     assert(RhIO::Root.getValueType("test/paramFloat") == RhIO::TypeFloat);

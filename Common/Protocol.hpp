@@ -69,6 +69,17 @@ enum MsgType : uint8_t {
     MsgAskMetaFloat,
     MsgAskMetaStr,
     /**
+     * Client.
+     * Ask for Server persist dump and load for all
+     * subtree below given node into given server
+     * side path directory
+     * Args:
+     * String: absolute node name
+     * String: configuration path server side
+     */
+    MsgAskSave,
+    MsgAskLoad,
+    /**
      * Server.
      * An error has occured.
      * Args:
@@ -121,15 +132,19 @@ enum MsgType : uint8_t {
      *
      * Bool: minimum value
      * Bool: maximum value
+     * Bool: persisted value
      * or
      * Int: minimum value
      * Int: maximum value
+     * Int: persisted value
      * or
      * Float: minimum value
      * Float: maximum value
+     * Float: persisted value
      * or
      * Str: minimum value
      * Str: maximum value
+     * Str: persisted value
      */
     MsgValMetaBool,
     MsgValMetaInt,
@@ -154,6 +169,12 @@ enum MsgType : uint8_t {
     MsgStreamInt,
     MsgStreamFloat,
     MsgStreamStr,
+    /**
+     * Server.
+     * Return acknowledge when persist 
+     * operation is finished
+     */
+    MsgPersistOK,
 };
 
 }

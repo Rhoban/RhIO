@@ -20,6 +20,8 @@ set (SOURCES
     commands/LogCommand.cpp
     commands/SyncCommand.cpp
     commands/RemoteCommand.cpp
+    commands/PlotCommand.cpp
+    GnuPlot.cpp
     Shell.cpp
     CSV.cpp
     Terminal.cpp
@@ -27,6 +29,7 @@ set (SOURCES
     NodePool.cpp
     Stream.cpp
     Completion.cpp
+
     main.cpp
     )
 
