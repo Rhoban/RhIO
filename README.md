@@ -3,7 +3,8 @@
 
 ## Typing
 
-* History [Done] TODO save to file?
+* History [Done]
+* History file [Done] should be in HOME/.rhio_history
 * Autocompletion [Done]
 * SUPPR? [Done]
 * "BEGIN" & "END"? [Done] -> Ctrl-a & Ctrl-e
