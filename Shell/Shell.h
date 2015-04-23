@@ -8,6 +8,7 @@
 #include "commands/Command.h"
 #include "Terminal.h"
 #include "Node.h"
+#include "NodePool.h"
 #include <termios.h>
 #include <deque>
 
@@ -20,6 +21,11 @@ namespace RhIO
     {
         public:
             Shell(std::string server);
+
+            /**
+             * Updates the local node tree
+             */
+            void sync();
 
             /**
              * Runs the interactive shell, will get lines from stdin
@@ -83,7 +89,14 @@ namespace RhIO
             bool goToPath(std::string path);
             std::string getPath();
 
+            /**
+             * Add the poll to the stream, and wait the user to press enter, then
+             * remove the pool from the stream
+             */
+            void streamWait(NodePool *pool);
             Stream *getStream();
+            NodePool poolForNode(Node *node);
+            NodePool getPool(std::vector<std::string> names, int start=0);
             
             Node *tree;
             struct termios termsave;
@@ -91,6 +104,7 @@ namespace RhIO
 
 
         protected:
+            std::string hostname;
             ClientReq *client;
             ClientSub *clientSub;
             Stream *stream;

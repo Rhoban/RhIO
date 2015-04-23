@@ -1,3 +1,4 @@
+#include <sstream>
 #include <iostream>
 #include "Shell.h"
 #include "CdCommand.h"
@@ -30,9 +31,9 @@ namespace RhIO
                 shell->upPath();
             } else {
                 if (!shell->goToPath(target)) {
-                    Terminal::setColor("red", true);
-                    std::cout << "Unknown node: " << target << std::endl;
-                    Terminal::clear();
+                    std::stringstream ss;
+                    ss << "Unknown node: " << target;
+                    throw ss.str();
                 }
             }
         }

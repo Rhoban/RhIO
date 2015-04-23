@@ -17,6 +17,10 @@ int main()
         ->defaultValue(42.0)
         ->isPersisted(true);
     RhIO::Root.child("test/test3").newStr("paramStr");
+   
+    RhIO::Root.newChild("server");
+    RhIO::Root.child("server").newStr("hostname")
+        ->defaultValue("testServ");
 
     std::cout << "Waiting" << std::endl;
 

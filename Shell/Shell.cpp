@@ -18,7 +18,7 @@
 namespace RhIO
 {
     Shell::Shell(std::string server_)
-        : server(server_), client(NULL), clientSub(NULL), stream(NULL)
+        : server(server_), client(NULL), clientSub(NULL), stream(NULL), tree(NULL)
     {
     }
 
@@ -36,13 +36,33 @@ namespace RhIO
     void Shell::displayPrompt()
     {
         Terminal::setColor("yellow", true);
-        std::cout << "RhIO";
+        std::cout << hostname;
         Terminal::clear();
         std::cout << ":";
         Terminal::setColor("blue", true);
         std::cout << getPath();
         Terminal::clear();
         std::cout << "# " << std::flush;
+    }
+            
+    void Shell::sync()
+    {
+        Terminal::setColor("white", true);
+        std::cout << "Downloading the tree..." << std::endl;
+        Terminal::clear();
+
+        // Downloading tree
+        if (tree != NULL) {
+            delete tree;
+        }
+        tree = new Node(client, "");
+
+        // Updating the hostname
+        if (auto value = getValue("/server/hostname")) {
+            hostname = Node::toString(value);
+        } else {
+            hostname = "RhIO";
+        }
     }
 
     void Shell::run()
@@ -59,9 +79,9 @@ namespace RhIO
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
         stream = new Stream(this);
-        std::cout << "Downloading the tree..." << std::endl;
-        tree = new Node(client, "");
         Terminal::clear();
+
+        sync();
 
         // Reading lines from stdin
         while (!terminate ) {
@@ -361,7 +381,13 @@ namespace RhIO
                 for (auto part : args) {
                     argsV.push_back(part);
                 }
-                commands[command]->process(argsV);
+                try {
+                    commands[command]->process(argsV);
+                } catch (std::string err) {
+                    Terminal::setColor("red", true);
+                    std::cout << "Error: " << err << std::endl;
+                    Terminal::clear();
+                }
             } else {
                 auto nodeValue = getNodeValue(command);
                 auto value = nodeValue.value;
@@ -535,5 +561,45 @@ namespace RhIO
     Node *Shell::getCurrentNode()
     {
         return getNode();
+    }
+
+    NodePool Shell::poolForNode(Node *node)
+    {
+        NodePool pool;
+        for (auto nodeVal : node->getAll()) {
+            Node::get(this, nodeVal);
+            pool.push_back(nodeVal);
+        }
+
+        return pool;
+    }
+
+    NodePool Shell::getPool(std::vector<std::string> names, int start)
+    {
+        if (names.size()-start <= 0) {
+            return poolForNode(getCurrentNode());
+        } else {
+            NodePool pool;
+            for (int k=start; k<names.size(); k++) {
+                auto val = getNodeValue(names[k]);
+                if (val.value == NULL) {
+                    std::ostringstream oss;
+                    oss << "Unknown parameter: " << names[k];
+                    throw oss.str();
+                }
+                Node::get(this, val);
+                pool.push_back(val);
+            }
+        
+            return pool;
+        }
+    }
+            
+    void Shell::streamWait(NodePool *pool)
+    {
+        stream->addPool(pool);
+        std::string line;
+        std::getline(std::cin, line);
+        stream->removePool(pool);
     }
 }
