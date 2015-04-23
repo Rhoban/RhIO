@@ -68,6 +68,12 @@ struct Value : public ValueBase
      */
     T min;
     T max;
+
+    /**
+     * The value stored in read config file
+     * (used to compute values diff)
+     */
+    T valuePersisted;
 };
 
 /**
@@ -113,6 +119,7 @@ struct ValueBuilder final
                 _value.hasMin = false;
                 _value.hasMax = false;
                 _value.value = T();
+                _value.valuePersisted = T();
                 _value.persisted = false;
             }
         }
@@ -141,6 +148,7 @@ struct ValueBuilder final
         {
             if (!_isExisting) {
                 _value.value = val;
+                _value.valuePersisted = val;
             }
             return this;
         }

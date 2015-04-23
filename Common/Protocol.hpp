@@ -121,15 +121,19 @@ enum MsgType : uint8_t {
      *
      * Bool: minimum value
      * Bool: maximum value
+     * Bool: persisted value
      * or
      * Int: minimum value
      * Int: maximum value
+     * Int: persisted value
      * or
      * Float: minimum value
      * Float: maximum value
+     * Float: persisted value
      * or
      * Str: minimum value
      * Str: maximum value
+     * Str: persisted value
      */
     MsgValMetaBool,
     MsgValMetaInt,

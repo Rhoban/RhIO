@@ -55,6 +55,13 @@ int main()
     assert(RhIO::Root.getValueStr("test2/test3/paramStr").hasMin == false);
     assert(RhIO::Root.getValueStr("test2/test3/paramStr").hasMax == false);
     
+    RhIO::Root.setInt("test/paramInt", 0);
+    RhIO::Root.setFloat("test/paramFloat", 0.0);
+    assert(RhIO::Root.getValueBool("paramBool").valuePersisted == true);
+    assert(RhIO::Root.getValueInt("test/paramInt").valuePersisted == 42);
+    assert(RhIO::Root.getValueFloat("test/paramFloat").valuePersisted == 3.14);
+    assert(RhIO::Root.getValueStr("test2/test3/paramStr").valuePersisted == "off");
+    
     std::cout << "Printing tree:" << std::endl;
     printTree(RhIO::Root); 
     

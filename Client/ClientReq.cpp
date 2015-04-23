@@ -227,6 +227,7 @@ ValueBool ClientReq::metaValueBool(const std::string& name)
     val.persisted = rep.readBool();
     val.min = rep.readBool();
     val.max = rep.readBool();
+    val.valuePersisted = rep.readBool();
 
     return val;
 }
@@ -254,6 +255,7 @@ ValueInt ClientReq::metaValueInt(const std::string& name)
     val.persisted = rep.readBool();
     val.min = rep.readInt();
     val.max = rep.readInt();
+    val.valuePersisted = rep.readInt();
 
     return val;
 }
@@ -281,6 +283,7 @@ ValueFloat ClientReq::metaValueFloat(const std::string& name)
     val.persisted = rep.readBool();
     val.min = rep.readFloat();
     val.max = rep.readFloat();
+    val.valuePersisted = rep.readFloat();
 
     return val;
 }
@@ -308,6 +311,7 @@ ValueStr ClientReq::metaValueStr(const std::string& name)
     val.persisted = rep.readBool();
     val.min = rep.readStr();
     val.max = rep.readStr();
+    val.valuePersisted = rep.readStr();
 
     return val;
 }

@@ -572,6 +572,7 @@ void ValueNode::loadValues(const std::string& path)
             }
             if (field == "value") {
                 _valuesBool.at(name).value = std::stoi(value);
+                _valuesBool.at(name).valuePersisted = std::stoi(value);
             } else if (field == "comment") {
                 _valuesBool.at(name).comment = value;
             } else if (field == "min") {
@@ -591,6 +592,7 @@ void ValueNode::loadValues(const std::string& path)
             }
             if (field == "value") {
                 _valuesInt.at(name).value = std::stol(value);
+                _valuesInt.at(name).valuePersisted = std::stol(value);
             } else if (field == "comment") {
                 _valuesInt.at(name).comment = value;
             } else if (field == "min") {
@@ -610,6 +612,7 @@ void ValueNode::loadValues(const std::string& path)
             }
             if (field == "value") {
                 _valuesFloat.at(name).value = std::stod(value);
+                _valuesFloat.at(name).valuePersisted = std::stod(value);
             } else if (field == "comment") {
                 _valuesFloat.at(name).comment = value;
             } else if (field == "min") {
@@ -629,6 +632,7 @@ void ValueNode::loadValues(const std::string& path)
             }
             if (field == "value") {
                 _valuesStr.at(name).value = value;
+                _valuesStr.at(name).valuePersisted = value;
             } else if (field == "comment") {
                 _valuesStr.at(name).comment = value;
             } else if (field == "min") {
