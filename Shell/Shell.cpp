@@ -103,7 +103,7 @@ namespace RhIO
                         if(shell_history.size()>0)
                             lastcmd=shell_history.back();
 
-                        if(line.compare("")!=0 and line.compare(lastcmd)!=0) //store in history if non null and different than the last cmd
+                        if(line.compare("")!=0 && line.compare(lastcmd)!=0) //store in history if non null and different than the last cmd
                         {
                             shell_history.push_back(line);
                             if(shell_history.size()>MAX_HISTORY)
@@ -128,7 +128,7 @@ namespace RhIO
                         displayPrompt();
                         std::cout<<line;
 
-                        if(cursorpos<line.size())
+                        if(cursorpos<line.size() )
                         {
                             Terminal::cursorNRight(line.size()-cursorpos);
                             cursorpos=line.size();
@@ -158,7 +158,7 @@ namespace RhIO
                         if(esc_mode)
                         {
 
-                            if(shell_history.size()>0 and hist_it!= shell_history.begin())
+                            if(shell_history.size()>0 && hist_it!= shell_history.begin())
                             {
                                 line=*--hist_it;
                                 cursorpos=line.size();
@@ -173,7 +173,7 @@ namespace RhIO
                     case 0x42: //down
                         if(esc_mode)
                         {
-                            if(shell_history.size()>0 and hist_it!= shell_history.end())
+                            if(shell_history.size()>0 && hist_it!= shell_history.end())
                             {
                                 line=*hist_it++;
                                 cursorpos=line.size();
@@ -359,8 +359,8 @@ namespace RhIO
     ClientSub *Shell::getClientSub()
     {
         return clientSub;
-    }        
-            
+    }
+
     void Shell::enterPath(std::string path_)
     {
         path.push_back(path_);
@@ -468,7 +468,7 @@ namespace RhIO
 
         return node->getNodeValue(name);
     }
-            
+
     Stream *Shell::getStream()
     {
         return stream;
