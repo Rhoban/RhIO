@@ -21,7 +21,6 @@ int main()
         ->comment("float parameter")
         ->minimum(0.0)
         ->persisted(true);
-    RhIO::Root.setFloat("test/paramFloat", 3.14);
     RhIO::Root.newStr("test2/test3/paramStr")
         ->comment("str parameter")
         ->persisted(true)
@@ -31,7 +30,11 @@ int main()
         RhIO::createDirectory("/tmp/", "testRhIO");
     } catch (const std::runtime_error& e) {
     }
+
+    RhIO::Root.setFloat("test/paramFloat", 3.14);
+    assert(RhIO::Root.getValueFloat("test/paramFloat").valuePersisted == 0.0);
     RhIO::Root.save("/tmp/testRhIO");
+    assert(RhIO::Root.getValueFloat("test/paramFloat").valuePersisted == 3.14);
 
     return 0;
 }

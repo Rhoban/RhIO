@@ -391,7 +391,7 @@ std::vector<std::string> ValueNode::listValuesStr() const
     return list;
 }
         
-void ValueNode::saveValues(const std::string& path) const
+void ValueNode::saveValues(const std::string& path)
 {
     std::lock_guard<std::mutex> lock(_mutex);
 
@@ -429,71 +429,47 @@ void ValueNode::saveValues(const std::string& path) const
     }
 
     //Write Bool values
-    for (const auto& v : _valuesBool) {
+    for (auto& v : _valuesBool) {
         if (v.second.persisted) {
             file << "[bool] " << v.second.name 
                 << ".value = " << v.second.value << std::endl;
             file << "[bool] " << v.second.name 
                 << ".comment = " << v.second.comment << std::endl;
-            if (v.second.hasMin) {
-                file << "[bool] " << v.second.name 
-                    << ".min = " << v.second.min << std::endl;
-            }
-            if (v.second.hasMax) {
-                file << "[bool] " << v.second.name 
-                    << ".max = " << v.second.max << std::endl;
-            }
+            //Update persisted value
+            v.second.valuePersisted = v.second.value;
         }
     }
     //Write Int values
-    for (const auto& v : _valuesInt) {
+    for (auto& v : _valuesInt) {
         if (v.second.persisted) {
             file << "[int] " << v.second.name 
                 << ".value = " << v.second.value << std::endl;
             file << "[int] " << v.second.name 
                 << ".comment = " << v.second.comment << std::endl;
-            if (v.second.hasMin) {
-                file << "[int] " << v.second.name 
-                    << ".min = " << v.second.min << std::endl;
-            }
-            if (v.second.hasMax) {
-                file << "[int] " << v.second.name 
-                    << ".max = " << v.second.max << std::endl;
-            }
+            //Update persisted value
+            v.second.valuePersisted = v.second.value;
         }
     }
     //Write Float values
-    for (const auto& v : _valuesFloat) {
+    for (auto& v : _valuesFloat) {
         if (v.second.persisted) {
             file << "[float] " << v.second.name 
                 << ".value = " << v.second.value << std::endl;
             file << "[float] " << v.second.name 
                 << ".comment = " << v.second.comment << std::endl;
-            if (v.second.hasMin) {
-                file << "[float] " << v.second.name 
-                    << ".min = " << v.second.min << std::endl;
-            }
-            if (v.second.hasMax) {
-                file << "[float] " << v.second.name 
-                    << ".max = " << v.second.max << std::endl;
-            }
+            //Update persisted value
+            v.second.valuePersisted = v.second.value;
         }
     }
     //Write Str values
-    for (const auto& v : _valuesStr) {
+    for (auto& v : _valuesStr) {
         if (v.second.persisted) {
             file << "[str] " << v.second.name 
                 << ".value = " << v.second.value << std::endl;
             file << "[str] " << v.second.name 
                 << ".comment = " << v.second.comment << std::endl;
-            if (v.second.hasMin) {
-                file << "[str] " << v.second.name 
-                    << ".min = " << v.second.min << std::endl;
-            }
-            if (v.second.hasMax) {
-                file << "[str] " << v.second.name 
-                    << ".max = " << v.second.max << std::endl;
-            }
+            //Update persisted value
+            v.second.valuePersisted = v.second.value;
         }
     }
 
@@ -575,12 +551,6 @@ void ValueNode::loadValues(const std::string& path)
                 _valuesBool.at(name).valuePersisted = std::stoi(value);
             } else if (field == "comment") {
                 _valuesBool.at(name).comment = value;
-            } else if (field == "min") {
-                _valuesBool.at(name).hasMin = true;
-                _valuesBool.at(name).min = std::stoi(value);
-            } else if (field == "max") {
-                _valuesBool.at(name).hasMax = true;
-                _valuesBool.at(name).max = std::stoi(value);
             } else {
                 error(line);
             }
@@ -595,12 +565,6 @@ void ValueNode::loadValues(const std::string& path)
                 _valuesInt.at(name).valuePersisted = std::stol(value);
             } else if (field == "comment") {
                 _valuesInt.at(name).comment = value;
-            } else if (field == "min") {
-                _valuesInt.at(name).hasMin = true;
-                _valuesInt.at(name).min = std::stol(value);
-            } else if (field == "max") {
-                _valuesInt.at(name).hasMax = true;
-                _valuesInt.at(name).max = std::stol(value);
             } else {
                 error(line);
             }
@@ -615,12 +579,6 @@ void ValueNode::loadValues(const std::string& path)
                 _valuesFloat.at(name).valuePersisted = std::stod(value);
             } else if (field == "comment") {
                 _valuesFloat.at(name).comment = value;
-            } else if (field == "min") {
-                _valuesFloat.at(name).hasMin = true;
-                _valuesFloat.at(name).min = std::stod(value);
-            } else if (field == "max") {
-                _valuesFloat.at(name).hasMax = true;
-                _valuesFloat.at(name).max = std::stod(value);
             } else {
                 error(line);
             }
@@ -635,12 +593,6 @@ void ValueNode::loadValues(const std::string& path)
                 _valuesStr.at(name).valuePersisted = value;
             } else if (field == "comment") {
                 _valuesStr.at(name).comment = value;
-            } else if (field == "min") {
-                _valuesStr.at(name).hasMin = true;
-                _valuesStr.at(name).min = value;
-            } else if (field == "max") {
-                _valuesStr.at(name).hasMax = true;
-                _valuesStr.at(name).max = value;
             } else {
                 error(line);
             }
