@@ -731,8 +731,8 @@ namespace RhIO
             prefix += "/";
         }
 
-        for (NodeValue node : node->getAll()) {
-            auto name = prefix+node.value->name;
+        for (NodeValue nodeValue : node->getAll()) {
+            auto name = prefix+nodeValue.value->name;
             possibilities.push_back(name);
         }
 
