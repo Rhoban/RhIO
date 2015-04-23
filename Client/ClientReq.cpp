@@ -37,6 +37,23 @@ std::vector<std::string> ClientReq::listValuesStr
     return listNames(MsgAskValuesStr, name);
 }
 
+std::vector<std::string> ClientReq::listCommands
+    (const std::string &name)
+{
+    // XXX: To implement
+    std::vector<std::string> commands;
+    commands.push_back("cmd1");
+    commands.push_back("cmd2");
+
+    return commands;
+}
+
+std::string ClientReq::callCommand(std::string name, 
+        const std::vector<std::string> args)
+{
+    return "Not implemented.";
+}
+
 bool ClientReq::getBool(const std::string& name)
 {
     //Allocate message data
