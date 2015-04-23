@@ -524,6 +524,11 @@ namespace RhIO
         if (command == "quit" || command == "exit") {
             terminate = true;
         } else {
+            // Applying alias
+            if (aliases.count(command)) {
+                command = aliases[command];
+            }
+
             // Checking for the command in the list
             if (commands.count(command)) {
                 std::vector<std::string> argsV;
@@ -779,8 +784,8 @@ namespace RhIO
             prefix += "/";
         }
 
-        for (NodeValue node : node->getAll()) {
-            auto name = prefix+node.value->name;
+        for (NodeValue nodeValue : node->getAll()) {
+            auto name = prefix+nodeValue.value->name;
             possibilities.push_back(name);
         }
 
