@@ -93,6 +93,15 @@ class ClientReq
         ValueFloat metaValueFloat(const std::string& name);
         ValueStr metaValueStr(const std::string& name);
 
+        /**
+         * Save and Load into given absolute node name
+         * configuration from given server side directory
+         */
+        void save(const std::string& name, 
+            const std::string& serverPath);
+        void load(const std::string& name, 
+            const std::string& serverPath);
+
     private:
 
         /**

@@ -89,6 +89,18 @@ class IONode final : public ValueNode
          * Return a list of Node children relative names
          */
         std::vector<std::string> listChildren() const;
+
+        /**
+         * Save recursively the subtree into given
+         * path directory
+         */
+        void save(const std::string& path) const;
+        
+        /**
+         * Load recursively the subtree into given
+         * path directory
+         */
+        void load(const std::string& path);
     
     private:
 

@@ -1,4 +1,5 @@
 #include "IONode.hpp"
+#include "Filesystem.hpp"
 
 namespace RhIO {
         
@@ -190,6 +191,83 @@ std::vector<std::string> IONode::listChildren() const
     }
     
     return list;
+}
+        
+void IONode::save(const std::string& path) const
+{
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list = listDirectories(path);
+
+    //Check that all folder is associated with a children
+    for (size_t i=0;i<list.size();i++) {
+        if (list[i] != "." && list[i] != "..") {
+            if (!_children.count(list[i])) {
+                throw std::runtime_error(
+                    "RhIO unexpected folder in save path: " 
+                    + path + ": " + list[i]);
+            }
+        }
+    }
+
+    //Create missing folder associated with children
+    for (const auto& c : _children) {
+        bool found = false;
+        for (size_t j=0;j<list.size();j++) {
+            if (c.first == list[j]) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            createDirectory(path, c.first);
+        }
+    }
+
+    //Save all persisted values
+    ValueNode::saveValues(path);
+
+    //Recursive call to children
+    for (const auto& c : _children) {
+        if (
+            path.length() > 0 && 
+            path[path.length()-1] != separator
+        ) {
+            c.second.save(path + separator + c.first);
+        } else {
+            c.second.save(path + c.first);
+        }
+    }
+}
+
+void IONode::load(const std::string& path)
+{
+    std::lock_guard<std::mutex> lock(_mutex);
+    std::vector<std::string> list = listDirectories(path);
+
+    //Adding children
+    for (size_t i=0;i<list.size();i++) {
+        if (
+            list[i] != "." && list[i] != ".." && 
+            _children.count(list[i]) == 0
+        ) {
+            _children[list[i]] = IONode(list[i], this);
+        }
+    }
+    
+    //Load all persisted values
+    ValueNode::loadValues(path);
+    
+    //Recursive call to children
+    for (auto& c : _children) {
+        if (
+            path.length() > 0 && 
+            path[path.length()-1] != separator
+        ) {
+            c.second.load(path + separator + c.first);
+        } else {
+            c.second.load(path + c.first);
+        }
+    }
 }
         
 IONode* IONode::forwardChildren(

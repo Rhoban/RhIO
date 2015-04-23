@@ -15,7 +15,7 @@ int main()
     RhIO::Root.child("test").newFloat("paramFloat")
         ->comment("this is a test float")
         ->defaultValue(42.0)
-        ->isPersisted(true);
+        ->persisted(true);
     RhIO::Root.child("test/test3").newStr("paramStr");
    
     RhIO::Root.newChild("server");
