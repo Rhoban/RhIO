@@ -5,6 +5,10 @@
 #include "commands/ClearCommand.h"
 #include "commands/LogCommand.h"
 #include "commands/SyncCommand.h"
+#include "commands/PlotCommand.h"
+#include "commands/DiffCommand.h"
+#include "commands/LoadCommand.h"
+#include "commands/SaveCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -28,6 +32,10 @@ int main(int argc, char *argv[])
     shell.registerCommand(new WatchCommand);
     shell.registerCommand(new LogCommand);
     shell.registerCommand(new SyncCommand);
+    shell.registerCommand(new PlotCommand);
+    shell.registerCommand(new DiffCommand);
+    shell.registerCommand(new LoadCommand);
+    shell.registerCommand(new SaveCommand);
 #ifdef HAS_CURSES
     shell.registerCommand(new TuneCommand);
 #endif
