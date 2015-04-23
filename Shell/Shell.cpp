@@ -9,7 +9,7 @@
 #include "Stream.h"
 #include "Shell.h"
 #include "utils.h"
-
+#include "Completion.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -87,6 +87,9 @@ namespace RhIO
         std::deque<std::string>::iterator hist_it=shell_history.end();
         int cursorpos=0;
         std::string lastcmd("");
+        bool completion_mode=false;
+        int completion_select=0;
+        std::deque<std::string> completion_matches;
 
         while(!done)
         {
@@ -168,7 +171,42 @@ namespace RhIO
                         break;
 
 
-                    case 0x09: //TAB
+                    case 0x09: //TAB completion
+                            //completion_mode
+                            //completion_select
+                        completion_matches.clear();
+
+                            //simple completion on commands
+
+                            // look for matching on commands
+                        for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
+                        {
+                            if(cmd_it->first.compare(0,line.size(),line)==0)
+                                completion_matches.push_back(cmd_it->first);
+                        }
+
+
+
+                        if(completion_matches.size()==1) //one solution, we are done
+                        {
+                            line=completion_matches[0];
+                            Terminal::clearLine();
+                            displayPrompt();
+                            std::cout<<line;
+                            break;
+                        }
+
+
+                            //lazy longest common substring (there is almost 2 elements)
+                        line=Completion::getSubstring(completion_matches);
+
+
+                        std::cout<<std::endl;
+                        for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
+                            std::cout<<*it<<'\t';
+                        std::cout<<std::endl;
+
+
                         break;
 
 
