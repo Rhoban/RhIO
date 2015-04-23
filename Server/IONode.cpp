@@ -9,6 +9,11 @@ IONode::IONode() :
         this, std::placeholders::_1, 
         std::placeholders::_2, 
         std::placeholders::_3)),
+    CommandNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
     _name("ERROR"),
     _pwd("ERROR"),
     _parent(nullptr),
@@ -19,6 +24,11 @@ IONode::IONode() :
 
 IONode::IONode(const std::string& name, IONode* parent) :
     ValueNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
+    CommandNode(std::bind(
         &IONode::forwardChildren, 
         this, std::placeholders::_1, 
         std::placeholders::_2, 
@@ -37,10 +47,16 @@ IONode::IONode(const std::string& name, IONode* parent) :
         }
     }
     BaseNode<ValueNode>::pwd = _pwd;
+    BaseNode<CommandNode>::pwd = _pwd;
 }
         
 IONode::IONode(const IONode& node) :
     ValueNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
+    CommandNode(std::bind(
         &IONode::forwardChildren, 
         this, std::placeholders::_1, 
         std::placeholders::_2, 
@@ -52,10 +68,12 @@ IONode::IONode(const IONode& node) :
     _mutex()
 {
     BaseNode<ValueNode>::pwd = _pwd;
+    BaseNode<CommandNode>::pwd = _pwd;
 }
 IONode& IONode::operator=(const IONode& node)
 {
     ValueNode::operator=(node);
+    CommandNode::operator=(node);
     _name = node._name;
     _pwd = node._pwd;
     _parent = node._parent;
@@ -65,7 +83,13 @@ IONode& IONode::operator=(const IONode& node)
         this, std::placeholders::_1, 
         std::placeholders::_2, 
         std::placeholders::_3);
+    BaseNode<CommandNode>::forwardFunc = std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3);
     BaseNode<ValueNode>::pwd = _pwd;
+    BaseNode<CommandNode>::pwd = _pwd;
 
     return *this;
 }
