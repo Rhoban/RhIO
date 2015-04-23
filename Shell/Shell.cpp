@@ -260,7 +260,8 @@ namespace RhIO
 
                     case 0x12: //Ctrl-r history completion
 
-                            //TODO
+
+                        completion_matches.clear();
                         cur_comp_line=line;
                         line="";
                         for(std::deque<std::string>::iterator cmd_it=shell_history.begin(); cmd_it!=shell_history.end();++cmd_it)
