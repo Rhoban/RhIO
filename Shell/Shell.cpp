@@ -407,6 +407,9 @@ namespace RhIO
     void Shell::registerCommand(Command *command)
     {
         command->setShell(this);
+        if (commands.count(command->getName())) {
+            delete commands[command->getName()];
+        }
         commands[command->getName()] = command;
     }
 
