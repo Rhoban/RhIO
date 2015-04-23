@@ -137,6 +137,11 @@ namespace RhIO
         std::string lastcmd;
         bool lastisspace=false;
         std::vector<std::string> paths;
+        std::vector<std::string> paths_to_print;
+        std::vector<std::string> cmd_to_print;
+        int print_len=0;
+        std::string lineback;
+
 
         while(!done)
         {
@@ -205,6 +210,32 @@ namespace RhIO
 
                         break;
 
+                    case 0x33: //after 5b for suppr
+                        break;
+
+                    case 0x7e: //after 33 for suppr
+
+                        if(esc_mode)
+                        {
+                            esc_mode=false;
+
+                            if(line.size()>0)
+                            {
+                                if(cursorpos>0)
+                                    line.erase(cursorpos,1);
+                                Terminal::clearLine();
+                                displayPrompt();
+
+
+                                std::cout<<line;
+
+                                Terminal::cursorNLeft(line.size());
+
+                                Terminal::cursorNRight(cursorpos);
+                            }
+
+                        }
+                        break;
 
                     case 0x7f: //backspace
                         if(line.size()>0)
@@ -279,9 +310,13 @@ namespace RhIO
                             //completion_select
                         completion_matches.clear();
                         splitted_cmd.clear();
+                        paths_to_print.clear();
+                        cmd_to_print.clear();
                         cur_comp_line="";
                         lastcmd="";
                         lastisspace=false;
+                        print_len=0;
+                        lineback=line;
                             //look at the line and split all the commands separated by a space
                             //work on the last one
 
@@ -331,7 +366,10 @@ namespace RhIO
                         for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
                         {
                             if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                            {
                                 completion_matches.push_back(cmd_it->first);
+                                cmd_to_print.push_back(cmd_it->first);
+                            }
                         }
 
                             //also look for path
@@ -339,7 +377,10 @@ namespace RhIO
                         for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
                         {
                             if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                            {
                                 completion_matches.push_back(*p_it);
+                                paths_to_print.push_back(*p_it);
+                            }
                         }
 
 
@@ -359,17 +400,44 @@ namespace RhIO
 
 
 
+                        // std::cout<<std::endl;
+                        // for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
+                        //     std::cout<<*it<<'\t';
+                        // std::cout<<std::endl;
+
                         std::cout<<std::endl;
-                        for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
-                            std::cout<<*it<<'\t';
+                        Terminal::setColor("red", false);
+                        for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
+                        {
+                            print_len+=(*it).size();
+                            if(print_len>20){
+                                std::cout<<std::endl;
+                                print_len=0;
+                            }
+                            std::cout<<*it<<"\t\t";
+                        }
+                        Terminal::setColor("blue", true);
+                        for(std::vector<std::string>::iterator it=paths_to_print.begin(); it!=paths_to_print.end();++it)
+                        {
+                            print_len+=(*it).size();
+                            if(print_len>20){
+                                std::cout<<std::endl;
+                                print_len=0;
+                            }
+                            std::cout<<*it<<"\t\t";
+                        }
+                        Terminal::clear();
                         std::cout<<std::endl;
+
+
 
                             //lazy longest common substring (there is almost 2 elements)
                         cur_comp_line=Completion::getSubstring(completion_matches);
 
 
                         line+=cur_comp_line;
-
+                        if(line.size()==0) //nothing found, we keep the line
+                            line=lineback;
 
                         Terminal::clearLine();
                         displayPrompt();
@@ -795,7 +863,7 @@ namespace RhIO
             getPossibilitiesRec(possibilities, entry.second, name);
         }
     }
-            
+
     void Shell::addAlias(std::string from, std::string to)
     {
         aliases[from] = to;

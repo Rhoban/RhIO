@@ -4,8 +4,8 @@
 ## Typing
 
 * History [Done] TODO save to file?
-* Autocompletion
-* SUPPR?
-* "BEGIN" & "END"?
-* Autocompletion: the "nothing found" case
+* Autocompletion [Done]
+* SUPPR? [Done]
+* "BEGIN" & "END"? [Done] -> Ctrl-a & Ctrl-e
+* Autocompletion: the "nothing found" case [Done]
 * Autocomplete words that are not at the end?

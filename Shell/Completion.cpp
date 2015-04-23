@@ -22,7 +22,7 @@ namespace RhIO
             }
 
                 //ckeck char by char...
-            for(int i=1;i<tmpcmd.length();i++)
+            for(int i=1;i<tmpcmd.length()+1;i++) //+1?
             {
                 bool iscommon=true;
                 std::string tmp(tmpcmd,0,i);
@@ -42,6 +42,7 @@ namespace RhIO
 
 
         }
+
         return line;
 
     }
