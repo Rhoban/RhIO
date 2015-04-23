@@ -471,6 +471,11 @@ namespace RhIO
         if (command == "quit" || command == "exit") {
             terminate = true;
         } else {
+            // Applying alias
+            if (aliases.count(command)) {
+                command = aliases[command];
+            }
+
             // Checking for the command in the list
             if (commands.count(command)) {
                 std::vector<std::string> argsV;
