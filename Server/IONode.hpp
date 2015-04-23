@@ -95,7 +95,7 @@ class IONode final : public ValueNode, public CommandNode
          * Save recursively the subtree into given
          * path directory
          */
-        void save(const std::string& path) const;
+        void save(const std::string& path);
         
         /**
          * Load recursively the subtree into given

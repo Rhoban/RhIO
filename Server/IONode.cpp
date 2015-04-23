@@ -217,7 +217,7 @@ std::vector<std::string> IONode::listChildren() const
     return list;
 }
         
-void IONode::save(const std::string& path) const
+void IONode::save(const std::string& path)
 {
     std::lock_guard<std::mutex> lock(_mutex);
     std::vector<std::string> list = listDirectories(path);
@@ -251,7 +251,7 @@ void IONode::save(const std::string& path) const
     ValueNode::saveValues(path);
 
     //Recursive call to children
-    for (const auto& c : _children) {
+    for (auto& c : _children) {
         if (
             path.length() > 0 && 
             path[path.length()-1] != separator

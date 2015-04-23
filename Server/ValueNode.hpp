@@ -112,7 +112,7 @@ class ValueNode : public BaseNode<ValueNode>
         /**
          * Save all values into given path
          */
-        void saveValues(const std::string& path) const;
+        void saveValues(const std::string& path);
 
         /**
          * Parse and load all values into given path
