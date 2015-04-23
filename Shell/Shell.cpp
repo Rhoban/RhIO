@@ -523,9 +523,9 @@ namespace RhIO
                 }
                 try {
                     commands[command]->process(argsV);
-                } catch (std::string err) {
+                } catch (std::runtime_error error) {
                     Terminal::setColor("red", true);
-                    std::cout << "Error: " << err << std::endl;
+                    std::cout << "Error: " << error.what() << std::endl;
                     Terminal::clear();
                 }
             } else {
@@ -753,5 +753,32 @@ namespace RhIO
         std::string line;
         std::getline(std::cin, line);
         stream->removePool(pool);
+    }
+            
+    std::vector<std::string> Shell::getPossibilities()
+    {
+        std::vector<std::string> possibilities;
+        getPossibilitiesRec(possibilities, getNode(), "");
+        getPossibilitiesRec(possibilities, tree, "/");
+        
+        return possibilities;
+    }
+
+    void Shell::getPossibilitiesRec(std::vector<std::string> &possibilities, Node *node, std::string prefix)
+    {
+        if (prefix != "" && prefix != "/") {
+            prefix += "/";
+        }
+
+        for (auto node : node->getAll()) {
+            auto name = prefix+node.value->name;
+            possibilities.push_back(name);
+        }
+
+        for (auto entry : node->children) {
+            auto name = prefix+entry.first;
+            possibilities.push_back(name);
+            getPossibilitiesRec(possibilities, entry.second, name);
+        }
     }
 }

@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <sstream>
 #include <iostream>
 #include "Shell.h"
@@ -29,7 +30,7 @@ namespace RhIO
             curse.shell = shell;
             curse.run();
         } else {
-            throw std::string("Nothing to tune");
+            throw std::runtime_error("Nothing to tune");
         }
     }
 }
