@@ -39,5 +39,9 @@ int main(int argc, char *argv[])
 #ifdef HAS_CURSES
     shell.registerCommand(new TuneCommand);
 #endif
+
+    shell.addAlias("l", "ls");
+    shell.addAlias("ll", "ls");
+
     shell.run();
 }

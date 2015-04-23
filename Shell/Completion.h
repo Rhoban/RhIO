@@ -2,6 +2,8 @@
 
 #include <string>
 #include <deque>
+#include <vector>
+#include <sstream>
 
 namespace RhIO
 {
@@ -9,5 +11,7 @@ namespace RhIO
     {
         public:
         static std::string getSubstring(std::deque<std::string> matches);
+        static std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems);
+        static std::vector<std::string> split(const std::string &s, char delim);
     };
 }

@@ -15,7 +15,7 @@
 #include <commands/RemoteCommand.h>
 
 
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <fcntl.h>
 
@@ -128,10 +128,15 @@ namespace RhIO
         bool esc_mode=false;
         std::deque<std::string>::iterator hist_it=shell_history.end();
         int cursorpos=0;
-        std::string lastcmd("");
+        std::string prev_cmd("");
         bool completion_mode=false;
         int completion_select=0;
         std::deque<std::string> completion_matches;
+        std::vector<std::string> splitted_cmd;
+        std::string cur_comp_line;
+        std::string lastcmd;
+        bool lastisspace=false;
+        std::vector<std::string> paths;
 
         while(!done)
         {
@@ -144,11 +149,11 @@ namespace RhIO
                         putchar(c);
                         done=true;
 
-                        lastcmd="";
+                        prev_cmd="";
                         if(shell_history.size()>0)
-                            lastcmd=shell_history.back();
+                            prev_cmd=shell_history.back();
 
-                        if(line.compare("")!=0 && line.compare(lastcmd)!=0) //store in history if non null and different than the last cmd
+                        if(line.compare("")!=0 && line.compare(prev_cmd)!=0) //store in history if non null and different than the last cmd
                         {
                             shell_history.push_back(line);
                             if(shell_history.size()>MAX_HISTORY)
@@ -204,38 +209,47 @@ namespace RhIO
                     case 0x7f: //backspace
                         if(line.size()>0)
                         {
-                            line.pop_back();
+
+
+                            if(cursorpos>0)
+                                line.erase(cursorpos-1,1);
                             Terminal::clearLine();
                             displayPrompt();
-                            cursorpos--;
+
+
                             std::cout<<line;
+
+                            Terminal::cursorNLeft(line.size()+1);
+
+                            Terminal::cursorNRight(cursorpos);
+                            if(cursorpos>0)
+                                cursorpos--;
                         }
                         break;
 
+                    case 0x12: //Ctrl-r history completion
 
-                    case 0x09: //TAB completion
-                            //completion_mode
-                            //completion_select
-                        completion_matches.clear();
-
-                            //simple completion on commands
-
-                            // look for matching on commands
-                        for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
+                            //TODO
+                        cur_comp_line=line;
+                        line="";
+                        for(std::deque<std::string>::iterator cmd_it=shell_history.begin(); cmd_it!=shell_history.end();++cmd_it)
                         {
-                            if(cmd_it->first.compare(0,line.size(),line)==0)
-                                completion_matches.push_back(cmd_it->first);
+                            if((*cmd_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                                completion_matches.push_back(*cmd_it);
                         }
 
 
 
                         if(completion_matches.size()==1) //one solution, we are done
                         {
-                            line=completion_matches[0];
+
+                            cur_comp_line=completion_matches[0];
+
+                            line+=cur_comp_line;
                             Terminal::clearLine();
                             displayPrompt();
-                            cursorpos=line.size();
                             std::cout<<line;
+                            cursorpos=line.size();
                             break;
                         }
 
@@ -247,7 +261,116 @@ namespace RhIO
                         std::cout<<std::endl;
 
                             //lazy longest common substring (there is almost 2 elements)
-                        line=Completion::getSubstring(completion_matches);
+                        cur_comp_line=Completion::getSubstring(completion_matches);
+
+
+                        line+=cur_comp_line;
+
+
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+                        cursorpos=line.size();
+
+                        break;
+
+                    case 0x09: //TAB completion
+                            //completion_mode
+                            //completion_select
+                        completion_matches.clear();
+                        splitted_cmd.clear();
+                        cur_comp_line="";
+                        lastcmd="";
+                        lastisspace=false;
+                            //look at the line and split all the commands separated by a space
+                            //work on the last one
+
+                        if(line.size()>0)
+                        {
+                            if(line.back()==' '){
+
+                                lastisspace=true;
+
+                                line.pop_back();
+                                lastcmd=line;
+                            }
+                            splitted_cmd=Completion::split(line,' ');
+
+                            if(splitted_cmd.size()>1)
+                            {
+
+                                line="";
+                                cur_comp_line=splitted_cmd.back();
+                                splitted_cmd.pop_back();
+                                for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
+                                    line+=*it+" ";
+
+                            }
+                            else{
+                                cur_comp_line=line;
+                                line="";
+                            }
+
+                        }
+                        else{
+                            cur_comp_line="";
+                        }
+                        if(lastisspace){
+                            cur_comp_line="";
+                            line=lastcmd+' ';
+
+                        }
+
+
+
+
+
+                            // simple completion on commands
+
+                            // look for matching on commands
+                        for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
+                        {
+                            if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                                completion_matches.push_back(cmd_it->first);
+                        }
+
+                            //also look for path
+                        paths=getPossibilities();
+                        for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
+                        {
+                            if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                                completion_matches.push_back(*p_it);
+                        }
+
+
+
+                        if(completion_matches.size()==1) //one solution, we are done
+                        {
+
+                            cur_comp_line=completion_matches[0];
+
+                            line+=cur_comp_line;
+                            Terminal::clearLine();
+                            displayPrompt();
+                            std::cout<<line;
+                            cursorpos=line.size();
+                            break;
+                        }
+
+
+
+                        std::cout<<std::endl;
+                        for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
+                            std::cout<<*it<<'\t';
+                        std::cout<<std::endl;
+
+                            //lazy longest common substring (there is almost 2 elements)
+                        cur_comp_line=Completion::getSubstring(completion_matches);
+
+
+                        line+=cur_comp_line;
+
+
                         Terminal::clearLine();
                         displayPrompt();
                         std::cout<<line;
@@ -401,6 +524,11 @@ namespace RhIO
         if (command == "quit" || command == "exit") {
             terminate = true;
         } else {
+            // Applying alias
+            if (aliases.count(command)) {
+                command = aliases[command];
+            }
+
             // Checking for the command in the list
             if (commands.count(command)) {
                 std::vector<std::string> argsV;
@@ -409,9 +537,9 @@ namespace RhIO
                 }
                 try {
                     commands[command]->process(argsV);
-                } catch (std::string err) {
+                } catch (std::runtime_error error) {
                     Terminal::setColor("red", true);
-                    std::cout << "Error: " << err << std::endl;
+                    std::cout << "Error: " << error.what() << std::endl;
                     Terminal::clear();
                 }
             } else {
@@ -639,5 +767,37 @@ namespace RhIO
         std::string line;
         std::getline(std::cin, line);
         stream->removePool(pool);
+    }
+
+    std::vector<std::string> Shell::getPossibilities()
+    {
+        std::vector<std::string> possibilities;
+        getPossibilitiesRec(possibilities, getNode(), "");
+        getPossibilitiesRec(possibilities, tree, "/");
+
+        return possibilities;
+    }
+
+    void Shell::getPossibilitiesRec(std::vector<std::string> &possibilities, Node *node, std::string prefix)
+    {
+        if (prefix != "" && prefix != "/") {
+            prefix += "/";
+        }
+
+        for (NodeValue nodeValue : node->getAll()) {
+            auto name = prefix+nodeValue.value->name;
+            possibilities.push_back(name);
+        }
+
+        for (auto entry : node->children) {
+            auto name = prefix+entry.first;
+            possibilities.push_back(name);
+            getPossibilitiesRec(possibilities, entry.second, name);
+        }
+    }
+            
+    void Shell::addAlias(std::string from, std::string to)
+    {
+        aliases[from] = to;
     }
 }

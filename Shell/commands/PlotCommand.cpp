@@ -31,7 +31,7 @@ namespace RhIO
 
         GnuPlot plot;
         pool.setCallback(std::bind(&PlotCommand::update, this, &plot, _1));
-    
+
         shell->streamWait(&pool);
         plot.closeWindow();
     }

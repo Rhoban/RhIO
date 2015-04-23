@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <sstream>
 #include <iostream>
 #include "Shell.h"
@@ -24,7 +25,7 @@ namespace RhIO
     {
         std::stringstream ss;
         ss << "Usage: " << getUsage();
-        throw ss.str();
+        throw std::runtime_error(ss.str());
     }
 
     Node *Command::getNode(std::vector<std::string> args)
@@ -39,7 +40,7 @@ namespace RhIO
         if (node == NULL) {
             std::stringstream ss;
             ss << "Unable to get node " << dir;
-            throw ss.str();
+            throw std::runtime_error(ss.str());
         }
 
         return node;

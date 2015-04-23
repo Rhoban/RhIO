@@ -100,8 +100,20 @@ namespace RhIO
             struct termios termsave;
             std::deque<std::string> shell_history;
 
+            /**
+             * Get all the possibilities at a certain point
+             */
+            std::vector<std::string> getPossibilities();
+            void getPossibilitiesRec(std::vector<std::string> &possibilities, 
+                    Node *node, std::string prefix);
+
+            /**
+             * Adds an alias
+             */
+            void addAlias(std::string from, std::string to);
 
         protected:
+            std::map<std::string, std::string> aliases;
             std::string hostname;
             ClientReq *client;
             ClientSub *clientSub;
