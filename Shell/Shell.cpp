@@ -140,6 +140,7 @@ namespace RhIO
         std::vector<std::string> paths_to_print;
         std::vector<std::string> cmd_to_print;
         int print_len=0;
+        std::string lineback;
 
 
         while(!done)
@@ -209,6 +210,32 @@ namespace RhIO
 
                         break;
 
+                    case 0x33: //after 5b for suppr
+                        break;
+
+                    case 0x7e: //after 33 for suppr
+
+                        if(esc_mode)
+                        {
+                            esc_mode=false;
+
+                            if(line.size()>0)
+                            {
+                                if(cursorpos>0)
+                                    line.erase(cursorpos,1);
+                                Terminal::clearLine();
+                                displayPrompt();
+
+
+                                std::cout<<line;
+
+                                Terminal::cursorNLeft(line.size());
+
+                                Terminal::cursorNRight(cursorpos);
+                            }
+
+                        }
+                        break;
 
                     case 0x7f: //backspace
                         if(line.size()>0)
@@ -289,6 +316,7 @@ namespace RhIO
                         lastcmd="";
                         lastisspace=false;
                         print_len=0;
+                        lineback=line;
                             //look at the line and split all the commands separated by a space
                             //work on the last one
 
@@ -408,7 +436,8 @@ namespace RhIO
 
 
                         line+=cur_comp_line;
-
+                        if(line.size()==0) //nothing found, we keep the line
+                            line=lineback;
 
                         Terminal::clearLine();
                         displayPrompt();
