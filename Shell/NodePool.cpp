@@ -27,6 +27,7 @@ namespace RhIO
         for (auto nodeVal : *this) {
             auto val = nodeVal.value;
 
+            Terminal::setColor("white", val->persisted);
             printf("%-15s", val->name.c_str());
             std::cout << " ";
 

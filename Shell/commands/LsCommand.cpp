@@ -40,6 +40,7 @@ namespace RhIO
             Terminal::clear();
 
             // Listing commands
+            /*
             for (auto command : node->getCommands()) {
                 Terminal::setColor("green", true);
                 printf("%-23s", command.c_str());
@@ -53,6 +54,7 @@ namespace RhIO
                 std::cout << std::endl;
                 Terminal::clear();
             }
+            */
 
             NodePool pool = shell->poolForNode(node);
             pool.draw();
