@@ -47,6 +47,23 @@ class ClientReq
             (const std::string& name);
 
         /**
+         * List the available commands on a given node
+         */
+        std::vector<std::string> listCommands
+            (const std::string &name);
+
+        /**
+         * Get the description of a command
+         */
+        std::string getCommandDesc(const std::string &name);
+
+        /**
+         * Call a remote command
+         */
+        std::string callCommand(std::string name, 
+                const std::vector<std::string> args);
+
+        /**
          * Ask and return the value of given 
          * absolute name for each type
          */

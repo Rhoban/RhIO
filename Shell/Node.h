@@ -33,9 +33,11 @@ namespace RhIO
             std::vector<ValueFloat> floats;
             std::vector<ValueStr> strings;
             std::map<std::string, Node*> children;
+            std::vector<std::string> commands;
 
             Node *getChild(std::string name);
             NodeValue getNodeValue(std::string name);
+            std::vector<std::string> getCommands();
     
             static ValueBool *asBool(ValueBase *value);
             static ValueInt *asInt(ValueBase *value);

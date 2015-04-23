@@ -9,6 +9,7 @@ namespace RhIO
     class Command
     {
         public:
+            virtual ~Command();
             virtual std::string getName()=0;
             virtual std::string getDesc()=0;
             virtual std::string getUsage();
