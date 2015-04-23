@@ -15,7 +15,7 @@
 #include <commands/RemoteCommand.h>
 
 
-#include <stdio.h>
+
 #include <stdlib.h>
 #include <fcntl.h>
 
@@ -128,10 +128,14 @@ namespace RhIO
         bool esc_mode=false;
         std::deque<std::string>::iterator hist_it=shell_history.end();
         int cursorpos=0;
-        std::string lastcmd("");
+        std::string prev_cmd("");
         bool completion_mode=false;
         int completion_select=0;
         std::deque<std::string> completion_matches;
+        std::vector<std::string> splitted_cmd;
+        std::string cur_comp_line;
+        std::string lastcmd;
+        bool lastisspace=false;
 
         while(!done)
         {
@@ -144,11 +148,11 @@ namespace RhIO
                         putchar(c);
                         done=true;
 
-                        lastcmd="";
+                        prev_cmd="";
                         if(shell_history.size()>0)
-                            lastcmd=shell_history.back();
+                            prev_cmd=shell_history.back();
 
-                        if(line.compare("")!=0 && line.compare(lastcmd)!=0) //store in history if non null and different than the last cmd
+                        if(line.compare("")!=0 && line.compare(prev_cmd)!=0) //store in history if non null and different than the last cmd
                         {
                             shell_history.push_back(line);
                             if(shell_history.size()>MAX_HISTORY)
@@ -204,11 +208,21 @@ namespace RhIO
                     case 0x7f: //backspace
                         if(line.size()>0)
                         {
-                            line.pop_back();
+
+
+                            if(cursorpos>0)
+                                line.erase(cursorpos-1,1);
                             Terminal::clearLine();
                             displayPrompt();
-                            cursorpos--;
+
+
                             std::cout<<line;
+
+                            Terminal::cursorNLeft(line.size()+1);
+
+                            Terminal::cursorNRight(cursorpos);
+                            if(cursorpos>0)
+                                cursorpos--;
                         }
                         break;
 
@@ -217,13 +231,61 @@ namespace RhIO
                             //completion_mode
                             //completion_select
                         completion_matches.clear();
+                        splitted_cmd.clear();
+                        cur_comp_line="";
+                        lastcmd="";
+                        lastisspace=false;
+                            //look at the line and split all the commands separated by a space
+                            //work on the last one
 
-                            //simple completion on commands
+                        if(line.size()>0)
+                        {
+                            if(line.back()==' '){
+
+                                lastisspace=true;
+
+                                line.pop_back();
+                                lastcmd=line;
+                            }
+                            splitted_cmd=Completion::split(line,' ');
+
+                            if(splitted_cmd.size()>1)
+                            {
+
+                                line="";
+                                cur_comp_line=splitted_cmd.back();
+                                splitted_cmd.pop_back();
+                                for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
+                                    line+=*it+" ";
+
+
+
+                            }
+                            else{
+                                cur_comp_line=line;
+                                line="";
+                            }
+
+                        }
+                        else{
+                            cur_comp_line="";
+                        }
+                        if(lastisspace){
+                            cur_comp_line="";
+                            line=lastcmd+' ';
+
+                        }
+
+
+
+
+
+                            // simple completion on commands
 
                             // look for matching on commands
                         for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
                         {
-                            if(cmd_it->first.compare(0,line.size(),line)==0)
+                            if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
                                 completion_matches.push_back(cmd_it->first);
                         }
 
@@ -231,11 +293,14 @@ namespace RhIO
 
                         if(completion_matches.size()==1) //one solution, we are done
                         {
-                            line=completion_matches[0];
+
+                            cur_comp_line=completion_matches[0];
+
+                            line+=cur_comp_line;
                             Terminal::clearLine();
                             displayPrompt();
-                            cursorpos=line.size();
                             std::cout<<line;
+                            cursorpos=line.size();
                             break;
                         }
 
@@ -247,7 +312,12 @@ namespace RhIO
                         std::cout<<std::endl;
 
                             //lazy longest common substring (there is almost 2 elements)
-                        line=Completion::getSubstring(completion_matches);
+                        cur_comp_line=Completion::getSubstring(completion_matches);
+
+
+                        line+=cur_comp_line;
+
+
                         Terminal::clearLine();
                         displayPrompt();
                         std::cout<<line;
