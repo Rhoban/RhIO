@@ -57,7 +57,7 @@ std::string ClientReq::getCommandDesc(const std::string &name)
 std::string ClientReq::callCommand(std::string name, 
         const std::vector<std::string> args)
 {
-    return "Not implemented.";
+    return "Not implemented.\n";
 }
 
 bool ClientReq::getBool(const std::string& name)
