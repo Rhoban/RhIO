@@ -20,8 +20,13 @@ namespace RhIO
     void LoadCommand::process(std::vector<std::string> args)
     {
         auto node = getNode(args);
+        std::string target = "rhio";
+        auto name = node->getPath();
+        if (name != "") {
+            target += "/" + name;
+        }
 
-        shell->getClient()->load(node->getPath(), "rhio");
+        shell->getClient()->load(node->getPath(), target);
         shell->sync();
     }
 }

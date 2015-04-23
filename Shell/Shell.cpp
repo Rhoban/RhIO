@@ -409,9 +409,9 @@ namespace RhIO
                 }
                 try {
                     commands[command]->process(argsV);
-                } catch (std::string err) {
+                } catch (std::runtime_error error) {
                     Terminal::setColor("red", true);
-                    std::cout << "Error: " << err << std::endl;
+                    std::cout << "Error: " << error.what() << std::endl;
                     Terminal::clear();
                 }
             } else {

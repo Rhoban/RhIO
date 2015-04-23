@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <sstream>
 #include <iostream>
 #include "Shell.h"
@@ -33,7 +34,7 @@ namespace RhIO
                 if (!shell->goToPath(target)) {
                     std::stringstream ss;
                     ss << "Unknown node: " << target;
-                    throw ss.str();
+                    throw std::runtime_error(ss.str());
                 }
             }
         }

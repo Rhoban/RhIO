@@ -20,8 +20,13 @@ namespace RhIO
     void SaveCommand::process(std::vector<std::string> args)
     {
         auto node = getNode(args);
+        std::string target = "rhio";
+        auto name = node->getPath();
+        if (name != "") {
+            target += "/" + name;
+        }
 
-        shell->getClient()->save(node->getPath(), "rhio");
+        shell->getClient()->save(node->getPath(), target);
         shell->sync();
     }
 }
