@@ -28,7 +28,8 @@ namespace RhIO
         custom=termsave;
         custom.c_lflag &= ~(ICANON|ECHO);
         tcsetattr(fd,TCSANOW,&custom);
-        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)|O_NONBLOCK);
+        // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)|O_NONBLOCK);
+        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)); //blocking
     }
 
     void Shell::displayPrompt()
