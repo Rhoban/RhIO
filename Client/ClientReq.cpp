@@ -47,6 +47,12 @@ std::vector<std::string> ClientReq::listCommands
 
     return commands;
 }
+        
+std::string ClientReq::getCommandDesc(const std::string &name)
+{
+    // XXX: To implement
+    return "Some command";
+}
 
 std::string ClientReq::callCommand(std::string name, 
         const std::vector<std::string> args)

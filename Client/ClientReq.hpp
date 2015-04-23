@@ -53,6 +53,11 @@ class ClientReq
             (const std::string &name);
 
         /**
+         * Get the description of a command
+         */
+        std::string getCommandDesc(const std::string &name);
+
+        /**
          * Call a remote command
          */
         std::string callCommand(std::string name, 
