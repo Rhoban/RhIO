@@ -315,6 +315,45 @@ ValueStr ClientReq::metaValueStr(const std::string& name)
 
     return val;
 }
+
+void ClientReq::save(const std::string& name, 
+    const std::string& serverPath)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + 2*sizeof(long) + name.length()
+        + serverPath.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskSave);
+    req.writeStr(name);
+    req.writeStr(serverPath);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgPersistOK);
+}
+void ClientReq::load(const std::string& name, 
+    const std::string& serverPath)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + 2*sizeof(long) + name.length()
+        + serverPath.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskLoad);
+    req.writeStr(name);
+    req.writeStr(serverPath);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgPersistOK);
+}
         
 DataBuffer ClientReq::waitReply
     (zmq::message_t& reply, MsgType expectedType)

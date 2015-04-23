@@ -82,13 +82,21 @@ void ServerRep::handleRequest()
             case MsgAskMetaStr:
                   valMetaStr(req);
                   return;
+            case MsgAskSave:
+                  save(req);
+                  return;
+            case MsgAskLoad:
+                  load(req);
+                  return;
             default:
                 //Unknown message type
                 error("Message type not implemented");
                 return;
         }
     } catch (const std::logic_error& e) {
-        error("RhIOServer exception: " + std::string(e.what()));
+        error("RhIOServer logic exception: " + std::string(e.what()));
+    } catch (const std::runtime_error& e) {
+        error("RhIOServer runtime exception: " + std::string(e.what()));
     }
 }
         
@@ -510,6 +518,51 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
     rep.writeStr(val.min);
     rep.writeStr(val.max);
     rep.writeStr(val.valuePersisted);
+
+    //Send reply
+    _socket.send(reply);
+}
+    
+void ServerRep::save(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Get path
+    std::string path = buffer.readStr();
+    
+    //Get asked node
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Config save
+    node->save(path);
+    
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgPersistOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::load(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    //Get path
+    std::string path = buffer.readStr();
+    
+    //Get asked node
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Config load
+    node->load(path);
+    
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgPersistOK);
 
     //Send reply
     _socket.send(reply);

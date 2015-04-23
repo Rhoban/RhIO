@@ -91,6 +91,9 @@ int main()
     assert(valStr.persisted == false);
     assert(valStr.valuePersisted == "");
 
+    //client.save("/", "/tmp/root");
+    //client.load("/", "/tmp/root");
+
     return 0;
 }
 
