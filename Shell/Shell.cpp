@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <list>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <algorithm>
 #include <functional>
@@ -26,6 +27,12 @@ namespace RhIO
     {
     }
 
+    Shell::~Shell()
+    {
+        if (history_file.is_open())
+            history_file.close();
+    }
+
     void Shell::terminal_set_ioconfig() {
         struct termios custom;
         int fd=fileno(stdin);
@@ -35,6 +42,35 @@ namespace RhIO
         tcsetattr(fd,TCSANOW,&custom);
         // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)|O_NONBLOCK);
         fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)); //blocking
+    }
+
+    void Shell::readHistory()
+    {
+
+        // std::cout<<"HOME: "<<hist_path<<std::endl;
+        history_file.open(history_path,std::fstream::in);
+        std::string line;
+        if (history_file.is_open())
+        {
+            while ( getline (history_file,line) )
+            {
+                shell_history.push_back(line);
+
+            }
+        }
+        history_file.close();
+    }
+
+    void Shell::writeHistory(std::string line)
+    {
+        if(history_file.is_open())
+        {
+            history_file<<line<<std::endl;
+            history_file.flush();
+        }
+        else
+            std::cout<<"FUCK";
+
     }
 
     void Shell::displayPrompt()
@@ -92,6 +128,16 @@ namespace RhIO
 
     void Shell::run()
     {
+
+        const char *homedir;
+        if ((homedir = getenv("HOME")) != NULL)
+        {
+            history_path=homedir;
+            history_path+="/.rhio_history";
+        }
+        readHistory();
+        // std::cout<<"PATH: "<<history_path<<std::endl;
+        history_file.open(history_path, std::fstream::out | std::fstream::app);
 
         terminal_set_ioconfig();
 
@@ -161,9 +207,13 @@ namespace RhIO
                         if(line.compare("")!=0 && line.compare(prev_cmd)!=0) //store in history if non null and different than the last cmd
                         {
                             shell_history.push_back(line);
+                            if(line.compare("quit")!=0 && line.compare("exit")!=0)
+                                writeHistory(line);
+
                             if(shell_history.size()>MAX_HISTORY)
                                 shell_history.pop_front();
                             hist_it=shell_history.begin();
+
                         }
                         return line;
                         break;//useless
