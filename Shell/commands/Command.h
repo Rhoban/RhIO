@@ -5,6 +5,7 @@
 
 namespace RhIO
 {
+    class Node;
     class Shell;
     class Command
     {
@@ -17,6 +18,7 @@ namespace RhIO
 
             void setShell(Shell *shell_);
             void errorUsage();
+            Node *getNode(std::vector<std::string> args);
 
         protected:
             Shell *shell;

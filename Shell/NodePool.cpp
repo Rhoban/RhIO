@@ -27,6 +27,7 @@ namespace RhIO
         for (auto nodeVal : *this) {
             auto val = nodeVal.value;
 
+            Terminal::setColor("white", val->persisted);
             printf("%-15s", val->name.c_str());
             std::cout << " ";
 
@@ -44,6 +45,13 @@ namespace RhIO
                 std::cout << " desc: ";
                 Terminal::clear();
                 std::cout << val->comment;
+            }
+
+            if (val->persisted) {
+                Terminal::setColor("grey", false);
+                std::cout << " persisted: ";
+                Terminal::clear();
+                std::cout << Node::persistedToString(val);
             }
             std::cout << std::endl;
         }

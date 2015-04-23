@@ -45,13 +45,10 @@ int main()
 
     assert(RhIO::Root.getValueBool("paramBool").hasMin == false);
     assert(RhIO::Root.getValueBool("paramBool").hasMax == false);
-    assert(RhIO::Root.getValueInt("test/paramInt").hasMin == true);
-    assert(RhIO::Root.getValueInt("test/paramInt").hasMax == true);
-    assert(RhIO::Root.getValueInt("test/paramInt").min == -1);
-    assert(RhIO::Root.getValueInt("test/paramInt").max == 1024);
-    assert(RhIO::Root.getValueFloat("test/paramFloat").hasMin == true);
+    assert(RhIO::Root.getValueInt("test/paramInt").hasMin == false);
+    assert(RhIO::Root.getValueInt("test/paramInt").hasMax == false);
+    assert(RhIO::Root.getValueFloat("test/paramFloat").hasMin == false);
     assert(RhIO::Root.getValueFloat("test/paramFloat").hasMax == false);
-    assert(RhIO::Root.getValueFloat("test/paramFloat").min == 0.0); 
     assert(RhIO::Root.getValueStr("test2/test3/paramStr").hasMin == false);
     assert(RhIO::Root.getValueStr("test2/test3/paramStr").hasMax == false);
     

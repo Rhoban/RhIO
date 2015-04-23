@@ -51,9 +51,7 @@ namespace RhIO
 
     void Shell::sync()
     {
-        Terminal::setColor("white", true);
-        std::cout << "Downloading the tree..." << std::endl;
-        Terminal::clear();
+        std::cout << "Synchronizing..." << std::endl;
 
         // Downloading tree
         if (tree != NULL) {
@@ -100,13 +98,10 @@ namespace RhIO
         std::string reqServer = "tcp://"+server+":"+ServerRepPort;
         std::string subServer = "tcp://"+server+":"+ServerPubPort;
         terminate = false;
-        Terminal::setColor("white", true);
-        std::cout << "Rhoban I/O shell, welcome!" << std::endl;
-        std::cout << "Connecting to " << server << std::endl;
+        std::cout << "RhIO, connecting to " << server << std::endl;
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
         stream = new Stream(this);
-        Terminal::clear();
 
         sync();
 
@@ -213,11 +208,21 @@ namespace RhIO
                     case 0x7f: //backspace
                         if(line.size()>0)
                         {
-                            line.pop_back();
+
+
+                            if(cursorpos>0)
+                                line.erase(cursorpos-1,1);
                             Terminal::clearLine();
                             displayPrompt();
-                            cursorpos--;
+
+
                             std::cout<<line;
+
+                            Terminal::cursorNLeft(line.size()+1);
+
+                            Terminal::cursorNRight(cursorpos);
+                            if(cursorpos>0)
+                                cursorpos--;
                         }
                         break;
 

@@ -6,6 +6,7 @@
 #include <string>
 #include <mutex>
 #include "ValueNode.hpp"
+#include "CommandNode.hpp"
 
 namespace RhIO {
 
@@ -21,7 +22,7 @@ constexpr char separator = '/';
  * virtual input/output hierarchy name tree
  * with children Nodes
  */
-class IONode final : public ValueNode
+class IONode final : public ValueNode, public CommandNode
 {
     public:
 
@@ -94,7 +95,7 @@ class IONode final : public ValueNode
          * Save recursively the subtree into given
          * path directory
          */
-        void save(const std::string& path) const;
+        void save(const std::string& path);
         
         /**
          * Load recursively the subtree into given
