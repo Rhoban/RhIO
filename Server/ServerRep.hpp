@@ -98,6 +98,21 @@ class ServerRep
         void load(DataBuffer& buffer);
 
         /**
+         * Implement MsgAskCommands (MsgListNames)
+         */
+        void listCommands(DataBuffer& buffer);
+
+        /**
+         * Implement MsgAskCommandDescription (MsgCommandDescription)
+         */
+        void commandDescription(DataBuffer& buffer);
+
+        /**
+         * Implement MsgAskCall (MsgCallResult)
+         */
+        void callResult(DataBuffer& buffer);
+
+        /**
          * Implement MsgError with given error message
          */
         void error(const std::string& msg);

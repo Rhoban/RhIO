@@ -38,26 +38,58 @@ std::vector<std::string> ClientReq::listValuesStr
 }
 
 std::vector<std::string> ClientReq::listCommands
-    (const std::string &name)
+    (const std::string& name)
 {
-    // XXX: To implement
-    std::vector<std::string> commands;
-    commands.push_back("cmd1");
-    commands.push_back("cmd2");
-
-    return commands;
+    return listNames(MsgAskCommands, name);
 }
         
-std::string ClientReq::getCommandDesc(const std::string &name)
+std::string ClientReq::commandDescription(const std::string& name)
 {
-    // XXX: To implement
-    return "Some command";
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskCommandDescription);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgCommandDescription);
+    return rep.readStr();
 }
 
-std::string ClientReq::callCommand(std::string name, 
-        const std::vector<std::string> args)
+std::string ClientReq::call(const std::string& name, 
+    const std::vector<std::string>& arguments)
 {
-    return "Not implemented.\n";
+    //Compute data size
+    size_t size = 0;
+    for (size_t i=0;i<arguments.size();i++) {
+        size += arguments[i].length();
+    }
+
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length()
+        + sizeof(long)
+        + arguments.size()*sizeof(long) + size);
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskCall);
+    req.writeStr(name);
+    req.writeInt(arguments.size());
+    for (size_t i=0;i<arguments.size();i++) {
+        req.writeStr(arguments[i]);
+    }
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgCallResult);
+    return rep.readStr();
 }
 
 bool ClientReq::getBool(const std::string& name)

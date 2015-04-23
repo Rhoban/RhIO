@@ -66,6 +66,7 @@ void CommandNode::newCommand(const std::string& name,
     CommandNode* child = BaseNode::forwardFunc(name, tmpName, true);
     if (child != nullptr) {
         child->newCommand(tmpName, comment, func);
+        return;
     }
 
     std::lock_guard<std::mutex> lock(_mutex);

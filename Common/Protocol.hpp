@@ -80,6 +80,34 @@ enum MsgType : uint8_t {
     MsgAskSave,
     MsgAskLoad,
     /**
+     * Client.
+     * List all registered command relative
+     * name at given node absolute name
+     * Args:
+     * String: absolute node name
+     */
+    MsgAskCommands,
+    /**
+     * Client.
+     * Ask the description
+     * for absolute command name 
+     * Args:
+     * String: absolute command name
+     */
+    MsgAskCommandDescription,
+    /**
+     * Client.
+     * Call the given absolute name command
+     * with given string arguments list
+     * Args:
+     * String: absolute command name
+     * Int: number of argument
+     * String: argument 1
+     * String: argument 2
+     * ...
+     */
+    MsgAskCall,
+    /**
      * Server.
      * An error has occured.
      * Args:
@@ -175,6 +203,22 @@ enum MsgType : uint8_t {
      * operation is finished
      */
     MsgPersistOK,
+    /**
+     * Server.
+     * Return the string description
+     * of asked command
+     * Args:
+     * String: the coomand description
+     */
+    MsgCommandDescription,
+    /**
+     * Server.
+     * Return call result of asked
+     * command call
+     * Args:
+     * String: call result
+     */
+    MsgCallResult,
 };
 
 }

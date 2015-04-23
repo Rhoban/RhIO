@@ -88,6 +88,15 @@ void ServerRep::handleRequest()
             case MsgAskLoad:
                   load(req);
                   return;
+            case MsgAskCommands:
+                  listCommands(req);
+                  return;
+            case MsgAskCommandDescription:
+                  commandDescription(req);
+                  return;
+            case MsgAskCall:
+                  callResult(req);
+                  return;
             default:
                 //Unknown message type
                 error("Message type not implemented");
@@ -563,6 +572,84 @@ void ServerRep::load(DataBuffer& buffer)
     zmq::message_t reply(sizeof(MsgType));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgPersistOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+        
+void ServerRep::listCommands(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Compute message size
+    size_t size = sizeof(MsgType);
+    size += sizeof(long);
+    std::vector<std::string> list = node->listCommands();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
+    }
+
+    //Allocate message data
+    zmq::message_t reply(size);
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgListNames);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
+    }
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::commandDescription(DataBuffer& buffer)
+{
+    //Get asked command name
+    std::string name = buffer.readStr();
+    //Check value name
+    if (!RhIO::Root.commandExist(name)) {
+        error("Unknown command name: " + name);
+        return;
+    }
+
+    //Allocate message data
+    std::string str = RhIO::Root.commandDescription(name);
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + str.length());
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgCommandDescription);
+    rep.writeStr(str);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::callResult(DataBuffer& buffer)
+{
+    //Get asked command name
+    std::string name = buffer.readStr();
+    //Check value name
+    if (!RhIO::Root.commandExist(name)) {
+        error("Unknown command name: " + name);
+        return;
+    }
+
+    //Build arguments list
+    std::vector<std::string> list;
+    size_t size = buffer.readInt();
+    for (size_t i=0;i<size;i++) {
+        list.push_back(buffer.readStr());
+    }
+    //Call command
+    std::string result = RhIO::Root.call(name, list);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + result.length());
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgCallResult);
+    rep.writeStr(result);
 
     //Send reply
     _socket.send(reply);

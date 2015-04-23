@@ -91,6 +91,12 @@ int main()
     assert(valStr.persisted == false);
     assert(valStr.valuePersisted == "");
 
+    assert(client.listCommands("/").size() == 0);
+    assert(client.listCommands("test").size() == 1);
+    assert(client.listCommands("test")[0] == "command1");
+    assert(client.commandDescription("test/command1") == "command1");
+    assert(client.call("test/command1", {"test1"}) == "OK test1");
+
     //client.save("/", "/tmp/root");
     //client.load("/", "/tmp/root");
 
