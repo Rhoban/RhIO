@@ -235,13 +235,18 @@ namespace RhIO
                         if(line.size()>0)
                         {
                             splitted_cmd=Completion::split(line,' ');
-                            for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
-                                std::cout<<"DEBUG split "<<*it<<std::endl;
+                            if(splitted_cmd.size()>1)
+                            {
+                                line="";
+                                for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
+                                    line+=*it+" ";
+                                cur_comp_line=splitted_cmd.back();
+                            }
                         }
                         else{
                             cur_comp_line="";
                         }
-
+                        std::cout<<"DEBUG "<<line<<" + "<<cur_comp_line<<std::endl;
 
 
 
