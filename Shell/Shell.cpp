@@ -726,7 +726,7 @@ namespace RhIO
             prefix += "/";
         }
 
-        for (auto node : node->getAll()) {
+        for (NodeValue node : node->getAll()) {
             auto name = prefix+node.value->name;
             possibilities.push_back(name);
         }
@@ -736,5 +736,10 @@ namespace RhIO
             possibilities.push_back(name);
             getPossibilitiesRec(possibilities, entry.second, name);
         }
+    }
+            
+    void Shell::addAlias(std::string from, std::string to)
+    {
+        aliases[from] = to;
     }
 }

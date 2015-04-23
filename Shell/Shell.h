@@ -107,7 +107,13 @@ namespace RhIO
             void getPossibilitiesRec(std::vector<std::string> &possibilities, 
                     Node *node, std::string prefix);
 
+            /**
+             * Adds an alias
+             */
+            void addAlias(std::string from, std::string to);
+
         protected:
+            std::map<std::string, std::string> aliases;
             std::string hostname;
             ClientReq *client;
             ClientSub *clientSub;
