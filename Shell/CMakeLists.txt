@@ -26,7 +26,7 @@ set (SOURCES
     Node.cpp
     NodePool.cpp
     Stream.cpp
-
+    Completion.cpp
     main.cpp
     )
 
