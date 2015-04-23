@@ -102,7 +102,13 @@ namespace RhIO
                 for (auto part : args) {
                     argsV.push_back(part);
                 }
-                commands[command]->process(argsV);
+                try {
+                    commands[command]->process(argsV);
+                } catch (std::string err) {
+                    Terminal::setColor("red", true);
+                    std::cout << "Error: " << err << std::endl;
+                    Terminal::clear();
+                }
             } else {
                 auto nodeValue = getNodeValue(command);
                 auto value = nodeValue.value;
@@ -276,5 +282,45 @@ namespace RhIO
     Node *Shell::getCurrentNode()
     {
         return getNode();
+    }
+
+    NodePool Shell::poolForNode(Node *node)
+    {
+        NodePool pool;
+        for (auto nodeVal : node->getAll()) {
+            Node::get(this, nodeVal);
+            pool.push_back(nodeVal);
+        }
+
+        return pool;
+    }
+
+    NodePool Shell::getPool(std::vector<std::string> names, int start)
+    {
+        if (names.size()-start <= 0) {
+            return poolForNode(getCurrentNode());
+        } else {
+            NodePool pool;
+            for (int k=start; k<names.size(); k++) {
+                auto val = getNodeValue(names[k]);
+                if (val.value == NULL) {
+                    std::ostringstream oss;
+                    oss << "Unknown parameter: " << names[k];
+                    throw oss.str();
+                }
+                Node::get(this, val);
+                pool.push_back(val);
+            }
+        
+            return pool;
+        }
+    }
+            
+    void Shell::streamWait(NodePool *pool)
+    {
+        stream->addPool(pool);
+        std::string line;
+        std::getline(std::cin, line);
+        stream->removePool(pool);
     }
 }

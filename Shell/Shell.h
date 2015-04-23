@@ -8,6 +8,7 @@
 #include "commands/Command.h"
 #include "Terminal.h"
 #include "Node.h"
+#include "NodePool.h"
 
 namespace RhIO
 {
@@ -70,7 +71,14 @@ namespace RhIO
             bool goToPath(std::string path);
             std::string getPath();
 
+            /**
+             * Add the poll to the stream, and wait the user to press enter, then
+             * remove the pool from the stream
+             */
+            void streamWait(NodePool *pool);
             Stream *getStream();
+            NodePool poolForNode(Node *node);
+            NodePool getPool(std::vector<std::string> names, int start=0);
             
             Node *tree;
 

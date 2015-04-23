@@ -1,3 +1,4 @@
+#include <sstream>
 #include <iostream>
 #include "Shell.h"
 #include "LsCommand.h"
@@ -26,9 +27,9 @@ namespace RhIO
         
         Node *values = shell->getNode(dir);
         if (values == NULL) {
-            Terminal::setColor("red", true);
-            std::cout << "Unable to get node " << dir << std::endl;
-            Terminal::clear();
+            std::stringstream ss;
+            ss << "Unable to get node " << dir;
+            throw ss.str();
         } else {
             // Listing sub directories
             for (auto child : values->children) {
@@ -38,11 +39,7 @@ namespace RhIO
                 Terminal::clear();
             }
 
-            NodePool pool;
-            for (auto nodeVal : values->getAll()) {
-                Node::get(shell, nodeVal);
-                pool.push_back(nodeVal);
-            }
+            NodePool pool = shell->poolForNode(values);
             pool.draw();
         }
     }

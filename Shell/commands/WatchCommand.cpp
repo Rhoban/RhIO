@@ -23,34 +23,17 @@ namespace RhIO
     {
         NodePool pool;
         if (args.size() == 0) {
-            Node *values = shell->getNode();
-            for (auto nodeVal : values->getAll()) {
-                Node::get(shell, nodeVal);
-                pool.push_back(nodeVal);
-            }
+            pool = shell->poolForNode(shell->getCurrentNode());
         } else {
-            for (int k=0; k<args.size(); k++) {
-                auto val = shell->getNodeValue(args[k]);
-                if (val.value == NULL) {
-                    Terminal::setColor("red", true);
-                    std::cout << "Unknown parameter: " << args[k] << std::endl;
-                    Terminal::clear();
-                    return;
-                }
-                pool.push_back(val);
-            }
+            pool = shell->getPool(args);
         }
-
 
         pool.setCallback(std::bind(&WatchCommand::update, this, _1));
     
         system("clear");
         pool.draw();
 
-        shell->getStream()->addPool(&pool);
-        std::string line;
-        std::getline(std::cin, line);
-        shell->getStream()->removePool(&pool);
+        shell->streamWait(&pool);
     }
 
     void WatchCommand::update(NodePool *pool)
