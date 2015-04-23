@@ -49,7 +49,7 @@ namespace RhIO
 
             if (val->persisted) {
                 Terminal::setColor("grey", false);
-                std::cout << " persisted ";
+                std::cout << " persisted: ";
                 Terminal::clear();
                 std::cout << Node::persistedToString(val);
             }

@@ -14,19 +14,13 @@ namespace RhIO
 
     std::string DiffCommand::getDesc()
     {
-        return "Shows the diff from the current node";
+        return "Shows the diff";
     }
 
     void DiffCommand::process(std::vector<std::string> args)
     {
-        std::string dir = "";
+        auto node = getNode(args);
 
-        if (args.size()) {
-            dir = args[0];
-        }
-        
-        Node *node = shell->getNode(dir);
-        
         if (!showDiff(node)) {
             Terminal::setColor("green", true);
             std::cout << "Everything is clean" << std::endl;
@@ -42,9 +36,7 @@ namespace RhIO
             auto value = nodeVal.value;
             if (value->persisted && Node::isDiff(value)) {
                 diff++;
-                Terminal::setColor("white", true);
-                std::cout << nodeVal.getName();
-                Terminal::setColor("white", false);
+                std::cout << "/" << nodeVal.getName();
                 std::cout << ": ";
                 Terminal::setColor("red", true);
                 std::cout << Node::persistedToString(value);
