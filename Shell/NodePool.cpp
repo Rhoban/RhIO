@@ -35,9 +35,6 @@ namespace RhIO
             printf("%6s ", Node::getType(val).c_str());
             Terminal::clear();
 
-            Terminal::setColor("grey", false);
-            std::cout << " val: ";
-            Terminal::clear();
             printf("%-8s", Node::toString(val).c_str());
 
             if (val->comment != "") {
