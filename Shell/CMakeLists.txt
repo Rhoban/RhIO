@@ -18,6 +18,7 @@ set (SOURCES
     commands/WatchCommand.cpp
     commands/CdCommand.cpp
     commands/LogCommand.cpp
+    commands/SyncCommand.cpp
     Shell.cpp
     CSV.cpp
     Terminal.cpp

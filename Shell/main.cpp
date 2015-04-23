@@ -4,6 +4,7 @@
 #include "commands/CdCommand.h"
 #include "commands/ClearCommand.h"
 #include "commands/LogCommand.h"
+#include "commands/SyncCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -26,6 +27,7 @@ int main(int argc, char *argv[])
     shell.registerCommand(new ClearCommand);
     shell.registerCommand(new WatchCommand);
     shell.registerCommand(new LogCommand);
+    shell.registerCommand(new SyncCommand);
 #ifdef HAS_CURSES
     shell.registerCommand(new TuneCommand);
 #endif

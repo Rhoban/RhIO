@@ -18,7 +18,7 @@
 namespace RhIO
 {
     Shell::Shell(std::string server_)
-        : server(server_), client(NULL), clientSub(NULL), stream(NULL)
+        : server(server_), client(NULL), clientSub(NULL), stream(NULL), tree(NULL)
     {
     }
 
@@ -44,6 +44,26 @@ namespace RhIO
         Terminal::clear();
         std::cout << "# " << std::flush;
     }
+            
+    void Shell::sync()
+    {
+        Terminal::setColor("white", true);
+        std::cout << "Downloading the tree..." << std::endl;
+        Terminal::clear();
+
+        // Downloading tree
+        if (tree != NULL) {
+            delete tree;
+        }
+        tree = new Node(client, "");
+
+        // Updating the hostname
+        if (auto value = getValue("/server/hostname")) {
+            hostname = Node::toString(value);
+        } else {
+            hostname = "RhIO";
+        }
+    }
 
     void Shell::run()
     {
@@ -59,15 +79,9 @@ namespace RhIO
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
         stream = new Stream(this);
-        std::cout << "Downloading the tree..." << std::endl;
-        tree = new Node(client, "");
         Terminal::clear();
 
-        if (auto value = getValue("server/hostname")) {
-            hostname = Node::toString(value);
-        } else {
-            hostname = "RhIO";
-        }
+        sync();
 
         // Reading lines from stdin
         while (!terminate ) {

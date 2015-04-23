@@ -23,6 +23,11 @@ namespace RhIO
             Shell(std::string server);
 
             /**
+             * Updates the local node tree
+             */
+            void sync();
+
+            /**
              * Runs the interactive shell, will get lines from stdin
              */
             void run();
