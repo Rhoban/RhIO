@@ -9,7 +9,7 @@
 #include "Stream.h"
 #include "Shell.h"
 #include "utils.h"
-
+#include <commands/RemoteCommand.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,6 +62,29 @@ namespace RhIO
             hostname = Node::toString(value);
         } else {
             hostname = "RhIO";
+        }
+
+        // Updating the commands
+        std::vector<std::string> toDelete;
+        for (auto entry : commands) {
+            if (dynamic_cast<RemoteCommand*>(entry.second)) {
+                delete entry.second;
+                toDelete.push_back(entry.first);
+            }
+        }
+        for (auto name : toDelete) {
+            commands.erase(name);
+        }
+        updateCommands(tree);
+    }
+
+    void Shell::updateCommands(Node *node)
+    {
+        for (auto name : node->getCommands()) {
+            registerCommand(new RemoteCommand(node->getPath(), name, client->getCommandDesc(name)));
+        }
+        for (auto entry : node->children) {
+            updateCommands(entry.second);
         }
     }
 
@@ -390,6 +413,15 @@ namespace RhIO
     std::map<std::string, Command*> Shell::getCommands()
     {
         return commands;
+    }
+            
+    Command *Shell::getCommand(std::string command)
+    {
+        if (commands.count(command)) {
+            return commands[command];
+        }
+
+        return NULL;
     }
 
     ClientReq *Shell::getClient()

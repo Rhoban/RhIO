@@ -19,6 +19,7 @@ set (SOURCES
     commands/CdCommand.cpp
     commands/LogCommand.cpp
     commands/SyncCommand.cpp
+    commands/RemoteCommand.cpp
     Shell.cpp
     CSV.cpp
     Terminal.cpp

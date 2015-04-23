@@ -26,6 +26,7 @@ namespace RhIO
              * Updates the local node tree
              */
             void sync();
+            void updateCommands(Node *node);
 
             /**
              * Runs the interactive shell, will get lines from stdin
@@ -57,14 +58,11 @@ namespace RhIO
             void set(std::string lvalue, std::string rvalue);
 
             /**
-             * Register a command to the shell
+             * Commands handling
              */
             void registerCommand(Command *command);
-
-            /**
-             * Get the list of commands
-             */
             std::map<std::string, Command*> getCommands();
+            Command *getCommand(std::string command);
 
             /**
              * Get the remote client

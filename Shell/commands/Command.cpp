@@ -5,6 +5,10 @@
 
 namespace RhIO
 {
+    Command::~Command()
+    {
+    }
+
     void Command::setShell(Shell *shell_)
     {
         shell = shell_;

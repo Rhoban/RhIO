@@ -14,6 +14,11 @@ namespace RhIO
     {
         return node->getPath() + "/" + value->name;
     }
+            
+    std::vector<std::string> Node::getCommands()
+    {
+        return commands;
+    }
 
     Node::Node(ClientReq *client, std::string path)
         : name(""), parent(NULL)
@@ -23,6 +28,7 @@ namespace RhIO
             slashed += "/";
         }
 
+        // Getting the nodes
 #define GET_CHILDREN(type, vect)                                 \
         for (auto name : client->listValues ## type (path)) {    \
             auto fullName = slashed+name;                       \
@@ -36,6 +42,9 @@ namespace RhIO
         GET_CHILDREN(Float, floats)
         GET_CHILDREN(Int, ints)
         GET_CHILDREN(Str, strings)
+
+        // Commands
+        commands = client->listCommands(path);
 
         // Getting childrens
         for (auto name : client->listChildren(path)) {
