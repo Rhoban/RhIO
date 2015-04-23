@@ -29,7 +29,7 @@ namespace RhIO
         if (args.size() < 2) {
             errorUsage();
         } else {
-            NodePool pool = shell->getPool(args);
+            NodePool pool = shell->getPool(args, 1);
 
             CSV csv;
             csv.open(args[0]);

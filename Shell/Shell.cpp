@@ -3,12 +3,17 @@
 #include <list>
 #include <iostream>
 #include <string>
-#include <algorithm> 
-#include <functional> 
+#include <algorithm>
+#include <functional>
 #include <RhIO.hpp>
 #include "Stream.h"
 #include "Shell.h"
 #include "utils.h"
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
 
 namespace RhIO
 {
@@ -17,8 +22,34 @@ namespace RhIO
     {
     }
 
+    void Shell::terminal_set_ioconfig() {
+        struct termios custom;
+        int fd=fileno(stdin);
+        tcgetattr(fd, &termsave);
+        custom=termsave;
+        custom.c_lflag &= ~(ICANON|ECHO);
+        tcsetattr(fd,TCSANOW,&custom);
+        // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)|O_NONBLOCK);
+        fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)); //blocking
+    }
+
+    void Shell::displayPrompt()
+    {
+        Terminal::setColor("yellow", true);
+        std::cout << hostname;
+        Terminal::clear();
+        std::cout << ":";
+        Terminal::setColor("blue", true);
+        std::cout << getPath();
+        Terminal::clear();
+        std::cout << "# " << std::flush;
+    }
+
     void Shell::run()
     {
+
+        terminal_set_ioconfig();
+
         std::string reqServer = "tcp://"+server+":"+ServerRepPort;
         std::string subServer = "tcp://"+server+":"+ServerPubPort;
         terminate = false;
@@ -32,22 +63,202 @@ namespace RhIO
         tree = new Node(client, "");
         Terminal::clear();
 
+        if (auto value = getValue("server/hostname")) {
+            hostname = Node::toString(value);
+        } else {
+            hostname = "RhIO";
+        }
+
         // Reading lines from stdin
-        while (!terminate && !feof(stdin)) {
-            Terminal::setColor("yellow", true);
-            std::cout << "RhIO";
-            Terminal::clear();
-            std::cout << ":";
-            Terminal::setColor("blue", true);
-            std::cout << getPath();
-            Terminal::clear();
-            std::cout << "# " << std::flush;
+        while (!terminate ) {
+            displayPrompt();
             std::string line;
-            std::getline(std::cin, line);
+            // std::getline(std::cin, line);
+            line=getLine();
             parse(line);
         }
-        if (feof(stdin)) {
-            std::cout << std::endl << std::flush;
+
+        tcsetattr(fileno(stdin),TCSANOW,&termsave);
+        std::cout << std::endl << std::flush;
+
+    }
+
+    std::string Shell::getLine()
+    {
+
+        char c;
+        std::string line("");
+        bool done=false;
+        bool esc_mode=false;
+        std::deque<std::string>::iterator hist_it=shell_history.end();
+        int cursorpos=0;
+        std::string lastcmd("");
+
+        while(!done)
+        {
+            if ((c = getchar())>0)
+            {
+                switch(c)
+                {
+                    case 0x0a: //enter
+
+                        putchar(c);
+                        done=true;
+
+                        lastcmd="";
+                        if(shell_history.size()>0)
+                            lastcmd=shell_history.back();
+
+                        if(line.compare("")!=0 && line.compare(lastcmd)!=0) //store in history if non null and different than the last cmd
+                        {
+                            shell_history.push_back(line);
+                            if(shell_history.size()>MAX_HISTORY)
+                                shell_history.pop_front();
+                            hist_it=shell_history.begin();
+                        }
+                        return line;
+                        break;//useless
+
+                    case 0x01: //Ctrl-a goto begin of line
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+                        cursorpos=0;
+                        if(line.size()>0)
+                            Terminal::cursorNLeft(line.size());
+
+                        break;
+
+                    case 0x05: //Ctrl-e goto end of line
+                        Terminal::clearLine();
+                        displayPrompt();
+                        std::cout<<line;
+
+                        if(cursorpos<line.size() )
+                        {
+                            Terminal::cursorNRight(line.size()-cursorpos);
+                            cursorpos=line.size();
+                        }
+
+                        break;
+
+                    case 0xc: //Ctrl-l clear screen
+                        Terminal::clearScreen();
+                        Terminal::clearLine();
+                        Terminal::initCursor();
+                        displayPrompt();
+                        line="";
+                        cursorpos=0;
+                        break;
+
+                    case 0x1b: //begin break mode (arrows)
+                        esc_mode=true;
+
+                        break;
+
+                    case 0x5b: //just after 0x1b
+
+                        break;
+
+                    case 0x41: //up
+                        if(esc_mode)
+                        {
+
+                            if(shell_history.size()>0 && hist_it!= shell_history.begin())
+                            {
+                                line=*--hist_it;
+                                cursorpos=line.size();
+                                Terminal::clearLine();
+                                displayPrompt();
+                                std::cout<<line;
+                            }
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x42: //down
+                        if(esc_mode)
+                        {
+                            if(shell_history.size()>0 && hist_it!= shell_history.end())
+                            {
+                                line=*hist_it++;
+                                cursorpos=line.size();
+                                Terminal::clearLine();
+                                displayPrompt();
+                                std::cout<<line;
+                            }
+                            else if( hist_it== shell_history.end())
+                            {
+                                Terminal::clearLine();
+                                displayPrompt();
+                                line="";
+                                cursorpos=0;
+                            }
+
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x43: //right
+                        if(esc_mode)
+                        {
+
+                            if(cursorpos<line.size())
+                            {
+                                Terminal::cursorRight();
+                                cursorpos++;
+                            }
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x44: //left
+                        if(esc_mode)
+                        {
+
+                            if(cursorpos>0)
+                            {
+                                Terminal::cursorLeft();
+                                cursorpos--;
+                            }
+                            esc_mode=false;
+                        }
+                        break;
+
+                    case 0x7f: //backspace
+                        if(line.size()>0)
+                        {
+                            line.pop_back();
+                            Terminal::clearLine();
+                            displayPrompt();
+                            cursorpos--;
+                            std::cout<<line;
+                        }
+                        break;
+
+                    default:
+
+                        if(line.size()>0)
+                        {
+                            std::string tmp("");
+                            tmp+=c;
+                            line.insert(cursorpos,tmp);
+                        }
+                        else{
+                            line+=c;
+                        }
+                        cursorpos++;
+                        Terminal::clearLine();
+                        displayPrompt();
+
+                        std::cout<<line;
+
+                        if(line.size()-cursorpos>0)
+                            Terminal::cursorNLeft(line.size()-cursorpos);
+
+                        break;
+                }
+            }
         }
     }
 
@@ -155,12 +366,12 @@ namespace RhIO
     {
         return client;
     }
-    
+
     ClientSub *Shell::getClientSub()
     {
         return clientSub;
-    }        
-            
+    }
+
     void Shell::enterPath(std::string path_)
     {
         path.push_back(path_);
@@ -212,7 +423,7 @@ namespace RhIO
                 path.push_back(part);
             }
         }
-        
+
         return path;
     }
 
@@ -237,7 +448,7 @@ namespace RhIO
         }
         return node;
     }
-            
+
     NodeValue Shell::getNodeValue(std::string path)
     {
         auto parts = pathToParts(path);
@@ -268,17 +479,17 @@ namespace RhIO
 
         return node->getNodeValue(name);
     }
-            
+
     Stream *Shell::getStream()
     {
         return stream;
     }
-    
+
     ValueBase *Shell::getValue(std::string path)
     {
         return getNodeValue(path).value;
     }
-            
+
     Node *Shell::getCurrentNode()
     {
         return getNode();

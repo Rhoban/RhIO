@@ -9,6 +9,10 @@
 #include "Terminal.h"
 #include "Node.h"
 #include "NodePool.h"
+#include <termios.h>
+#include <deque>
+
+#define MAX_HISTORY 100
 
 namespace RhIO
 {
@@ -22,6 +26,15 @@ namespace RhIO
              * Runs the interactive shell, will get lines from stdin
              */
             void run();
+
+            void terminal_set_ioconfig();
+
+            void displayPrompt();
+
+            /**
+             * Read the command line
+             */
+            std::string getLine();
 
             /**
              * Parse a command line typed by the user
@@ -42,7 +55,7 @@ namespace RhIO
              * Register a command to the shell
              */
             void registerCommand(Command *command);
-            
+
             /**
              * Get the list of commands
              */
@@ -81,8 +94,12 @@ namespace RhIO
             NodePool getPool(std::vector<std::string> names, int start=0);
             
             Node *tree;
+            struct termios termsave;
+            std::deque<std::string> shell_history;
+
 
         protected:
+            std::string hostname;
             ClientReq *client;
             ClientSub *clientSub;
             Stream *stream;
