@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Shell.h"
 #include "HelpCommand.h"
+#include "RemoteCommand.h"
 
 namespace RhIO
 {
@@ -21,8 +22,18 @@ namespace RhIO
         for (auto entry : commands) {
             auto command = entry.second;
             Terminal::setColor("white", true);
-            std::cout << command->getName() << ": " << std::endl;
+            std::cout << command->getName() << ": ";
             Terminal::clear();
+            
+            if (auto remote = dynamic_cast<RemoteCommand*>(command)) {
+                std::cout << "(from ";
+                Terminal::setColor("grey", true);
+                std::cout << "/" << remote->getOrigin() << "/";
+                Terminal::clear();
+                std::cout << ")";
+            }
+
+            std::cout << std::endl;
             if (command->getUsage() != "") {
                 std::cout << "    Usage: " << command->getUsage() << std::endl;
             }

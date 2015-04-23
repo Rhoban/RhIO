@@ -1,3 +1,4 @@
+#include <sstream>
 #include <iostream>
 #include "Shell.h"
 #include "TuneCommand.h"
@@ -22,24 +23,13 @@ namespace RhIO
 
     void TuneCommand::process(std::vector<std::string> args)
     {
-        if (!args.size()) {
-            errorUsage();
-        } else {
-            Curse curse;
-
-            for (auto arg : args) {
-                auto val = shell->getNodeValue(arg);
-                if (val.value == NULL) {
-                    Terminal::setColor("red", true);
-                    std::cout << "Unknown parameter: " << arg << std::endl;
-                    Terminal::clear();
-                    return;
-                }
-                curse.values.push_back(val);
-            }
-
+        Curse curse;
+        curse.values = shell->getPool(args);
+        if (curse.values.size()) {
             curse.shell = shell;
             curse.run();
+        } else {
+            throw std::string("Nothing to tune");
         }
     }
 }

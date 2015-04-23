@@ -8,6 +8,11 @@
 #include "commands/Command.h"
 #include "Terminal.h"
 #include "Node.h"
+#include "NodePool.h"
+#include <termios.h>
+#include <deque>
+
+#define MAX_HISTORY 100
 
 namespace RhIO
 {
@@ -18,9 +23,24 @@ namespace RhIO
             Shell(std::string server);
 
             /**
+             * Updates the local node tree
+             */
+            void sync();
+            void updateCommands(Node *node);
+
+            /**
              * Runs the interactive shell, will get lines from stdin
              */
             void run();
+
+            void terminal_set_ioconfig();
+
+            void displayPrompt();
+
+            /**
+             * Read the command line
+             */
+            std::string getLine();
 
             /**
              * Parse a command line typed by the user
@@ -38,14 +58,11 @@ namespace RhIO
             void set(std::string lvalue, std::string rvalue);
 
             /**
-             * Register a command to the shell
+             * Commands handling
              */
             void registerCommand(Command *command);
-            
-            /**
-             * Get the list of commands
-             */
             std::map<std::string, Command*> getCommands();
+            Command *getCommand(std::string command);
 
             /**
              * Get the remote client
@@ -70,11 +87,22 @@ namespace RhIO
             bool goToPath(std::string path);
             std::string getPath();
 
+            /**
+             * Add the poll to the stream, and wait the user to press enter, then
+             * remove the pool from the stream
+             */
+            void streamWait(NodePool *pool);
             Stream *getStream();
+            NodePool poolForNode(Node *node);
+            NodePool getPool(std::vector<std::string> names, int start=0);
             
             Node *tree;
+            struct termios termsave;
+            std::deque<std::string> shell_history;
+
 
         protected:
+            std::string hostname;
             ClientReq *client;
             ClientSub *clientSub;
             Stream *stream;

@@ -1,9 +1,14 @@
+#include <sstream>
 #include <iostream>
 #include "Command.h"
 #include "Terminal.h"
 
 namespace RhIO
 {
+    Command::~Command()
+    {
+    }
+
     void Command::setShell(Shell *shell_)
     {
         shell = shell_;
@@ -16,8 +21,8 @@ namespace RhIO
             
     void Command::errorUsage()
     {
-        Terminal::setColor("red", true);
-        std::cout << "Error, usage: " << getUsage() << std::endl;
-        Terminal::clear();
+        std::stringstream ss;
+        ss << "Usage: " << getUsage();
+        throw ss.str();
     }
 }

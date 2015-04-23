@@ -29,25 +29,12 @@ namespace RhIO
         if (args.size() < 2) {
             errorUsage();
         } else {
-            NodePool pool;
-            for (int k=1; k<args.size(); k++) {
-                auto val = shell->getNodeValue(args[k]);
-                if (val.value == NULL) {
-                    Terminal::setColor("red", true);
-                    std::cout << "Unknown parameter: " << args[k] << std::endl;
-                    Terminal::clear();
-                    return;
-                }
-                pool.push_back(val);
-            }
+            NodePool pool = shell->getPool(args, 1);
 
             CSV csv;
             csv.open(args[0]);
             pool.setCallback(std::bind(&LogCommand::update, this, &csv, _1));
-            shell->getStream()->addPool(&pool);
-            std::string line;
-            std::getline(std::cin, line);
-            shell->getStream()->removePool(&pool);
+            shell->streamWait(&pool);
             csv.close();
         }
     }

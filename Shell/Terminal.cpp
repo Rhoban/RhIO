@@ -9,6 +9,16 @@ namespace RhIO
 #endif
     }
 
+    void Terminal::clearScreen()
+    {
+        printf("\033[2J");
+    }
+
+    void Terminal::initCursor()
+    {
+        printf("\033[1;1H");
+    }
+
     void Terminal::setColor(std::string name, bool bold)
     {
 #ifdef HAS_COLORS
@@ -30,5 +40,34 @@ namespace RhIO
             printf("\x1b[%dm", bold);
         }
 #endif
+    }
+
+    void Terminal::clearLine()
+    {
+        printf("%c[2K\r", 27);
+    }
+
+// - Move the cursor forward N columns:
+//   \033[<N>C
+// - Move the cursor backward N columns:
+//   \033[<N>D
+
+
+    void Terminal::cursorRight()
+    {
+        printf("\033[C");
+    }
+
+    void Terminal::cursorLeft()
+    {
+        printf("\033[D");
+    }
+    void Terminal::cursorNLeft(int n)
+    {
+        printf("\033[%dD",n);
+    }
+    void Terminal::cursorNRight(int n)
+    {
+        printf("\033[%dC",n);
     }
 }

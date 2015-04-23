@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <ncurses.h>
 #include <Value.hpp>
+#include "NodePool.h"
 #include "Node.h"
 
 #define SLIDER_WIDTH    12
@@ -28,6 +29,6 @@ namespace RhIO
             void bound(ValueBase *value);
 
             Shell *shell;
-            std::vector<NodeValue> values;
+            NodePool values;
     };
 }
