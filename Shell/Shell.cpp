@@ -136,6 +136,7 @@ namespace RhIO
         std::string cur_comp_line;
         std::string lastcmd;
         bool lastisspace=false;
+        std::vector<std::string> paths;
 
         while(!done)
         {
@@ -331,6 +332,14 @@ namespace RhIO
                         {
                             if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
                                 completion_matches.push_back(cmd_it->first);
+                        }
+
+                            //also look for path
+                        paths=getPossibilities();
+                        for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
+                        {
+                            if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                                completion_matches.push_back(*p_it);
                         }
 
 
@@ -754,13 +763,13 @@ namespace RhIO
         std::getline(std::cin, line);
         stream->removePool(pool);
     }
-            
+
     std::vector<std::string> Shell::getPossibilities()
     {
         std::vector<std::string> possibilities;
         getPossibilitiesRec(possibilities, getNode(), "");
         getPossibilitiesRec(possibilities, tree, "/");
-        
+
         return possibilities;
     }
 
