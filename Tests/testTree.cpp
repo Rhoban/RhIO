@@ -57,6 +57,6 @@ int main()
 
     std::cout << "Display Tree" << std::endl;
     printTree(RhIO::Root); 
-    
+
     return 0;
 }

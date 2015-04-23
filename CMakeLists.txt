@@ -22,6 +22,7 @@ link_directories(${ZMQ_DIRECTORY}/lib)
 #Sources files
 set(SOURCES_FILES_SERVER
     Server/IONode.cpp
+    Server/Filesystem.cpp
     Server/RhIO.cpp
     Server/ServerPub.cpp
     Server/ServerRep.cpp
@@ -66,6 +67,11 @@ if (BUILD_RHIO_TESTS)
     target_link_libraries(testThreadSafeValue RhIO)
     add_executable(testThreadSafeValueUpdate Tests/testThreadSafeValueUpdate.cpp)
     target_link_libraries(testThreadSafeValueUpdate RhIO)
+    
+    add_executable(testPersistSave Tests/testPersistSave.cpp)
+    target_link_libraries(testPersistSave RhIO)
+    add_executable(testPersistLoad Tests/testPersistLoad.cpp)
+    target_link_libraries(testPersistLoad RhIO)
     
     add_executable(testServerRep Tests/testServerRep.cpp)
     target_link_libraries(testServerRep RhIO)

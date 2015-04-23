@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <chrono>
+#include <fstream>
 #include "ValueNode.hpp"
 #include "ServerPub.hpp"
 #include "RhIO.hpp"
@@ -388,6 +389,263 @@ std::vector<std::string> ValueNode::listValuesStr() const
     }
 
     return list;
+}
+        
+void ValueNode::saveValues(const std::string& path) const
+{
+    std::lock_guard<std::mutex> lock(_mutex);
+
+    //Check that some values have to be saved
+    bool hasValues = false;
+    for (const auto& v : _valuesBool) {
+        if (v.second.persisted) hasValues = true;
+    }
+    for (const auto& v : _valuesInt) {
+        if (v.second.persisted) hasValues = true;
+    }
+    for (const auto& v : _valuesFloat) {
+        if (v.second.persisted) hasValues = true;
+    }
+    for (const auto& v : _valuesStr) {
+        if (v.second.persisted) hasValues = true;
+    }
+    if (!hasValues) {
+        return;
+    }
+
+    //Open values.conf file
+    std::ofstream file;
+    if (
+        path.length() > 0 && 
+        path[path.length()-1] != separator
+    ) {
+        file.open(path + separator + "values.conf");
+    } else {
+        file.open(path + "values.conf");
+    }
+    if (!file.is_open()) {
+        throw std::runtime_error(
+            "RhIO unable to write values file: " + path);
+    }
+
+    //Write Bool values
+    for (const auto& v : _valuesBool) {
+        if (v.second.persisted) {
+            file << "[bool] " << v.second.name 
+                << ".value = " << v.second.value << std::endl;
+            file << "[bool] " << v.second.name 
+                << ".comment = " << v.second.comment << std::endl;
+            if (v.second.hasMin) {
+                file << "[bool] " << v.second.name 
+                    << ".min = " << v.second.min << std::endl;
+            }
+            if (v.second.hasMax) {
+                file << "[bool] " << v.second.name 
+                    << ".max = " << v.second.max << std::endl;
+            }
+        }
+    }
+    //Write Int values
+    for (const auto& v : _valuesInt) {
+        if (v.second.persisted) {
+            file << "[int] " << v.second.name 
+                << ".value = " << v.second.value << std::endl;
+            file << "[int] " << v.second.name 
+                << ".comment = " << v.second.comment << std::endl;
+            if (v.second.hasMin) {
+                file << "[int] " << v.second.name 
+                    << ".min = " << v.second.min << std::endl;
+            }
+            if (v.second.hasMax) {
+                file << "[int] " << v.second.name 
+                    << ".max = " << v.second.max << std::endl;
+            }
+        }
+    }
+    //Write Float values
+    for (const auto& v : _valuesFloat) {
+        if (v.second.persisted) {
+            file << "[float] " << v.second.name 
+                << ".value = " << v.second.value << std::endl;
+            file << "[float] " << v.second.name 
+                << ".comment = " << v.second.comment << std::endl;
+            if (v.second.hasMin) {
+                file << "[float] " << v.second.name 
+                    << ".min = " << v.second.min << std::endl;
+            }
+            if (v.second.hasMax) {
+                file << "[float] " << v.second.name 
+                    << ".max = " << v.second.max << std::endl;
+            }
+        }
+    }
+    //Write Str values
+    for (const auto& v : _valuesStr) {
+        if (v.second.persisted) {
+            file << "[str] " << v.second.name 
+                << ".value = " << v.second.value << std::endl;
+            file << "[str] " << v.second.name 
+                << ".comment = " << v.second.comment << std::endl;
+            if (v.second.hasMin) {
+                file << "[str] " << v.second.name 
+                    << ".min = " << v.second.min << std::endl;
+            }
+            if (v.second.hasMax) {
+                file << "[str] " << v.second.name 
+                    << ".max = " << v.second.max << std::endl;
+            }
+        }
+    }
+
+    file.close();
+}
+        
+void ValueNode::loadValues(const std::string& path)
+{
+    //Open values.conf file
+    std::ifstream file;
+    if (
+        path.length() > 0 && 
+        path[path.length()-1] != separator
+    ) {
+        file.open(path + separator + "values.conf");
+    } else {
+        file.open(path + "values.conf");
+    }
+    if (!file.is_open()) {
+        return;
+    }
+
+    auto error = [&path](const std::string& line) {
+        throw std::runtime_error(
+                "RhIO invalid formated values file: " 
+                + path + ": " + line);
+    };
+
+    //For each lines
+    while (file.good()) {
+        std::string line;
+        std::getline(file, line);
+        if (line.size() == 0) continue;
+        if (line[0] != '[') error(line);
+        //Extract type
+        size_t pos = 0;
+        size_t pos2 = line.find_first_of("]", pos);
+        if (pos2 == std::string::npos) error(line);
+        if (pos2 - pos == 0) error(line);
+        pos2++;
+        std::string type = line.substr(pos, pos2 - pos);
+        //Skip space
+        pos = pos2 + 1;
+        pos = line.find_first_not_of(" ", pos);
+        if (pos == std::string::npos) error(line);
+        //Extract name
+        pos2 = line.find_first_of(".", pos);
+        if (pos2 == std::string::npos) error(line);
+        if (pos2 - pos == 0) error(line);
+        std::string name = line.substr(pos, pos2 - pos);
+        //Extract field
+        pos = pos2 + 1;
+        pos2 = line.find_first_of(" ", pos);
+        if (pos2 == std::string::npos) error(line);
+        if (pos2 - pos == 0) error(line);
+        std::string field = line.substr(pos, pos2 - pos);
+        //Extact value
+        pos = pos2 + 1;
+        pos = line.find_first_of("=", pos);
+        if (pos == std::string::npos) error(line);
+        pos++;
+        pos = line.find_first_not_of(" ", pos);
+        std::string value;
+        if (pos == std::string::npos) {
+            value = "";
+        } else {
+            value = line.substr(pos);
+        }
+        
+        //Assign value, comment, min and max
+        if (type == "[bool]") {
+            //Bool type
+            if (_valuesBool.count(name) == 0) {
+                _valuesBool[name] = ValueBool();
+                ValueBuilderBool(_valuesBool[name], false);
+            }
+            if (field == "value") {
+                _valuesBool.at(name).value = std::stoi(value);
+            } else if (field == "comment") {
+                _valuesBool.at(name).comment = value;
+            } else if (field == "min") {
+                _valuesBool.at(name).hasMin = true;
+                _valuesBool.at(name).min = std::stoi(value);
+            } else if (field == "max") {
+                _valuesBool.at(name).hasMax = true;
+                _valuesBool.at(name).max = std::stoi(value);
+            } else {
+                error(line);
+            }
+        } else if (type == "[int]") {
+            //Int type
+            if (_valuesInt.count(name) == 0) {
+                _valuesInt[name] = ValueInt();
+                ValueBuilderInt(_valuesInt[name], false);
+            }
+            if (field == "value") {
+                _valuesInt.at(name).value = std::stol(value);
+            } else if (field == "comment") {
+                _valuesInt.at(name).comment = value;
+            } else if (field == "min") {
+                _valuesInt.at(name).hasMin = true;
+                _valuesInt.at(name).min = std::stol(value);
+            } else if (field == "max") {
+                _valuesInt.at(name).hasMax = true;
+                _valuesInt.at(name).max = std::stol(value);
+            } else {
+                error(line);
+            }
+        } else if (type == "[float]") {
+            //Float type
+            if (_valuesFloat.count(name) == 0) {
+                _valuesFloat[name] = ValueFloat();
+                ValueBuilderFloat(_valuesFloat[name], false);
+            }
+            if (field == "value") {
+                _valuesFloat.at(name).value = std::stod(value);
+            } else if (field == "comment") {
+                _valuesFloat.at(name).comment = value;
+            } else if (field == "min") {
+                _valuesFloat.at(name).hasMin = true;
+                _valuesFloat.at(name).min = std::stod(value);
+            } else if (field == "max") {
+                _valuesFloat.at(name).hasMax = true;
+                _valuesFloat.at(name).max = std::stod(value);
+            } else {
+                error(line);
+            }
+        } else if (type == "[str]") {
+            //Str type
+            if (_valuesStr.count(name) == 0) {
+                _valuesStr[name] = ValueStr();
+                ValueBuilderStr(_valuesStr[name], false);
+            }
+            if (field == "value") {
+                _valuesStr.at(name).value = value;
+            } else if (field == "comment") {
+                _valuesStr.at(name).comment = value;
+            } else if (field == "min") {
+                _valuesStr.at(name).hasMin = true;
+                _valuesStr.at(name).min = value;
+            } else if (field == "max") {
+                _valuesStr.at(name).hasMax = true;
+                _valuesStr.at(name).max = value;
+            } else {
+                error(line);
+            }
+        } else {
+            error(line);
+        }
+    }
+    
+    file.close();
 }
 
 }

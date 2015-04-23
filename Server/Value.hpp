@@ -144,7 +144,7 @@ struct ValueBuilder final
             }
             return this;
         }
-        ValueBuilder* isPersisted(bool flag)
+        ValueBuilder* persisted(bool flag)
         {
             _value.persisted = flag;
             return this;
