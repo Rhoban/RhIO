@@ -45,6 +45,13 @@ namespace RhIO
                 Terminal::clear();
                 std::cout << val->comment;
             }
+
+            if (val->persisted) {
+                Terminal::setColor("grey", false);
+                std::cout << " persisted ";
+                Terminal::clear();
+                std::cout << Node::persistedToString(val);
+            }
             std::cout << std::endl;
         }
     }

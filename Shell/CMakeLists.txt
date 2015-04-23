@@ -21,6 +21,7 @@ set (SOURCES
     commands/SyncCommand.cpp
     commands/RemoteCommand.cpp
     commands/PlotCommand.cpp
+    commands/DiffCommand.cpp
     GnuPlot.cpp
     Shell.cpp
     CSV.cpp

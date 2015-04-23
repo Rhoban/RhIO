@@ -49,6 +49,8 @@ namespace RhIO
             static std::string toString(ValueBase *value);
             static double toNumber(ValueBase *value);
             static std::string getType(ValueBase *value);
+            static bool isDiff(ValueBase *value);
+            static std::string persistedToString(ValueBase *value);
 
             static void setFromString(Shell *shell, NodeValue value, std::string str);
 

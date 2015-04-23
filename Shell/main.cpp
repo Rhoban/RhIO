@@ -6,6 +6,7 @@
 #include "commands/LogCommand.h"
 #include "commands/SyncCommand.h"
 #include "commands/PlotCommand.h"
+#include "commands/DiffCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -30,6 +31,7 @@ int main(int argc, char *argv[])
     shell.registerCommand(new LogCommand);
     shell.registerCommand(new SyncCommand);
     shell.registerCommand(new PlotCommand);
+    shell.registerCommand(new DiffCommand);
 #ifdef HAS_CURSES
     shell.registerCommand(new TuneCommand);
 #endif

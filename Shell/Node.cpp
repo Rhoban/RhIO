@@ -216,14 +216,50 @@ namespace RhIO
         auto name = nodeValue.getName();
         auto value = nodeValue.value;
 
-        if (asBool(value)) {
-            client->setBool(name, (str != "0" && str != "false"));
-        } else if (asInt(value)) {
-            client->setInt(name, atoi(str.c_str()));
-        } else if (asFloat(value)) {
-            client->setFloat(name, atof(str.c_str()));
-        } else if (asString(value)) {
-            client->setStr(name, str);
+        if (auto val = asBool(value)) {
+            val->value = (str != "0" && str != "false");
+        } else if (auto val =asInt(value)) {
+            val->value = atoi(str.c_str());
+        } else if (auto val =asFloat(value)) {
+            val->value = atof(str.c_str());
+        } else if (auto val =asString(value)) {
+            val->value = str;
         } 
+
+        set(shell, nodeValue);
+    }
+    
+    std::string Node::persistedToString(ValueBase *value)
+    {
+        if (auto val = asBool(value)) {
+            return val->valuePersisted ? "true" : "false";
+        } else if (auto val = asInt(value)) {
+            std::stringstream ss;
+            ss << val->valuePersisted;
+            return ss.str();
+        } else if (auto val = asFloat(value)) {
+            std::stringstream ss;
+            ss << val->valuePersisted;
+            return ss.str();
+        } else if (auto val = asString(value)) {
+            return val->valuePersisted;
+        } else {
+            return "?";
+        }
+    }
+
+    bool Node::isDiff(ValueBase *value)
+    {
+        if (auto val = asBool(value)) {
+            return val->value != val->valuePersisted;
+        } else if (auto val = asInt(value)) {
+            return val->value != val->valuePersisted;
+        } else if (auto val = asFloat(value)) {
+            return val->value != val->valuePersisted;
+        } else if (auto val = asString(value)) {
+            return val->value != val->valuePersisted;
+        } else {
+            return false;
+        }
     }
 }
