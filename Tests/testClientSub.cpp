@@ -46,6 +46,15 @@ int main()
         assert(name == "test/test3/paramStr");
         assert(val == "4");
     });
+    client.setHandlerStream(
+        [](const std::string name, long timestamp, const std::string& val) 
+    {
+        std::cout << "Receiving Stream:" << std::endl;
+        std::cout << name << " " 
+            << timestamp << " " << val << std::endl;
+        assert(name == "test/stream1");
+        assert(val == "test stream1\n");
+    });
     
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(

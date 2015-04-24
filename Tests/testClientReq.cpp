@@ -96,6 +96,11 @@ int main()
     assert(client.listCommands("test")[0] == "command1");
     assert(client.commandDescription("test/command1") == "command1");
     assert(client.call("test/command1", {"test1"}) == "OK test1");
+    
+    assert(client.listStreams("/").size() == 0);
+    assert(client.listStreams("test").size() == 1);
+    assert(client.listStreams("test")[0] == "stream1");
+    assert(client.streamDescription("test/stream1") == "stream1");
 
     //client.save("/", "/tmp/root");
     //client.load("/", "/tmp/root");

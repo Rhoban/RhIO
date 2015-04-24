@@ -7,6 +7,7 @@
 #include <mutex>
 #include "ValueNode.hpp"
 #include "CommandNode.hpp"
+#include "StreamNode.hpp"
 
 namespace RhIO {
 
@@ -22,7 +23,8 @@ constexpr char separator = '/';
  * virtual input/output hierarchy name tree
  * with children Nodes
  */
-class IONode final : public ValueNode, public CommandNode
+class IONode final : public ValueNode, 
+    public CommandNode, public StreamNode
 {
     public:
 

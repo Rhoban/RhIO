@@ -72,22 +72,22 @@ class CommandNode: public BaseNode<CommandNode>
             CommandFunc func);
 
         /**
-         * Return the relative name list of all registered
-         * commands
+         * Return the relative name list of 
+         * all registered commands
          */
         std::vector<std::string> listCommands() const;
 
     private:
 
         /**
-         * Container values map for commands functions
+         * Container map for commands functions
          * and commands descriptions
          */
         std::map<std::string, CommandFunc> _commands;
         std::map<std::string, std::string> _descriptions;
         
         /**
-         * Mutex protecting concurent values creation
+         * Mutex protecting concurent commands creation
          */
         mutable std::mutex _mutex;
 };

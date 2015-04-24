@@ -25,6 +25,8 @@ int main()
             return "OK " + args[0];
         });
 
+    RhIO::Root.newStream("test/stream1", "stream1");
+
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(
         std::chrono::milliseconds(5000));

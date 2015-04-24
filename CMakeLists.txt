@@ -27,6 +27,8 @@ set(SOURCES_FILES_SERVER
     Server/RhIO.cpp
     Server/ServerPub.cpp
     Server/ServerRep.cpp
+    Server/Stream.cpp
+    Server/StreamNode.cpp
     Server/ValueNode.cpp
 )
 set(SOURCES_FILES_COMMON

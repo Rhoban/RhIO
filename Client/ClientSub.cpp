@@ -13,6 +13,7 @@ ClientSub::ClientSub(const std::string& endpoint) :
     _handlerInt(StreamIntHandler()),
     _handlerFloat(StreamFloatHandler()),
     _handlerStr(StreamStrHandler()),
+    _handlerStream(StreamStrHandler()),
     //Starting receiver thread
     _thread(&ClientSub::subscriberThread, this, endpoint)
 {
@@ -45,6 +46,11 @@ void ClientSub::setHandlerStr(StreamStrHandler handler)
 {
     std::lock_guard<std::mutex> lock(_mutex);
     _handlerStr = handler;
+}
+void ClientSub::setHandlerStream(StreamStrHandler handler)
+{
+    std::lock_guard<std::mutex> lock(_mutex);
+    _handlerStream = handler;
 }
         
 void ClientSub::subscriberThread(const std::string& endpoint)
@@ -114,6 +120,16 @@ void ClientSub::subscriberThread(const std::string& endpoint)
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerStr) {
                 _handlerStr(name, timestamp, val);
+            }
+            continue;
+        } else if (type == MsgStreamStream) {
+            //Stream Stream value
+            std::string name = sub.readStr();
+            long timestamp = sub.readInt();
+            std::string val = sub.readStr();
+            std::lock_guard<std::mutex> lock(_mutex);
+            if (_handlerStream) {
+                _handlerStream(name, timestamp, val);
             }
             continue;
         } else {

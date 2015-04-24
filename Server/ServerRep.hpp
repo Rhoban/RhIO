@@ -113,6 +113,17 @@ class ServerRep
         void callResult(DataBuffer& buffer);
 
         /**
+         * Implement MsgAskStreams (MsgListNames)
+         */
+        void listStreams(DataBuffer& buffer);
+
+        /**
+         * Implement MsgAskDescriptionStream 
+         * (MsgDescriptionStream)
+         */
+        void descriptionStream(DataBuffer& buffer);
+
+        /**
          * Implement MsgError with given error message
          */
         void error(const std::string& msg);

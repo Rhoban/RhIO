@@ -12,14 +12,17 @@ ServerPub::ServerPub(const std::string& endpoint) :
     _queue1Int(),
     _queue1Float(),
     _queue1Str(),
+    _queue1Stream(),
     _queue2Bool(),
     _queue2Int(),
     _queue2Float(),
     _queue2Str(),
+    _queue2Stream(),
     _mutexQueueBool(),
     _mutexQueueInt(),
     _mutexQueueFloat(),
-    _mutexQueueStr()
+    _mutexQueueStr(),
+    _mutexQueueStream()
 {
     _socket.bind(endpoint.c_str());
 }
@@ -64,6 +67,17 @@ void ServerPub::publishStr(const std::string& name,
         _queue2Str.push_back({name, val, timestamp});
     }
 }
+
+void ServerPub::publishStream(const std::string& name, 
+    const std::string& val, long timestamp)
+{
+    std::lock_guard<std::mutex> lock(_mutexQueueStream);
+    if (_isWritingTo1) {
+        _queue1Stream.push_back({name, val, timestamp});
+    } else {
+        _queue2Stream.push_back({name, val, timestamp});
+    }
+}
         
 void ServerPub::sendToClient()
 {
@@ -80,6 +94,8 @@ void ServerPub::sendToClient()
         (_isWritingTo1) ? _queue2Float : _queue1Float;
     std::list<PubValStr>& queueStr = 
         (_isWritingTo1) ? _queue2Str : _queue1Str;
+    std::list<PubValStr>& queueStream = 
+        (_isWritingTo1) ? _queue2Stream : _queue1Stream;
 
     //Sending values Bool
     while (!queueBool.empty()) {
@@ -158,6 +174,26 @@ void ServerPub::sendToClient()
         //Pop value
         queueStr.pop_front();
     }
+    //Sending values Stream
+    while (!queueStream.empty()) {
+        //Allocate message data
+        zmq::message_t packet(
+            sizeof(MsgType) + sizeof(long) 
+            + queueStream.front().name.length()
+            + sizeof(long) + sizeof(long)
+            + queueStream.front().value.length());
+        DataBuffer pub(packet.data(), packet.size());
+        pub.writeType(MsgStreamStream);
+        pub.writeStr(queueStream.front().name);
+        pub.writeInt(queueStream.front().timestamp);
+        pub.writeStr(queueStream.front().value);
+
+        //Send packet
+        _socket.send(packet);
+
+        //Pop value
+        queueStream.pop_front();
+    }
 }
         
 void ServerPub::swapBuffer()
@@ -167,6 +203,7 @@ void ServerPub::swapBuffer()
     std::lock_guard<std::mutex> lockInt(_mutexQueueInt);
     std::lock_guard<std::mutex> lockFloat(_mutexQueueFloat);
     std::lock_guard<std::mutex> lockStr(_mutexQueueStr);
+    std::lock_guard<std::mutex> lockStream(_mutexQueueStream);
     //Swap buffer
     _isWritingTo1 = !_isWritingTo1;
 }

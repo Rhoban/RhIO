@@ -7,6 +7,7 @@
 #include "DataBuffer.hpp"
 #include "Protocol.hpp"
 #include "Value.hpp"
+#include "Stream.hpp"
 
 namespace RhIO {
 
@@ -96,6 +97,20 @@ class ClientReq
         ValueInt metaValueInt(const std::string& name);
         ValueFloat metaValueFloat(const std::string& name);
         ValueStr metaValueStr(const std::string& name);
+
+        /**
+         * Return the list of available stream on 
+         * a given absolute node name
+         */
+        std::vector<std::string> listStreams
+            (const std::string& name);
+
+        /**
+         * Retrieve textual description for given absolute
+         * stream name.
+         * Absolute name, comment, and timestamp
+         */
+        std::string streamDescription(const std::string& name);
 
         /**
          * Save and Load into given absolute node name

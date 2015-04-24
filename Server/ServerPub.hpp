@@ -41,6 +41,13 @@ class ServerPub
             const std::string& val, long timestamp);
 
         /**
+         * Append to publish buffer stream
+         * given absolute name, string and timestamp
+         */
+        void publishStream(const std::string& name,
+            const std::string& val, long timestamp);
+
+        /**
          * Switch values buffer and publish to Client
          * all registered values in former writing buffer.
          */
@@ -93,6 +100,7 @@ class ServerPub
         std::list<PubValInt> _queue1Int;
         std::list<PubValFloat> _queue1Float;
         std::list<PubValStr> _queue1Str;
+        std::list<PubValStr> _queue1Stream;
 
         /**
          * Second double buffer values to
@@ -102,6 +110,7 @@ class ServerPub
         std::list<PubValInt> _queue2Int;
         std::list<PubValFloat> _queue2Float;
         std::list<PubValStr> _queue2Str;
+        std::list<PubValStr> _queue2Stream;
 
         /**
          * Mutex protecting external values container
@@ -111,6 +120,7 @@ class ServerPub
         std::mutex _mutexQueueInt;
         std::mutex _mutexQueueFloat;
         std::mutex _mutexQueueStr;
+        std::mutex _mutexQueueStream;
 
         /**
          * Swap double buffer for publishing values

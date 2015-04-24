@@ -18,6 +18,8 @@ int main()
         ->persisted(true);
     RhIO::Root.child("test/test3").newStr("paramStr");
 
+    RhIO::Root.newStream("test/stream1", "stream1");
+
     std::cout << "Waiting" << std::endl;
     RhIO::Root.setBool("test/paramBool", true);
     RhIO::Root.setInt("test/test3/paramInt", 2);
@@ -27,6 +29,7 @@ int main()
     RhIO::Root.setInt("test/test3/paramInt", 2);
     RhIO::Root.setFloat("test/paramFloat", 3.0);
     RhIO::Root.setStr("test/test3/paramStr", "4");
+    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
     std::this_thread::sleep_for(
         std::chrono::milliseconds(100));
 
@@ -34,6 +37,7 @@ int main()
     RhIO::Root.setInt("test/test3/paramInt", 2);
     RhIO::Root.setFloat("test/paramFloat", 3.0);
     RhIO::Root.setStr("test/test3/paramStr", "4");
+    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
     std::this_thread::sleep_for(
         std::chrono::milliseconds(100));
 
@@ -41,6 +45,7 @@ int main()
     RhIO::Root.setInt("test/test3/paramInt", 2);
     RhIO::Root.setFloat("test/paramFloat", 3.0);
     RhIO::Root.setStr("test/test3/paramStr", "4");
+    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
     std::this_thread::sleep_for(
         std::chrono::milliseconds(100));
 
@@ -48,6 +53,7 @@ int main()
     RhIO::Root.setInt("test/test3/paramInt", 2);
     RhIO::Root.setFloat("test/paramFloat", 3.0);
     RhIO::Root.setStr("test/test3/paramStr", "4");
+    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
     std::this_thread::sleep_for(
         std::chrono::milliseconds(1000));
 

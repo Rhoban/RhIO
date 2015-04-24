@@ -46,7 +46,7 @@ class ClientSub
 
         /**
          * Setup custom handler for value streaming of each
-         * type Bool, Int, Float, Str
+         * type Bool, Int, Float, Str, Stream
          * Default argument is an empty handler
          */
         void setHandlerBool(
@@ -56,6 +56,8 @@ class ClientSub
         void setHandlerFloat(
             StreamFloatHandler handler = StreamFloatHandler());
         void setHandlerStr(
+            StreamStrHandler handler = StreamStrHandler());
+        void setHandlerStream(
             StreamStrHandler handler = StreamStrHandler());
 
     private:
@@ -78,6 +80,7 @@ class ClientSub
         StreamIntHandler _handlerInt;
         StreamFloatHandler _handlerFloat;
         StreamStrHandler _handlerStr;
+        StreamStrHandler _handlerStream;
         
         /**
          * Receiver thread

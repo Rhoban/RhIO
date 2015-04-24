@@ -97,6 +97,12 @@ void ServerRep::handleRequest()
             case MsgAskCall:
                   callResult(req);
                   return;
+            case MsgAskStreams:
+                  listStreams(req);
+                  return;
+            case MsgAskDescriptionStream:
+                  descriptionStream(req);
+                  return;
             default:
                 //Unknown message type
                 error("Message type not implemented");
@@ -650,6 +656,58 @@ void ServerRep::callResult(DataBuffer& buffer)
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgCallResult);
     rep.writeStr(result);
+
+    //Send reply
+    _socket.send(reply);
+}
+        
+void ServerRep::listStreams(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Compute message size
+    size_t size = sizeof(MsgType);
+    size += sizeof(long);
+    std::vector<std::string> list = node->listStreams();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(long) + list[i].length();
+    }
+
+    //Allocate message data
+    zmq::message_t reply(size);
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgListNames);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
+    }
+
+    //Send reply
+    _socket.send(reply);
+}
+        
+void ServerRep::descriptionStream(DataBuffer& buffer)
+{
+    //Get asked stream name
+    std::string name = buffer.readStr();
+    //Check stream name
+    if (!RhIO::Root.streamExist(name)) {
+        error("Unknown stream name: " + name);
+        return;
+    }
+
+    std::string comment = RhIO::Root.streamDescription(name);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(long) + comment.length()
+        + sizeof(long));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgDescriptionStream);
+    rep.writeStr(comment);
 
     //Send reply
     _socket.send(reply);

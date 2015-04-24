@@ -108,6 +108,22 @@ enum MsgType : uint8_t {
      */
     MsgAskCall,
     /**
+     * Client.
+     * List all registered streams relative
+     * name at given node absolute name
+     * Args:
+     * String: absolute node name
+     */
+    MsgAskStreams,
+    /**
+     * Client.
+     * Ask given absolute stream name
+     * textual comment information
+     * Args:
+     * String: absolute stream name
+     */
+    MsgAskDescriptionStream,
+    /**
      * Server.
      * An error has occured.
      * Args:
@@ -197,6 +213,7 @@ enum MsgType : uint8_t {
     MsgStreamInt,
     MsgStreamFloat,
     MsgStreamStr,
+    MsgStreamStream,
     /**
      * Server.
      * Return acknowledge when persist 
@@ -219,6 +236,12 @@ enum MsgType : uint8_t {
      * String: call result
      */
     MsgCallResult,
+    /**
+     * Server.
+     * Return description for asked
+     * stream
+     */
+    MsgDescriptionStream,
 };
 
 }

@@ -347,6 +347,30 @@ ValueStr ClientReq::metaValueStr(const std::string& name)
 
     return val;
 }
+        
+std::vector<std::string> ClientReq::listStreams
+    (const std::string& name)
+{
+    return listNames(MsgAskStreams, name);
+}
+        
+std::string ClientReq::streamDescription(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskDescriptionStream);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgDescriptionStream);
+    return rep.readStr();
+}
 
 void ClientReq::save(const std::string& name, 
     const std::string& serverPath)
