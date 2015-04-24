@@ -127,6 +127,10 @@ namespace RhIO
              */
             void addAlias(std::string from, std::string to);
 
+            void getFromServer(NodeValue value);
+            void setToServer(NodeValue value);
+            void setFromString(NodeValue value, std::string str);
+
         protected:
             std::map<std::string, std::string> aliases;
             std::string hostname;

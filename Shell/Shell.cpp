@@ -675,7 +675,7 @@ namespace RhIO
                 auto value = nodeValue.value;
 
                 if (value) {
-                    Node::get(this, nodeValue);
+                    getFromServer(nodeValue);
                     std::cout << command << "=" << Node::toString(value) << std::endl;
                 } else {
                     Terminal::setColor("red", true);
@@ -693,7 +693,7 @@ namespace RhIO
         auto value = nodeValue.value;
 
         if (value) {
-            Node::setFromString(this, nodeValue, rvalue);
+            setFromString(nodeValue, rvalue);
         } else {
             Terminal::setColor("red", true);
             std::cout << "Unknown parameter: " << lvalue << std::endl;
@@ -861,7 +861,7 @@ namespace RhIO
     {
         NodePool pool;
         for (auto nodeVal : node->getAll()) {
-            Node::get(this, nodeVal);
+            getFromServer(nodeVal);
             pool.push_back(nodeVal);
         }
 
@@ -881,7 +881,7 @@ namespace RhIO
                     oss << "Unknown parameter: " << names[k];
                     throw std::runtime_error(oss.str());
                 }
-                Node::get(this, val);
+                getFromServer(val);
                 pool.push_back(val);
             }
 
@@ -927,5 +927,55 @@ namespace RhIO
     void Shell::addAlias(std::string from, std::string to)
     {
         aliases[from] = to;
+    }
+            
+    void Shell::getFromServer(NodeValue nodeValue)
+    {
+        auto name = nodeValue.getName();
+        auto value = nodeValue.value;
+
+        if (auto val = Node::asBool(value)) {
+            val->value = client->getBool(name);
+        } else if (auto val = Node::asInt(value)) {
+            val->value = client->getInt(name);
+        } else if (auto val = Node::asFloat(value)) {
+            val->value = client->getFloat(name);
+        } else if (auto val = Node::asString(value)) {
+            val->value = client->getStr(name);
+        }
+    }
+
+    void Shell::setToServer(NodeValue nodeValue)
+    {
+        auto name = nodeValue.getName();
+        auto value = nodeValue.value;
+
+        if (auto val = Node::asBool(value)) {
+            client->setBool(name, val->value);
+        } else if (auto val = Node::asInt(value)) {
+            client->setInt(name, val->value);
+        } else if (auto val = Node::asFloat(value)) {
+            client->setFloat(name, val->value);
+        } else if (auto val = Node::asString(value)) {
+            client->setStr(name, val->value);
+        }
+    }
+
+    void Shell::setFromString(NodeValue nodeValue, std::string str)
+    {
+        auto name = nodeValue.getName();
+        auto value = nodeValue.value;
+
+        if (auto val = Node::asBool(value)) {
+            val->value = (str != "0" && str != "false");
+        } else if (auto val = Node::asInt(value)) {
+            val->value = atoi(str.c_str());
+        } else if (auto val = Node::asFloat(value)) {
+            val->value = atof(str.c_str());
+        } else if (auto val = Node::asString(value)) {
+            val->value = str;
+        } 
+
+        setToServer(nodeValue);
     }
 }

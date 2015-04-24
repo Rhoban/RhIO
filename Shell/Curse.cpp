@@ -44,7 +44,7 @@ namespace RhIO
 
         // Getting fresh values for variables
         for (auto value : values) {
-            Node::get(shell, value);
+            shell->getFromServer(value);
         }
     }
 
@@ -188,7 +188,7 @@ namespace RhIO
                         if (auto v = Node::asFloat(value)) {
                             v->value = atof(buf);
                         }
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
 
                     unpost_form(form);
@@ -230,29 +230,29 @@ namespace RhIO
                             v->value = 0;
                         }
                         bound(value);
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
                     if (c == KEY_DOWN) {
                         increment(value, -1);
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
                     if (c == KEY_UP) {
                         increment(value, 1);
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
                 }
                 if (auto val = Node::asBool(value)) {
                     if (c == ' ') {
                         val->value = !val->value;
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
                     if (c == '0') {
                         val->value = false;
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
                     if (c == '1') {
                         val->value = true;
-                        Node::set(shell, nodeValue);
+                        shell->setToServer(nodeValue);
                     }
                 }
                 if (c == 'q' || c == '\n') {
