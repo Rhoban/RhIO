@@ -5,6 +5,8 @@
 #include <thread>
 #include "Shell.h"
 
+#define DEFAULT_FREQ    100
+
 namespace RhIO
 {
     class NodePool;
@@ -21,10 +23,12 @@ namespace RhIO
             
             void addPool(NodePool *pool);
             void removePool(NodePool *pool);
+            void setFrequency(int frequency=DEFAULT_FREQ);
 
             void update();
 
         protected:
+            int frequency;
             bool alive;
             std::thread worker;
             std::mutex mutex;

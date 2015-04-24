@@ -118,7 +118,12 @@ namespace RhIO
             mutex.unlock();
 
             std::this_thread::sleep_for(
-                std::chrono::milliseconds(10));
+                std::chrono::milliseconds(1000/frequency));
         }
+    }
+
+    void Stream::setFrequency(int frequency_)
+    {
+        frequency = frequency_;
     }
 }
