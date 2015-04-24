@@ -280,7 +280,7 @@ namespace RhIO
 
                             if(line.size()>0)
                             {
-                                if(cursorpos>0)
+                                if(cursorpos>=0)
                                     line.erase(cursorpos,1);
                                 Terminal::clearLine();
                                 displayPrompt();
@@ -289,8 +289,8 @@ namespace RhIO
                                 std::cout<<line;
 
                                 Terminal::cursorNLeft(line.size());
-
-                                Terminal::cursorNRight(cursorpos);
+                                if(cursorpos>0)
+                                    Terminal::cursorNRight(cursorpos);
                             }
 
                         }
