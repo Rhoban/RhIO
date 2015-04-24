@@ -11,7 +11,7 @@
 #include "Stream.h"
 #include "Shell.h"
 #include "utils.h"
-
+#include <set>
 #include "Completion.h"
 
 #include <commands/RemoteCommand.h>
@@ -23,6 +23,22 @@
 
 namespace RhIO
 {
+        //just a function to remove duplicates on vector string (maybe put that somewhere else)
+        //template and auto? Yeah :)
+    template<typename T>void unique_vect(T &k)
+    {
+        auto w = k.begin();
+        std::set< std::string > tmpset ;
+        for(auto r = k.begin(); r != k.end(); ++r)
+        {
+            if(tmpset.insert(*r).second)
+            {
+                *w++ = *r ;
+            }
+        }
+        k.erase(w, k.end());
+    }
+
     Shell::Shell(std::string server_)
         : server(server_), client(NULL), clientSub(NULL), stream(NULL), tree(NULL)
     {
@@ -69,8 +85,6 @@ namespace RhIO
             history_file<<line<<std::endl;
             history_file.flush();
         }
-        else
-            std::cout<<"FUCK";
 
     }
 
@@ -186,7 +200,9 @@ namespace RhIO
         int cursorpos=0;
         std::string prev_cmd("");
         bool completion_mode=false;
+        bool history_mode=false;
         int completion_select=0;
+        std::string completion_selected("");
         std::deque<std::string> completion_matches;
         std::vector<std::string> splitted_cmd;
         std::string cur_comp_line;
@@ -207,7 +223,13 @@ namespace RhIO
                 {
                     case 0x0a: //enter
 
-                        putchar(c);
+                        if(completion_mode || history_mode) //we have selected a choice in the completion
+                        {
+                            line=completion_selected;
+                        }
+                        else
+                            putchar(c);
+
                         done=true;
 
                         prev_cmd="";
@@ -225,10 +247,14 @@ namespace RhIO
                             hist_it=shell_history.begin();
 
                         }
+                        completion_mode=false;
+                        history_mode=false;
                         return line;
                         break;//useless
 
                     case 0x01: //Ctrl-a goto begin of line
+                        completion_mode=false;
+                        history_mode=false;
                         Terminal::clearLine();
                         displayPrompt();
                         std::cout<<line;
@@ -239,6 +265,8 @@ namespace RhIO
                         break;
 
                     case 0x05: //Ctrl-e goto end of line
+                        completion_mode=false;
+                        history_mode=false;
                         Terminal::clearLine();
                         displayPrompt();
                         std::cout<<line;
@@ -253,6 +281,8 @@ namespace RhIO
                         break;
 
                     case 0xc: //Ctrl-l clear screen
+                        completion_mode=false;
+                        history_mode=false;
                         Terminal::clearScreen();
                         Terminal::clearLine();
                         Terminal::initCursor();
@@ -262,11 +292,14 @@ namespace RhIO
                         break;
 
                     case 0x1b: //begin break mode (arrows)
+                        completion_mode=false;
+                        history_mode=false;
                         esc_mode=true;
                         break;
 
                     case 0x7e: //after 33 for suppr
-
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode)
                         {
                             esc_mode=false;
@@ -289,6 +322,8 @@ namespace RhIO
                         break;
 
                     case 0x7f: //backspace
+                        completion_mode=false;
+                        history_mode=false;
                         if(line.size()>0)
                         {
                             if(cursorpos>0)
@@ -308,19 +343,81 @@ namespace RhIO
 
                     case 0x12: //Ctrl-r history completion
 
+                        completion_mode=false;
 
-                        completion_matches.clear();
-                        cur_comp_line=line;
-                        line="";
-                        for(std::deque<std::string>::iterator cmd_it=shell_history.begin(); cmd_it!=shell_history.end();++cmd_it)
+
+                        if(history_mode) //same as completion_mode navigation
                         {
-                            if((*cmd_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
-                                completion_matches.push_back(*cmd_it);
+
+                            completion_selected="";
+                            print_len=0;
+                            int i=0;
+                            std::cout<<std::endl;
+                            Terminal::setColor("white", true);
+                            for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
+                            {
+                                print_len+=(*it).size();
+                                if(print_len>20){
+                                    std::cout<<std::endl;
+                                    print_len=0;
+                                }
+                                if(completion_select<cmd_to_print.size() && completion_select==i )
+                                {
+                                    Terminal::setBColor("blue", true);
+                                    std::cout<<*it;
+                                    Terminal::clear();
+                                    std::cout<<"\t\t";
+                                    Terminal::setColor("white", true);
+                                    completion_selected=*it;
+                                }
+                                else
+                                    std::cout<<*it<<"\t\t";
+                                i++;
+                            }
+
+                            Terminal::clear();
+                            std::cout<<std::endl;
+
+                            completion_select++;
+                            if(completion_select>cmd_to_print.size())
+                                completion_select=0;
+                            break;
                         }
 
 
 
-                        if(completion_matches.size()==1) //one solution, we are done
+                        history_mode=true;
+                            //End history mode
+                        cmd_to_print.clear();
+                        completion_matches.clear();
+                        cur_comp_line=line;
+                        line="";
+                        for(std::deque<std::string>::iterator hist_it=shell_history.begin(); hist_it!=shell_history.end();++hist_it)
+                        {
+                            if((*hist_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
+                            {
+                                    //bof
+
+                                //     //check if it is a cmd
+                                // for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
+                                // {
+                                //     if((*hist_it).compare(0,cmd_it->first.size(),cmd_it->first)==0)
+                                //     {
+                                //         std::cout<<"DEBUG hist "<<*hist_it<<" "<<cmd_it->first<<std::endl;
+                                //         cmd_to_print.push_back(*hist_it);
+                                //     }
+                                // }
+                                    ////
+                                completion_matches.push_back(*hist_it);
+                                cmd_to_print.push_back(*hist_it);
+                            }
+                        }
+
+                            //filter out duplicates
+                        unique_vect(completion_matches);
+                        unique_vect(cmd_to_print); //will be used for the history_mode
+
+                        if(completion_matches.size()==1) //if there is only one solution, we are done
                         {
 
                             cur_comp_line=completion_matches[0];
@@ -334,13 +431,26 @@ namespace RhIO
                         }
 
 
-
+                        print_len=0;
                         std::cout<<std::endl;
+                        Terminal::setColor("white", true);
                         for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
-                            std::cout<<*it<<'\t';
+                        {
+                            print_len+=(*it).size();
+                            if(print_len>20){
+                                std::cout<<std::endl;
+                                print_len=0;
+                            }
+
+
+
+                            std::cout<<*it<<"\t\t";
+
+                        }
+                        Terminal::clear();
                         std::cout<<std::endl;
 
-                            //lazy longest common substring (there is almost 2 elements)
+                            //longest common substring (there is almost 2 elements)
                         cur_comp_line=Completion::getSubstring(completion_matches);
 
 
@@ -357,6 +467,75 @@ namespace RhIO
                     case 0x09: //TAB completion
                             //completion_mode
                             //completion_select
+
+                            //TODO cleanup, it becomes quite messy....
+                        history_mode=false;
+
+                        if(completion_mode) //we keep pressing tab so let's navigate through solutions
+                        {
+                            completion_selected="";
+                            print_len=0;
+                            int i=0;
+                            std::cout<<std::endl;
+                            Terminal::setColor("green", true);
+                                // Terminal::setBColor("green", true);
+                            for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
+                            {
+                                print_len+=(*it).size();
+                                if(print_len>20){
+                                    std::cout<<std::endl;
+                                    print_len=0;
+                                }
+                                if(completion_select<cmd_to_print.size() && completion_select==i )
+                                {
+                                    Terminal::setBColor("blue", true);
+                                    std::cout<<*it;
+                                    Terminal::clear();
+                                    std::cout<<"\t\t";
+                                    Terminal::setColor("green", true);
+                                    completion_selected=*it;
+                                }
+                                else
+                                    std::cout<<*it<<"\t\t";
+                                i++;
+                            }
+                            i=0;
+                            Terminal::setColor("blue", true);
+                            for(std::vector<std::string>::iterator it=paths_to_print.begin(); it!=paths_to_print.end();++it)
+                            {
+                                print_len+=(*it).size();
+                                if(print_len>20){
+                                    std::cout<<std::endl;
+                                    print_len=0;
+                                }
+
+                                if(completion_select>=cmd_to_print.size() && completion_select-cmd_to_print.size()==i)
+                                {
+                                    Terminal::setBColor("blue", true);
+                                    std::cout<<*it;
+                                    Terminal::clear();
+                                    std::cout<<"\t\t";
+                                    Terminal::setColor("blue", true);
+                                    completion_selected=*it;
+                                }
+                                else
+                                    std::cout<<*it<<"\t\t";
+                                i++;
+
+
+                            }
+                            Terminal::clear();
+                            std::cout<<std::endl;
+
+                            completion_select++;
+                            if(completion_select>cmd_to_print.size()+paths_to_print.size())
+                                completion_select=0;
+                            break;
+                        }
+
+                            //Else, normal completion, first tab
+
+
                         completion_matches.clear();
                         splitted_cmd.clear();
                         paths_to_print.clear();
@@ -432,7 +611,8 @@ namespace RhIO
                             }
                         }
 
-
+                            //filter out the duplicate
+                        unique_vect(paths_to_print);
 
                         if(completion_matches.size()==1) //one solution, we are done
                         {
@@ -446,7 +626,8 @@ namespace RhIO
                             cursorpos=line.size();
                             break;
                         }
-
+                        else
+                            completion_mode=true;
 
 
                         // std::cout<<std::endl;
@@ -479,9 +660,7 @@ namespace RhIO
                         Terminal::clear();
                         std::cout<<std::endl;
 
-
-
-                            //lazy longest common substring (there is almost 2 elements)
+                            //longest common substring (there is almost 2 elements)
                         cur_comp_line=Completion::getSubstring(completion_matches);
 
 
@@ -499,6 +678,8 @@ namespace RhIO
 
                             // if not esc_mode -> fall to default
                     case 0x41: //up
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode && c==0x41)
                         {
 
@@ -516,6 +697,8 @@ namespace RhIO
 
 
                     case 0x42: //down
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode && c==0x42)
                         {
                             if(shell_history.size()>0 && hist_it!= shell_history.end())
@@ -540,6 +723,8 @@ namespace RhIO
                         // break;
 
                     case 0x43: //right
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode && c==0x43)
                         {
 
@@ -554,6 +739,8 @@ namespace RhIO
                         // break;
 
                     case 0x44: //left
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode && c==0x44)
                         {
 
@@ -568,17 +755,22 @@ namespace RhIO
                         // break;
 
                     case 0x5b: //just after 0x1b
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode && c==0x5b)
                             break;
 
 
                     case 0x33: //after 5b for suppr or char '3' and fall to default
+                        completion_mode=false;
+                        history_mode=false;
                         if(esc_mode && c==0x33)
                             break;
 
 
                     default:
-
+                        completion_mode=false;
+                        history_mode=false;
                         if(line.size()>0)
                         {
                             std::string tmp("");
