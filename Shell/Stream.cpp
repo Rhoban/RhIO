@@ -118,7 +118,7 @@ namespace RhIO
             mutex.unlock();
 
             std::this_thread::sleep_for(
-                std::chrono::milliseconds(50));
+                std::chrono::milliseconds(10));
         }
     }
 }

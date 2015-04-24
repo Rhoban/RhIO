@@ -131,7 +131,7 @@ namespace RhIO
                         sprintf(buffer, " %d", val->value);
                         cvalue = (float)val->value;
                     } else if (auto val = Node::asFloat(value)) {
-                        sprintf(buffer, " %.2f", val->value);
+                        sprintf(buffer, " %g", val->value);
                         cvalue = val->value;
                     }
 
