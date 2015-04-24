@@ -55,7 +55,6 @@ int main(int argc, char *argv[])
     shell->registerCommand(new TuneCommand);
 #endif
 
-    shell->addAlias("l", "ls");
     shell->addAlias("ll", "ls");
 
     shell->run();
