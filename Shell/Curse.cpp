@@ -176,7 +176,7 @@ namespace RhIO
             auto value = nodeValue.value;
             int c = wgetch(stdscr);
 
-            if (form != NULL) {
+            if (form != NULL) {
                 if (c == 10 || c == 27) {
                     if (c == 10) {
                         form_driver(form, REQ_VALIDATION);
@@ -195,7 +195,7 @@ namespace RhIO
                     free_form(form);
                     free_field(field[0]);
                     form = NULL;
-                } else {
+                } else {
                     form_driver(form, c);
                 }
             } else {
