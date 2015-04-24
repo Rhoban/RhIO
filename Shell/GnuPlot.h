@@ -58,15 +58,25 @@ namespace RhIO
             void closeWindow();
 
             /**
-             * Time Window
+             * Change the history size
              */
-            int timeWindow;
+            void changeHistory();
 
         private:
             /**
              * Replot?
              */
-            bool replot;
+             bool replot;
+
+            /**
+             * Paused?
+             */
+            bool paused;
+
+            /**
+             * Current history size
+             */
+            int history;
 
             /**
              * Gnuplot pipe file descriptor

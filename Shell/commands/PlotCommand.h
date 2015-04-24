@@ -16,5 +16,8 @@ namespace RhIO
             virtual void process(std::vector<std::string> args);
 
             void update(GnuPlot *plot, NodePool *pool);
+
+        protected:
+            bool paused;
     };
 }
