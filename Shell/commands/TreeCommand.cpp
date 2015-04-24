@@ -30,8 +30,9 @@ namespace RhIO
         std::cout << name << std::endl;
 
         auto all = node->getAll();
-        int k = 0, n = node->children.size() + all.size();
-        for (auto entry : node->children) {
+        auto children = node->getChildren();
+        int k = 0, n = children.size() + all.size();
+        for (auto entry : children) {
             std::string subleft;
             k++;
             Terminal::setColor("white", true);

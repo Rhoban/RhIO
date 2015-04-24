@@ -19,6 +19,11 @@ namespace RhIO
     {
         return commands;
     }
+            
+    std::map<std::string, Node*> Node::getChildren()
+    {
+        return children;
+    }
 
     Node::Node(ClientReq *client, std::string path)
         : name(""), parent(NULL)
