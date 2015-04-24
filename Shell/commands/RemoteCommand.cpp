@@ -26,6 +26,6 @@ namespace RhIO
 
     void RemoteCommand::process(std::vector<std::string> args)
     {
-        std::cout << shell->getClient()->callCommand(name, args);
+        std::cout << shell->getClient()->call(name, args);
     }
 }

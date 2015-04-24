@@ -33,7 +33,7 @@ namespace RhIO
              * Runs the interactive shell, will get lines from stdin
              */
             void run();
-
+            void quit();
             void terminal_set_ioconfig();
 
             /**

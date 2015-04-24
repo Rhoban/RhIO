@@ -39,6 +39,7 @@ namespace RhIO
     {
         auto first = timeRef.front();
         auto last = timeRef.back();
+//#error "TO FIX!"
         if (last-first > timeWindow) {
             timeRef.pop_front();
             for (auto signal : signals) {

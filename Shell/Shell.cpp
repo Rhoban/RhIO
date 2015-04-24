@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include <stdio.h>
 #include <ctype.h>
 #include <list>
@@ -119,7 +120,7 @@ namespace RhIO
     void Shell::updateCommands(Node *node)
     {
         for (auto name : node->getCommands()) {
-            registerCommand(new RemoteCommand(node->getPath(), name, client->getCommandDesc(name)));
+            registerCommand(new RemoteCommand(node->getPath(), name, client->commandDescription(name)));
         }
         for (auto entry : node->children) {
             updateCommands(entry.second);
@@ -160,9 +161,13 @@ namespace RhIO
             parse(line);
         }
 
+        quit();
+    }
+
+    void Shell::quit()
+    {
         tcsetattr(fileno(stdin),TCSANOW,&termsave);
         std::cout << std::endl << std::flush;
-
     }
 
     std::string Shell::getLine()
@@ -870,7 +875,7 @@ namespace RhIO
                 if (val.value == NULL) {
                     std::ostringstream oss;
                     oss << "Unknown parameter: " << names[k];
-                    throw oss.str();
+                    throw std::runtime_error(oss.str());
                 }
                 Node::get(this, val);
                 pool.push_back(val);

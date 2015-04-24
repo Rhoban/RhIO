@@ -6,8 +6,6 @@
 #include "NodePool.h"
 #include "Node.h"
 
-#define SLIDER_WIDTH    12
-
 namespace RhIO
 {
     class Shell;
@@ -23,6 +21,7 @@ namespace RhIO
 
             int selected;
             int row, col;
+            int granularity;
     
             void getMinMax(ValueBase *value, float *min, float *max);
             void increment(ValueBase *value, int delta);

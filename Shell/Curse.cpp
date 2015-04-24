@@ -8,6 +8,10 @@
 
 #define SLIDER_WIDTH    12
 
+static float granularities[] = {100, 1000, 10000};
+
+#define GRANULARITIES   (sizeof(granularities)/sizeof(float))
+
 namespace RhIO
 {
     void Curse::run()
@@ -19,6 +23,7 @@ namespace RhIO
 
     void Curse::init()
     {
+        granularity = 0;
         initscr();
         clear();
         noecho();
@@ -76,7 +81,7 @@ namespace RhIO
         } else if (auto val = Node::asFloat(value)) {
             float min, max;
             getMinMax(val, &min, &max);
-            val->value += delta*((max-min)/100.0);
+            val->value += delta*((max-min)/granularities[granularity]);
         }
 
         bound(value);
@@ -156,11 +161,12 @@ namespace RhIO
                 pos++;
             }
             attron(COLOR_PAIR(1));
-            draw(0, 0, "Parameters tuner");
+            mvwprintw(stdscr, 0, 0, "Parameters tuner, granularity: 1/%.0f", granularities[granularity]);
 
             auto nodeValue = values[selected];
             auto value = nodeValue.value;
             int c = wgetch(stdscr);
+
             if (c == KEY_LEFT) {
                 selected--;
                 if (selected < 0) selected = 0;
@@ -168,6 +174,9 @@ namespace RhIO
             if (c == KEY_RIGHT) {
                 selected++;
                 if (selected >= values.size()) selected = values.size()-1;
+            }
+            if (c == 'g') {
+                granularity = (granularity+1)%GRANULARITIES;
             }
             
             if (Node::asInt(value) || Node::asFloat(value)) {
@@ -198,9 +207,9 @@ namespace RhIO
     void Curse::end()
     {
         curs_set(1);
+        endwin();
         echo();
         clrtoeol();
-        endwin();
     }
 
     void Curse::draw(int x, int y, char *s)
