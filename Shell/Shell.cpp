@@ -423,8 +423,12 @@ namespace RhIO
                         {
                             if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
                             {
-                                completion_matches.push_back(*p_it);
-                                paths_to_print.push_back(*p_it);
+                                    //only keep the current hierarchy level (cut at the next '/')
+                                if((*p_it).find("/",cur_comp_line.size())==std::string::npos)// || cur_comp_line.size()==0 || cur_comp_line.back()=='/')
+                                {
+                                    completion_matches.push_back(*p_it);
+                                    paths_to_print.push_back(*p_it);
+                                }
                             }
                         }
 
