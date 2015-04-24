@@ -22,7 +22,9 @@ namespace RhIO
     void Terminal::setColor(std::string name, bool bold)
     {
 #ifdef HAS_COLORS
-        if (name == "red") {
+        if (name == "white") {
+            printf("\x1b[%d;37m", bold);
+        } else if (name == "red") {
             printf("\x1b[%d;31m", bold);
         } else if (name == "green") {
             printf("\x1b[%d;32m", bold);

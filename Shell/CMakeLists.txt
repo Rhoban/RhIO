@@ -24,6 +24,7 @@ set (SOURCES
     commands/DiffCommand.cpp
     commands/SaveCommand.cpp
     commands/LoadCommand.cpp
+    commands/TreeCommand.cpp
     GnuPlot.cpp
     Shell.cpp
     CSV.cpp

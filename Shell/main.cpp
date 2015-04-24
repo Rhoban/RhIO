@@ -10,6 +10,7 @@
 #include "commands/DiffCommand.h"
 #include "commands/LoadCommand.h"
 #include "commands/SaveCommand.h"
+#include "commands/TreeCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -49,6 +50,7 @@ int main(int argc, char *argv[])
     shell->registerCommand(new DiffCommand);
     shell->registerCommand(new LoadCommand);
     shell->registerCommand(new SaveCommand);
+    shell->registerCommand(new TreeCommand);
 #ifdef HAS_CURSES
     shell->registerCommand(new TuneCommand);
 #endif
