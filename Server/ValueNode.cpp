@@ -110,8 +110,23 @@ void ValueNode::setBool(const std::string& name, bool val,
     if (_valuesBool.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Bool name: " + name);
     } else {
+        //Bound to min/max
+        if (
+            _valuesBool.at(name).hasMin && 
+            val < _valuesBool.at(name).min
+        ) {
+            val = _valuesBool.at(name).min;
+        }
+        if (
+            _valuesBool.at(name).hasMax && 
+            val > _valuesBool.at(name).max
+        ) {
+            val = _valuesBool.at(name).max;
+        }
+        //Update value
         _valuesBool[name].value = val;
         _valuesBool[name].timestamp = timestamp;
+        //Publish value
         ServerStream->publishBool(BaseNode::pwd + separator + name, val,
             std::chrono::duration_cast<std::chrono::milliseconds>
                 (timestamp.time_since_epoch()).count());
@@ -132,8 +147,23 @@ void ValueNode::setInt(const std::string& name, long val,
     if (_valuesInt.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Int name: " + name);
     } else {
+        //Bound to min/max
+        if (
+            _valuesInt.at(name).hasMin && 
+            val < _valuesInt.at(name).min
+        ) {
+            val = _valuesInt.at(name).min;
+        }
+        if (
+            _valuesInt.at(name).hasMax && 
+            val > _valuesInt.at(name).max
+        ) {
+            val = _valuesInt.at(name).max;
+        }
+        //Update value
         _valuesInt[name].value = val;
         _valuesInt[name].timestamp = timestamp;
+        //Publish value
         ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
             std::chrono::duration_cast<std::chrono::milliseconds>
                 (timestamp.time_since_epoch()).count());
@@ -154,8 +184,23 @@ void ValueNode::setFloat(const std::string& name, double val,
     if (_valuesFloat.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Float name: " + name);
     } else {
+        //Bound to min/max
+        if (
+            _valuesFloat.at(name).hasMin && 
+            val < _valuesFloat.at(name).min
+        ) {
+            val = _valuesFloat.at(name).min;
+        }
+        if (
+            _valuesFloat.at(name).hasMax && 
+            val > _valuesFloat.at(name).max
+        ) {
+            val = _valuesFloat.at(name).max;
+        }
+        //Update value
         _valuesFloat[name].value = val;
         _valuesFloat[name].timestamp = timestamp;
+        //Publish value
         ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
             std::chrono::duration_cast<std::chrono::milliseconds>
                 (timestamp.time_since_epoch()).count());
@@ -176,8 +221,23 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
     if (_valuesStr.count(name) == 0) {
         throw std::logic_error("RhIO unknown value Str name: " + name);
     } else {
+        //Update value
         _valuesStr[name].value = val;
         _valuesStr[name].timestamp = timestamp;
+        //Bound to min/max
+        if (
+            _valuesStr.at(name).hasMin && 
+            val < _valuesStr.at(name).min
+        ) {
+            _valuesStr[name].value = _valuesStr.at(name).min;
+        }
+        if (
+            _valuesStr.at(name).hasMax && 
+            val > _valuesStr.at(name).max
+        ) {
+            _valuesStr[name].value = _valuesStr.at(name).max;
+        }
+        //Publish value
         ServerStream->publishStr(BaseNode::pwd + separator + name, val,
             std::chrono::duration_cast<std::chrono::milliseconds>
                 (timestamp.time_since_epoch()).count());

@@ -74,6 +74,12 @@ int main()
     RhIO::Root.setInt("test/test3/paramInt", 4);
     assert(RhIO::Root.getInt("test/test3/paramInt") == 4);
     
+    assert(RhIO::Root.getInt("test/test3/paramInt") == 4);
+    RhIO::Root.setInt("test/test3/paramInt", 20);
+    assert(RhIO::Root.getInt("test/test3/paramInt") == 10);
+    RhIO::Root.setInt("test/test3/paramInt", -10);
+    assert(RhIO::Root.getInt("test/test3/paramInt") == -1);
+    
     assert(RhIO::Root.getFloat("test/paramFloat") == 42.0);
     RhIO::Root.setFloat("test/paramFloat", 1.0);
     assert(RhIO::Root.getFloat("test/paramFloat") == 1.0);
