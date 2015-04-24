@@ -1,12 +1,11 @@
 #include <iostream>
 #include <sstream>
 #include "Node.h"
-#include "Shell.h"
 
 namespace RhIO
 {       
     NodeValue::NodeValue(Node *node_, ValueBase *value_)
-        : node(node_), value(value_)
+        : value(value_), node(node_)
     {
     }
 
@@ -26,7 +25,7 @@ namespace RhIO
     }
 
     Node::Node(ClientReq *client, std::string path)
-        : name(""), parent(NULL)
+        : parent(NULL), name("")
     {
         std::string slashed = path;
         if (path != "") {

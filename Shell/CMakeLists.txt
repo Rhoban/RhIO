@@ -29,7 +29,6 @@ set (SOURCES
     Shell.cpp
     CSV.cpp
     Terminal.cpp
-    Node.cpp
     NodePool.cpp
     Stream.cpp
     Completion.cpp
