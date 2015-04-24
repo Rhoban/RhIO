@@ -263,11 +263,7 @@ namespace RhIO
 
                     case 0x1b: //begin break mode (arrows)
                         esc_mode=true;
-
                         break;
-
-
-
 
                     case 0x7e: //after 33 for suppr
 
@@ -299,7 +295,6 @@ namespace RhIO
                                 line.erase(cursorpos-1,1);
                             Terminal::clearLine();
                             displayPrompt();
-
 
                             std::cout<<line;
 
@@ -410,10 +405,6 @@ namespace RhIO
 
                         }
 
-
-
-
-
                             // simple completion on commands
 
                             // look for matching on commands
@@ -460,7 +451,8 @@ namespace RhIO
                         // std::cout<<std::endl;
 
                         std::cout<<std::endl;
-                        Terminal::setColor("red", false);
+                        Terminal::setColor("green", true);
+                        // Terminal::setBColor("green", true);
                         for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
                         {
                             print_len+=(*it).size();
