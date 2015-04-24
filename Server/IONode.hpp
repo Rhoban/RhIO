@@ -124,9 +124,11 @@ class IONode final : public ValueNode,
         IONode* _parent;
 
         /**
-         * Children Nodes container 
+         * Children Nodes container pointer
+         * (pointer to prevent address change when
+         * container update)
          */
-        std::map<std::string, IONode> _children;
+        std::map<std::string, IONode*> _children;
         
         /**
          * Mutex protecting concurent branch children

@@ -196,7 +196,7 @@ const IONode& IONode::child(const std::string& name) const
     if (_children.count(name) == 0) {
         throw std::logic_error("RhIO unknown node name: " + name);
     } else {
-        return _children.at(name);
+        return *(_children.at(name));
     }
 }
 IONode& IONode::child(const std::string& name)
@@ -210,7 +210,7 @@ IONode& IONode::child(const std::string& name)
     if (_children.count(name) == 0) {
         throw std::logic_error("RhIO unknown node name: " + name);
     } else {
-        return _children.at(name);
+        return *(_children.at(name));
     }
 }
         
@@ -226,7 +226,7 @@ void IONode::newChild(const std::string& name)
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_children.count(name) == 0) {
-        _children[name] = IONode(name, this);
+        _children[name] = new IONode(name, this);
     }
 }
         
@@ -280,9 +280,9 @@ void IONode::save(const std::string& path)
             path.length() > 0 && 
             path[path.length()-1] != separator
         ) {
-            c.second.save(path + separator + c.first);
+            c.second->save(path + separator + c.first);
         } else {
-            c.second.save(path + c.first);
+            c.second->save(path + c.first);
         }
     }
 }
@@ -298,7 +298,7 @@ void IONode::load(const std::string& path)
             list[i] != "." && list[i] != ".." && 
             _children.count(list[i]) == 0
         ) {
-            _children[list[i]] = IONode(list[i], this);
+            _children[list[i]] = new IONode(list[i], this);
         }
     }
     
@@ -311,9 +311,9 @@ void IONode::load(const std::string& path)
             path.length() > 0 && 
             path[path.length()-1] != separator
         ) {
-            c.second.load(path + separator + c.first);
+            c.second->load(path + separator + c.first);
         } else {
-            c.second.load(path + c.first);
+            c.second->load(path + c.first);
         }
     }
 }
@@ -347,7 +347,7 @@ IONode* IONode::forwardChildren(
             if (createBranch) {
                 std::lock_guard<std::mutex> lock(pt->_mutex);
                 if (pt->_children.count(part) == 0) {
-                    pt->_children[part] = IONode(part, pt);
+                    pt->_children[part] = new IONode(part, pt);
                 }
             } else {
                 std::lock_guard<std::mutex> lock(_mutex);
@@ -357,7 +357,7 @@ IONode* IONode::forwardChildren(
                 }
             }
             std::lock_guard<std::mutex> lock(_mutex);
-            pt = &(pt->_children.at(part));
+            pt = pt->_children.at(part);
         }
     }
 
