@@ -29,19 +29,51 @@ namespace RhIO
             pool = shell->getPool(args);
         }
 
+        Terminal::setColor("white", true);
+        std::cout << "Plotting." << std::endl;
+        std::cout << "  q: quit" << std::endl;
+        std::cout << "  h: change history" << std::endl;
+        std::cout << "  p: pause/unpause" << std::endl;
+        Terminal::clear();
+
+        paused = false;
         GnuPlot plot;
         pool.setCallback(std::bind(&PlotCommand::update, this, &plot, _1));
 
-        shell->streamWait(&pool);
+        auto stream = shell->getStream();
+        stream->addPool(&pool);
+        while (true) {
+            char c;
+            if ((c=getchar())>0) {
+                if (c == 'q') {
+                    break;
+                }
+                if (c == 'h') {
+                    plot.changeHistory();
+                }
+                if (c == 'p') {
+                    paused = !paused;
+                    if (paused) {
+                        printf("Paused\n");
+                    } else {
+                        printf("Unpaused\n");
+                    }
+                }
+            }
+        }
+        stream->removePool(&pool);
+
         plot.closeWindow();
     }
 
     void PlotCommand::update(GnuPlot *plot, NodePool *pool)
     {
-        plot->setX(pool->timestamp);
-        for (auto node : *pool) {
-            plot->push(node.value->name, Node::toNumber(node.value));
+        if (!paused) {
+            plot->setX(pool->timestamp);
+            for (auto node : *pool) {
+                plot->push(node.value->name, Node::toNumber(node.value));
+            }
+            plot->render();
         }
-        plot->render();
     }
 }

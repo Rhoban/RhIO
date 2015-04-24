@@ -33,6 +33,9 @@ namespace RhIO
         system("clear");
         pool.draw();
 
+        // Reducing frequency when watching values, avoiding shell flickering.
+        // We can't see more than 25 fps anyway.
+        shell->getStream()->setFrequency(25);
         shell->streamWait(&pool);
     }
 

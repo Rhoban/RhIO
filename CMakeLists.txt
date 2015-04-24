@@ -37,6 +37,7 @@ set(SOURCES_FILES_COMMON
 set(SOURCES_FILES_CLIENT
     Client/ClientReq.cpp
     Client/ClientSub.cpp
+    Client/Node.cpp
 )
 
 #Needed Libraries
@@ -88,6 +89,9 @@ if (BUILD_RHIO_TESTS)
     
     add_executable(testServer Tests/testServer.cpp)
     target_link_libraries(testServer RhIO)
+    
+    add_executable(testServerStress Tests/testServerStress.cpp)
+    target_link_libraries(testServerStress RhIO)
     
     add_executable(testCommands Tests/testCommands.cpp)
     target_link_libraries(testCommands RhIO)

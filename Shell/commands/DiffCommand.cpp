@@ -35,20 +35,23 @@ namespace RhIO
         for (auto nodeVal : node->getAll()) {
             auto value = nodeVal.value;
             if (value->persisted && Node::isDiff(value)) {
+                Terminal::clear();
                 diff++;
-                std::cout << "/" << nodeVal.getName();
-                std::cout << ": ";
+                std::string name = std::string("/") + nodeVal.getName() + ":";
+                printf("%-20s ", name.c_str());
+                
                 Terminal::setColor("red", true);
-                std::cout << Node::persistedToString(value);
+                printf("%-5s", Node::persistedToString(value).c_str());
                 Terminal::setColor("white", false);
-                std::cout << " -> ";
+                std::cout << " → ";
                 Terminal::setColor("green", true);
-                std::cout << Node::toString(value);
+                printf("%-5s", Node::toString(value).c_str());
+
                 std::cout << std::endl;
             }
         }
 
-        for (auto entry : node->children) {
+        for (auto entry : node->getChildren()) {
             diff += showDiff(entry.second);
         }
         return diff;

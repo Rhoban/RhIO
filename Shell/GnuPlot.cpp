@@ -1,5 +1,8 @@
 #include "GnuPlot.h"
 
+float histories[] = {15.0, 30.0, 60.0};
+#define HISTORIES (sizeof(histories)/sizeof(float))
+
 namespace RhIO
 {
     GnuPlotSignal::GnuPlotSignal(std::string name_)
@@ -8,7 +11,7 @@ namespace RhIO
     }
 
     GnuPlot::GnuPlot()
-        : plotFd(-1), replot(false), timeWindow(15000)
+        : plotFd(-1), replot(false), history(0)
     {
     }
 
@@ -37,14 +40,20 @@ namespace RhIO
 
     void GnuPlot::render()
     {
-        auto first = timeRef.front();
-        auto last = timeRef.back();
-        if (last-first > timeWindow) {
-            timeRef.pop_front();
-            for (auto signal : signals) {
-                signal->values.pop_front();
+        int timeWindow = histories[history]*1000;
+        bool removed;
+        do {
+            removed = false;
+            auto first = timeRef.front();
+            auto last = timeRef.back();
+            if (last-first > timeWindow) {
+                removed = true;
+                timeRef.pop_front();
+                for (auto signal : signals) {
+                    signal->values.pop_front();
+                }
             }
-        }
+        } while (removed);
 
         std::string commands = generatePlotting();
 
@@ -142,5 +151,11 @@ namespace RhIO
         write(plotFd, "quit\n", 5);
         write(plotFd, "quit\n", 5);
         close(plotFd);
+    }
+
+    void GnuPlot::changeHistory()
+    {
+        history = (history+1)%HISTORIES;
+        printf("History set to %gs\n", histories[history]);
     }
 }

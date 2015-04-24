@@ -11,8 +11,9 @@
 #include "NodePool.h"
 #include <termios.h>
 #include <deque>
+#include <fstream>
 
-#define MAX_HISTORY 100
+#define MAX_HISTORY 1000
 
 namespace RhIO
 {
@@ -21,7 +22,7 @@ namespace RhIO
     {
         public:
             Shell(std::string server);
-
+            ~Shell();
             /**
              * Updates the local node tree
              */
@@ -32,9 +33,22 @@ namespace RhIO
              * Runs the interactive shell, will get lines from stdin
              */
             void run();
-
+            void quit();
             void terminal_set_ioconfig();
 
+            /**
+             * Read the history file in HOME/.rhio_history
+             */
+            void readHistory();
+
+            /**
+             * Append a line in history file in HOME/.rhio_history
+             */
+            void writeHistory(std::string line);
+
+            /**
+             * Display the prompt...
+             */
             void displayPrompt();
 
             /**
@@ -95,22 +109,27 @@ namespace RhIO
             Stream *getStream();
             NodePool poolForNode(Node *node);
             NodePool getPool(std::vector<std::string> names, int start=0);
-            
+
             Node *tree;
             struct termios termsave;
             std::deque<std::string> shell_history;
-
+            std::fstream history_file;
+            std::string history_path;
             /**
              * Get all the possibilities at a certain point
              */
             std::vector<std::string> getPossibilities();
-            void getPossibilitiesRec(std::vector<std::string> &possibilities, 
+            void getPossibilitiesRec(std::vector<std::string> &possibilities,
                     Node *node, std::string prefix);
 
             /**
              * Adds an alias
              */
             void addAlias(std::string from, std::string to);
+
+            void getFromServer(NodeValue value);
+            void setToServer(NodeValue value);
+            void setFromString(NodeValue value, std::string str);
 
         protected:
             std::map<std::string, std::string> aliases;
@@ -122,5 +141,6 @@ namespace RhIO
             std::map<std::string, Command*> commands;
             std::list<std::string> path;
             std::string server;
+
     };
 }

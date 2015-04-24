@@ -24,11 +24,11 @@ set (SOURCES
     commands/DiffCommand.cpp
     commands/SaveCommand.cpp
     commands/LoadCommand.cpp
+    commands/TreeCommand.cpp
     GnuPlot.cpp
     Shell.cpp
     CSV.cpp
     Terminal.cpp
-    Node.cpp
     NodePool.cpp
     Stream.cpp
     Completion.cpp
@@ -64,7 +64,7 @@ if (CURSES)
         )
     set (EXTRA_LIBS
         ${EXTRA_LIBS}
-        ncurses
+        ncurses form panel
         )
 endif ()
 

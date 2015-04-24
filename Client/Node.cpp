@@ -1,12 +1,11 @@
 #include <iostream>
 #include <sstream>
 #include "Node.h"
-#include "Shell.h"
 
 namespace RhIO
 {       
     NodeValue::NodeValue(Node *node_, ValueBase *value_)
-        : node(node_), value(value_)
+        : value(value_), node(node_)
     {
     }
 
@@ -19,9 +18,14 @@ namespace RhIO
     {
         return commands;
     }
+            
+    std::map<std::string, Node*> Node::getChildren()
+    {
+        return children;
+    }
 
     Node::Node(ClientReq *client, std::string path)
-        : name(""), parent(NULL)
+        : parent(NULL), name("")
     {
         std::string slashed = path;
         if (path != "") {
@@ -129,40 +133,6 @@ namespace RhIO
         return dynamic_cast<ValueStr*>(value);
     }
 
-    void Node::get(Shell *shell, NodeValue nodeValue)
-    {
-        auto client = shell->getClient();
-        auto name = nodeValue.getName();
-        auto value = nodeValue.value;
-
-        if (auto val = asBool(value)) {
-            val->value = client->getBool(name);
-        } else if (auto val = asInt(value)) {
-            val->value = client->getInt(name);
-        } else if (auto val = asFloat(value)) {
-            val->value = client->getFloat(name);
-        } else if (auto val = asString(value)) {
-            val->value = client->getStr(name);
-        }
-    }
-
-    void Node::set(Shell *shell, NodeValue nodeValue)
-    {
-        auto client = shell->getClient();
-        auto name = nodeValue.getName();
-        auto value = nodeValue.value;
-
-        if (auto val = asBool(value)) {
-            client->setBool(name, val->value);
-        } else if (auto val = asInt(value)) {
-            client->setInt(name, val->value);
-        } else if (auto val = asFloat(value)) {
-            client->setFloat(name, val->value);
-        } else if (auto val = asString(value)) {
-            client->setStr(name, val->value);
-        }
-    }
-
     std::string Node::toString(ValueBase *value)
     {
         if (auto val = asBool(value)) {
@@ -208,25 +178,6 @@ namespace RhIO
         } else {
             return "?";
         }
-    }
-            
-    void Node::setFromString(Shell *shell, NodeValue nodeValue, std::string str)
-    {
-        auto client = shell->getClient();
-        auto name = nodeValue.getName();
-        auto value = nodeValue.value;
-
-        if (auto val = asBool(value)) {
-            val->value = (str != "0" && str != "false");
-        } else if (auto val =asInt(value)) {
-            val->value = atoi(str.c_str());
-        } else if (auto val =asFloat(value)) {
-            val->value = atof(str.c_str());
-        } else if (auto val =asString(value)) {
-            val->value = str;
-        } 
-
-        set(shell, nodeValue);
     }
     
     std::string Node::persistedToString(ValueBase *value)
