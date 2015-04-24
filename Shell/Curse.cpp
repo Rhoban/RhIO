@@ -183,6 +183,16 @@ namespace RhIO
                 float min, max;
                 getMinMax(value, &min, &max);
 
+                if (c == '0') {
+                    if (auto v = Node::asInt(value)) {
+                        v->value = 0;
+                    }
+                    if (auto v = Node::asFloat(value)) {
+                        v->value = 0;
+                    }
+                    bound(value);
+                    Node::set(shell, nodeValue);
+                }
                 if (c == KEY_DOWN) {
                     increment(value, -1);
                     Node::set(shell, nodeValue);
@@ -195,6 +205,14 @@ namespace RhIO
             if (auto val = Node::asBool(value)) {
                 if (c == ' ') {
                     val->value = !val->value;
+                    Node::set(shell, nodeValue);
+                }
+                if (c == '0') {
+                    val->value = false;
+                    Node::set(shell, nodeValue);
+                }
+                if (c == '1') {
+                    val->value = true;
                     Node::set(shell, nodeValue);
                 }
             }
