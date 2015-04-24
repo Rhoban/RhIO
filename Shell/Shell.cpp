@@ -266,9 +266,6 @@ namespace RhIO
 
                         break;
 
-                    case 0x5b: //just after 0x1b
-
-                        break;
 
 
 
@@ -285,7 +282,6 @@ namespace RhIO
                                 Terminal::clearLine();
                                 displayPrompt();
 
-
                                 std::cout<<line;
 
                                 Terminal::cursorNLeft(line.size());
@@ -299,8 +295,6 @@ namespace RhIO
                     case 0x7f: //backspace
                         if(line.size()>0)
                         {
-
-
                             if(cursorpos>0)
                                 line.erase(cursorpos-1,1);
                             Terminal::clearLine();
@@ -576,6 +570,11 @@ namespace RhIO
                             break;
                         }
                         // break;
+
+                    case 0x5b: //just after 0x1b
+                        if(esc_mode && c==0x5b)
+                            break;
+
 
                     case 0x33: //after 5b for suppr or char '3' and fall to default
                         if(esc_mode && c==0x33)
