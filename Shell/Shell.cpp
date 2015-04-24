@@ -663,6 +663,7 @@ namespace RhIO
                     argsV.push_back(part);
                 }
                 try {
+                    stream->setFrequency();
                     commands[command]->process(argsV);
                 } catch (std::runtime_error error) {
                     Terminal::setColor("red", true);
