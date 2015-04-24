@@ -128,7 +128,7 @@ namespace RhIO
                     getMinMax(value, &min, &max);
 
                     if (auto val = Node::asInt(value)) {
-                        sprintf(buffer, " %d", val->value);
+                        sprintf(buffer, " %ld", val->value);
                         cvalue = (float)val->value;
                     } else if (auto val = Node::asFloat(value)) {
                         sprintf(buffer, " %g", val->value);
@@ -270,9 +270,9 @@ namespace RhIO
         clrtoeol();
     }
 
-    void Curse::draw(int x, int y, char *s)
+    void Curse::draw(int x, int y, std::string s)
     {
-        mvwprintw(stdscr, x, y, s);
+        mvwprintw(stdscr, x, y, s.c_str());
     }
 
     int row, col;
