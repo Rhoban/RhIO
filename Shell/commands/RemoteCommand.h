@@ -7,7 +7,7 @@ namespace RhIO
     class RemoteCommand : public Command
     {
         public:
-            RemoteCommand(std::string origin, std::string name, std::string desc);
+            RemoteCommand(std::string origin, std::string name, std::string fullName, std::string desc);
 
             virtual std::string getName();
             virtual std::string getDesc();
@@ -16,7 +16,7 @@ namespace RhIO
 
         protected:
             std::string origin;
-            std::string name;
+            std::string name, fullName;
             std::string desc;
     };
 }

@@ -120,7 +120,12 @@ namespace RhIO
     void Shell::updateCommands(Node *node)
     {
         for (auto name : node->getCommands()) {
-            registerCommand(new RemoteCommand(node->getPath(), name, client->commandDescription(name)));
+            std::string fullName = node->getPath();
+            if (fullName != "") {
+                fullName += "/";
+            }
+            fullName += name;
+            registerCommand(new RemoteCommand(node->getPath(), name, fullName, client->commandDescription(fullName)));
         }
         for (auto entry : node->children) {
             updateCommands(entry.second);

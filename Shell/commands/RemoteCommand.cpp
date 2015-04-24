@@ -4,8 +4,9 @@
 
 namespace RhIO
 {
-    RemoteCommand::RemoteCommand(std::string origin_, std::string name_, std::string desc_)
-        : origin(origin_), name(name_), desc(desc_)
+    RemoteCommand::RemoteCommand(std::string origin_, std::string name_, 
+            std::string fullName_, std::string desc_)
+        : origin(origin_), name(name_), fullName(fullName_), desc(desc_)
     {
     }
 
@@ -26,6 +27,10 @@ namespace RhIO
 
     void RemoteCommand::process(std::vector<std::string> args)
     {
-        std::cout << shell->getClient()->call(name, args);
+        auto response = shell->getClient()->call(fullName, args);
+        std::cout << response;
+        if (response.size() && response[response.size()-1]!='\n') {
+            std::cout << std::endl;
+        }
     }
 }
