@@ -270,8 +270,7 @@ namespace RhIO
 
                         break;
 
-                    case 0x33: //after 5b for suppr
-                        break;
+
 
                     case 0x7e: //after 33 for suppr
 
@@ -577,6 +576,10 @@ namespace RhIO
                             break;
                         }
                         // break;
+
+                    case 0x33: //after 5b for suppr or char '3' and fall to default
+                        if(esc_mode && c==0x33)
+                            break;
 
 
                     default:
