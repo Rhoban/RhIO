@@ -263,14 +263,6 @@ namespace RhIO
 
                     case 0x1b: //begin break mode (arrows)
                         esc_mode=true;
-
-                        break;
-
-                    case 0x5b: //just after 0x1b
-
-                        break;
-
-                    case 0x33: //after 5b for suppr
                         break;
 
                     case 0x7e: //after 33 for suppr
@@ -281,17 +273,16 @@ namespace RhIO
 
                             if(line.size()>0)
                             {
-                                if(cursorpos>0)
+                                if(cursorpos>=0)
                                     line.erase(cursorpos,1);
                                 Terminal::clearLine();
                                 displayPrompt();
 
-
                                 std::cout<<line;
 
                                 Terminal::cursorNLeft(line.size());
-
-                                Terminal::cursorNRight(cursorpos);
+                                if(cursorpos>0)
+                                    Terminal::cursorNRight(cursorpos);
                             }
 
                         }
@@ -300,13 +291,10 @@ namespace RhIO
                     case 0x7f: //backspace
                         if(line.size()>0)
                         {
-
-
                             if(cursorpos>0)
                                 line.erase(cursorpos-1,1);
                             Terminal::clearLine();
                             displayPrompt();
-
 
                             std::cout<<line;
 
@@ -417,10 +405,6 @@ namespace RhIO
 
                         }
 
-
-
-
-
                             // simple completion on commands
 
                             // look for matching on commands
@@ -467,7 +451,8 @@ namespace RhIO
                         // std::cout<<std::endl;
 
                         std::cout<<std::endl;
-                        Terminal::setColor("red", false);
+                        Terminal::setColor("green", true);
+                        // Terminal::setBColor("green", true);
                         for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
                         {
                             print_len+=(*it).size();
@@ -577,6 +562,15 @@ namespace RhIO
                             break;
                         }
                         // break;
+
+                    case 0x5b: //just after 0x1b
+                        if(esc_mode && c==0x5b)
+                            break;
+
+
+                    case 0x33: //after 5b for suppr or char '3' and fall to default
+                        if(esc_mode && c==0x33)
+                            break;
 
 
                     default:
