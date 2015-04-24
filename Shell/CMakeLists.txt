@@ -64,7 +64,7 @@ if (CURSES)
         )
     set (EXTRA_LIBS
         ${EXTRA_LIBS}
-        ncurses
+        ncurses form panel
         )
 endif ()
 

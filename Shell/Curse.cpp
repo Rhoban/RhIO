@@ -1,3 +1,5 @@
+#include <form.h>
+#include <panel.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -89,17 +91,22 @@ namespace RhIO
 
     void Curse::loop()
     {
+        FIELD *field[2] = {NULL, NULL};
+        FORM *form = NULL;
         int names = row-3;
 
         while(1) {   
             attron(COLOR_PAIR(1));
             int pos = 0;
-            clear();
+
+            if (form == NULL) {
+                clear();
+            }
 
             // Drawing parameters
             for (auto nodeValue : values) {
                 auto value = nodeValue.value;
-                if (pos == selected) {
+                if (pos == selected && form==NULL) {
                     attron(COLOR_PAIR(3));
                     for (int k=0; k<SLIDER_WIDTH; k++) {
                         for (int r=0; r<row; r++) {
@@ -128,7 +135,9 @@ namespace RhIO
                         cvalue = val->value;
                     }
 
-                    draw(names+1, SLIDER_WIDTH*pos, buffer);
+                    if (form == NULL || pos != selected) {
+                        draw(names+1, SLIDER_WIDTH*pos, buffer);
+                    }
 
                     int kmin = 2;
                     int kmax = names-1;
@@ -161,63 +170,94 @@ namespace RhIO
                 pos++;
             }
             attron(COLOR_PAIR(1));
-            mvwprintw(stdscr, 0, 0, "Parameters tuner, granularity: 1/%.0f", granularities[granularity]);
+            mvwprintw(stdscr, 0, 0, "Parameters tuner, granularity: 1/%g", granularities[granularity]);
 
             auto nodeValue = values[selected];
             auto value = nodeValue.value;
             int c = wgetch(stdscr);
 
-            if (c == KEY_LEFT) {
-                selected--;
-                if (selected < 0) selected = 0;
-            }
-            if (c == KEY_RIGHT) {
-                selected++;
-                if (selected >= values.size()) selected = values.size()-1;
-            }
-            if (c == 'g') {
-                granularity = (granularity+1)%GRANULARITIES;
-            }
-            
-            if (Node::asInt(value) || Node::asFloat(value)) {
-                float min, max;
-                getMinMax(value, &min, &max);
+            if (form != NULL) {
+                if (c == 10 || c == 27) {
+                    if (c == 10) {
+                        form_driver(form, REQ_VALIDATION);
+                        char *buf = field_buffer(field[0], 0);
 
-                if (c == '0') {
-                    if (auto v = Node::asInt(value)) {
-                        v->value = 0;
+                        if (auto v = Node::asInt(value)) {
+                            v->value = atoi(buf);
+                        }
+                        if (auto v = Node::asFloat(value)) {
+                            v->value = atof(buf);
+                        }
+                        Node::set(shell, nodeValue);
                     }
-                    if (auto v = Node::asFloat(value)) {
-                        v->value = 0;
+
+                    unpost_form(form);
+                    free_form(form);
+                    free_field(field[0]);
+                    form = NULL;
+                } else {
+                    form_driver(form, c);
+                }
+            } else {
+                if (c == KEY_LEFT) {
+                    selected--;
+                    if (selected < 0) selected = 0;
+                }
+                if (c == KEY_RIGHT) {
+                    selected++;
+                    if (selected >= values.size()) selected = values.size()-1;
+                }
+                if (c == 'g') {
+                    granularity = (granularity+1)%GRANULARITIES;
+                }
+                
+                if (Node::asInt(value) || Node::asFloat(value)) {
+                    float min, max;
+                    getMinMax(value, &min, &max);
+
+                    if (c == 'v') {
+                        field[0] = new_field(1, SLIDER_WIDTH-2, names+1, 1+SLIDER_WIDTH*selected, 0, 0);
+                        set_field_back(field[0], A_UNDERLINE);
+                        form = new_form(field);
+                        post_form(form);
+                        refresh();
                     }
-                    bound(value);
-                    Node::set(shell, nodeValue);
+                    if (c == '0') {
+                        if (auto v = Node::asInt(value)) {
+                            v->value = 0;
+                        }
+                        if (auto v = Node::asFloat(value)) {
+                            v->value = 0;
+                        }
+                        bound(value);
+                        Node::set(shell, nodeValue);
+                    }
+                    if (c == KEY_DOWN) {
+                        increment(value, -1);
+                        Node::set(shell, nodeValue);
+                    }
+                    if (c == KEY_UP) {
+                        increment(value, 1);
+                        Node::set(shell, nodeValue);
+                    }
                 }
-                if (c == KEY_DOWN) {
-                    increment(value, -1);
-                    Node::set(shell, nodeValue);
+                if (auto val = Node::asBool(value)) {
+                    if (c == ' ') {
+                        val->value = !val->value;
+                        Node::set(shell, nodeValue);
+                    }
+                    if (c == '0') {
+                        val->value = false;
+                        Node::set(shell, nodeValue);
+                    }
+                    if (c == '1') {
+                        val->value = true;
+                        Node::set(shell, nodeValue);
+                    }
                 }
-                if (c == KEY_UP) {
-                    increment(value, 1);
-                    Node::set(shell, nodeValue);
+                if (c == 'q' || c == '\n') {
+                    break;
                 }
-            }
-            if (auto val = Node::asBool(value)) {
-                if (c == ' ') {
-                    val->value = !val->value;
-                    Node::set(shell, nodeValue);
-                }
-                if (c == '0') {
-                    val->value = false;
-                    Node::set(shell, nodeValue);
-                }
-                if (c == '1') {
-                    val->value = true;
-                    Node::set(shell, nodeValue);
-                }
-            }
-            if (c == 'q' || c == '\n') {
-                break;
             }
         }
     }
