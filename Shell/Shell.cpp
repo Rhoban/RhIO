@@ -141,7 +141,7 @@ namespace RhIO
             fullName += name;
             registerCommand(new RemoteCommand(node->getPath(), name, fullName, client->commandDescription(fullName)));
         }
-        for (auto entry : node->children) {
+        for (auto entry : node->getChildren()) {
             updateCommands(entry.second);
         }
     }
@@ -1109,7 +1109,7 @@ namespace RhIO
             possibilities.push_back(name);
         }
 
-        for (auto entry : node->children) {
+        for (auto entry : node->getChildren()) {
             auto name = prefix+entry.first;
             possibilities.push_back(name);
             getPossibilitiesRec(possibilities, entry.second, name);

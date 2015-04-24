@@ -17,7 +17,7 @@ namespace RhIO
             void init();
             void loop();
             void end();
-            void draw(int x, int y, char *s);
+            void draw(int x, int y, std::string s);
 
             int selected;
             int row, col;

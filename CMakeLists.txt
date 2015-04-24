@@ -35,6 +35,7 @@ set(SOURCES_FILES_COMMON
 set(SOURCES_FILES_CLIENT
     Client/ClientReq.cpp
     Client/ClientSub.cpp
+    Client/Node.cpp
 )
 
 #Needed Libraries
