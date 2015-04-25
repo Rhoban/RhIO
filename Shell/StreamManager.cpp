@@ -8,7 +8,7 @@ using namespace std::placeholders;
 namespace RhIO
 {
     StreamManager::StreamManager(Shell *shell)
-        : alive(true), worker(&StreamManager::update, this)
+        : alive(true), worker(&StreamManager::update, this), frequency(DEFAULT_FREQ)
     {
         auto sub = shell->getClientSub();
 
