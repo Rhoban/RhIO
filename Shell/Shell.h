@@ -17,7 +17,7 @@
 
 namespace RhIO
 {
-    class Stream;
+    class StreamManager;
     class Shell
     {
         public:
@@ -106,7 +106,7 @@ namespace RhIO
              * remove the pool from the stream
              */
             void streamWait(NodePool *pool);
-            Stream *getStream();
+            StreamManager *getStream();
             NodePool poolForNode(Node *node);
             NodePool getPool(std::vector<std::string> names, int start=0);
 
@@ -136,7 +136,7 @@ namespace RhIO
             std::string hostname;
             ClientReq *client;
             ClientSub *clientSub;
-            Stream *stream;
+            StreamManager *stream;
             bool terminate;
             std::map<std::string, Command*> commands;
             std::list<std::string> path;

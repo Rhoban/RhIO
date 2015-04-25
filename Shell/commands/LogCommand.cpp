@@ -3,7 +3,7 @@
 #include "LogCommand.h"
 #include "CSV.h"
 #include "NodePool.h"
-#include "Stream.h"
+#include "StreamManager.h"
 
 using namespace std::placeholders;
 

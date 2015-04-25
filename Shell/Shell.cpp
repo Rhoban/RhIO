@@ -8,15 +8,13 @@
 #include <algorithm>
 #include <functional>
 #include <RhIO.hpp>
-#include "Stream.h"
+#include "StreamManager.h"
 #include "Shell.h"
 #include "utils.h"
 #include <set>
 #include "Completion.h"
 
 #include <commands/RemoteCommand.h>
-
-
 
 #include <stdlib.h>
 #include <fcntl.h>
@@ -167,7 +165,7 @@ namespace RhIO
         std::cout << "RhIO, connecting to " << server << std::endl;
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
-        stream = new Stream(this);
+        stream = new StreamManager(this);
 
         sync();
 
@@ -1034,7 +1032,7 @@ namespace RhIO
         return node->getNodeValue(name);
     }
 
-    Stream *Shell::getStream()
+    StreamManager *Shell::getStream()
     {
         return stream;
     }
@@ -1069,12 +1067,21 @@ namespace RhIO
             for (int k=start; k<names.size(); k++) {
                 auto val = getNodeValue(names[k]);
                 if (val.value == NULL) {
-                    std::ostringstream oss;
-                    oss << "Unknown parameter: " << names[k];
-                    throw std::runtime_error(oss.str());
+                    auto node = getNode(names[k]);
+                    if (node == NULL) {
+                        std::ostringstream oss;
+                        oss << "Unknown parameter: " << names[k];
+                        throw std::runtime_error(oss.str());
+                    } else {
+                        for (auto n : node->getAll()) {
+                            getFromServer(n);
+                            pool.push_back(n);
+                        }
+                    }
+                } else {
+                    getFromServer(val);
+                    pool.push_back(val);
                 }
-                getFromServer(val);
-                pool.push_back(val);
             }
 
             return pool;

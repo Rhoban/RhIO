@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Stream.h"
+#include "StreamManager.h"
 #include "NodePool.h"
 #include "Node.h"
 
@@ -7,24 +7,24 @@ using namespace std::placeholders;
 
 namespace RhIO
 {
-    Stream::Stream(Shell *shell)
-        : alive(true), worker(&Stream::update, this)
+    StreamManager::StreamManager(Shell *shell)
+        : alive(true), worker(&StreamManager::update, this)
     {
         auto sub = shell->getClientSub();
 
-        sub->setHandlerBool(std::bind(&Stream::boolHandler, this, _1, _2, _3));
-        sub->setHandlerInt(std::bind(&Stream::intHandler, this, _1, _2, _3));
-        sub->setHandlerFloat(std::bind(&Stream::floatHandler, this, _1, _2, _3));
-        sub->setHandlerStr(std::bind(&Stream::stringHandler, this, _1, _2, _3));
+        sub->setHandlerBool(std::bind(&StreamManager::boolHandler, this, _1, _2, _3));
+        sub->setHandlerInt(std::bind(&StreamManager::intHandler, this, _1, _2, _3));
+        sub->setHandlerFloat(std::bind(&StreamManager::floatHandler, this, _1, _2, _3));
+        sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
     }
 
-    Stream::~Stream()
+    StreamManager::~StreamManager()
     {
         alive = false;
         worker.join();
     }
 
-    void Stream::boolHandler(const std::string &name, long timestamp, bool val)
+    void StreamManager::boolHandler(const std::string &name, long timestamp, bool val)
     {
         mutex.lock();
         for (auto pool : pools) {
@@ -41,7 +41,7 @@ namespace RhIO
         mutex.unlock();
     }
 
-    void Stream::intHandler(const std::string &name, long timestamp, int val)
+    void StreamManager::intHandler(const std::string &name, long timestamp, int val)
     {
         mutex.lock();
         for (auto pool : pools) {
@@ -58,7 +58,7 @@ namespace RhIO
         mutex.unlock();
     }
 
-    void Stream::floatHandler(const std::string &name, long timestamp, float val)
+    void StreamManager::floatHandler(const std::string &name, long timestamp, float val)
     {
         mutex.lock();
         for (auto pool : pools) {
@@ -75,7 +75,7 @@ namespace RhIO
         mutex.unlock();
     }
 
-    void Stream::stringHandler(const std::string &name, long timestamp, const std::string &val)
+    void StreamManager::stringHandler(const std::string &name, long timestamp, const std::string &val)
     {
         mutex.lock();
         for (auto pool : pools) {
@@ -92,21 +92,21 @@ namespace RhIO
         mutex.unlock();
     }
     
-    void Stream::addPool(NodePool *pool)
+    void StreamManager::addPool(NodePool *pool)
     {
         mutex.lock();
         pools.insert(pool);
         mutex.unlock();
     }
 
-    void Stream::removePool(NodePool *pool)
+    void StreamManager::removePool(NodePool *pool)
     {
         mutex.lock();
         pools.erase(pool);
         mutex.unlock();
     }
 
-    void Stream::update()
+    void StreamManager::update()
     {
         while (alive) {
             mutex.lock();
@@ -122,7 +122,7 @@ namespace RhIO
         }
     }
 
-    void Stream::setFrequency(int frequency_)
+    void StreamManager::setFrequency(int frequency_)
     {
         frequency = frequency_;
     }

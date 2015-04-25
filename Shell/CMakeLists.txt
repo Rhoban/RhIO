@@ -30,7 +30,7 @@ set (SOURCES
     CSV.cpp
     Terminal.cpp
     NodePool.cpp
-    Stream.cpp
+    StreamManager.cpp
     Completion.cpp
 
     main.cpp
