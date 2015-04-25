@@ -211,7 +211,7 @@ namespace RhIO
         std::vector<std::string> cmd_to_print;
         int print_len=0;
         std::string lineback;
-
+        std::string cmd_list("");
 
         while(!done)
         {
@@ -493,7 +493,7 @@ namespace RhIO
                                     Terminal::clear();
                                     std::cout<<"\t\t";
                                     Terminal::setColor("green", true);
-                                    completion_selected=*it;
+                                    completion_selected=cmd_list+*it;
                                 }
                                 else
                                     std::cout<<*it<<"\t\t";
@@ -516,7 +516,7 @@ namespace RhIO
                                     Terminal::clear();
                                     std::cout<<"\t\t";
                                     Terminal::setColor("blue", true);
-                                    completion_selected=*it;
+                                    completion_selected=cmd_list+*it;
                                 }
                                 else
                                     std::cout<<*it<<"\t\t";
@@ -545,6 +545,7 @@ namespace RhIO
                         lastisspace=false;
                         print_len=0;
                         lineback=line;
+                        cmd_list="";
                             //look at the line and split all the commands separated by a space
                             //work on the last one
 
@@ -566,7 +567,10 @@ namespace RhIO
                                 cur_comp_line=splitted_cmd.back();
                                 splitted_cmd.pop_back();
                                 for(std::vector<std::string>::iterator it=splitted_cmd.begin();it!=splitted_cmd.end();++it)
+                                {
                                     line+=*it+" ";
+                                    cmd_list+=*it+" ";
+                                }
 
                             }
                             else{
@@ -1129,7 +1133,7 @@ namespace RhIO
     {
         aliases[from] = to;
     }
-            
+
     void Shell::getFromServer(NodeValue nodeValue)
     {
         auto name = nodeValue.getName();
@@ -1175,7 +1179,7 @@ namespace RhIO
             val->value = atof(str.c_str());
         } else if (auto val = Node::asString(value)) {
             val->value = str;
-        } 
+        }
 
         setToServer(nodeValue);
     }
