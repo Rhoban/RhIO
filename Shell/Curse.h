@@ -27,7 +27,11 @@ namespace RhIO
             void increment(ValueBase *value, int delta);
             void bound(ValueBase *value);
 
+            void update(NodePool *);
+
             Shell *shell;
             NodePool values;
+
+            bool streamUpdated;
     };
 }
