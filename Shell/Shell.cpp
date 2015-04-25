@@ -225,9 +225,9 @@ namespace RhIO
                         {
                             line=completion_selected;
                         }
-                        else
-                            putchar(c);
-
+                        // else
+                        //     putchar(c); ??
+                        putchar(c);
                         done=true;
 
                         prev_cmd="";
@@ -247,6 +247,7 @@ namespace RhIO
                         }
                         completion_mode=false;
                         history_mode=false;
+
                         return line;
                         break;//useless
 
@@ -468,6 +469,7 @@ namespace RhIO
 
                             //TODO cleanup, it becomes quite messy....
                         history_mode=false;
+                        // completion_mode=false; //desactivate that stuff
 
                         if(completion_mode) //we keep pressing tab so let's navigate through solutions
                         {
@@ -670,7 +672,7 @@ namespace RhIO
                         displayPrompt();
                         std::cout<<line;
                         cursorpos=line.size();
-
+                        completion_selected=line;
                         break;
 
 

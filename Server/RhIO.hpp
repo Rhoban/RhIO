@@ -2,6 +2,7 @@
 #define RHIO_HPP
 
 #include "IONode.hpp"
+#include "Bind.hpp"
 
 namespace RhIO {
 
