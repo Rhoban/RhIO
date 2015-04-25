@@ -21,6 +21,7 @@ link_directories(${ZMQ_DIRECTORY}/lib)
 
 #Sources files
 set(SOURCES_FILES_SERVER
+    Server/Bind.cpp
     Server/CommandNode.cpp
     Server/IONode.cpp
     Server/Filesystem.cpp
@@ -95,5 +96,8 @@ if (BUILD_RHIO_TESTS)
     
     add_executable(testCommands Tests/testCommands.cpp)
     target_link_libraries(testCommands RhIO)
+    
+    add_executable(testBind Tests/testBind.cpp)
+    target_link_libraries(testBind RhIO)
 endif (BUILD_RHIO_TESTS)
 
