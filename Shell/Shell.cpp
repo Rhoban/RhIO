@@ -8,15 +8,13 @@
 #include <algorithm>
 #include <functional>
 #include <RhIO.hpp>
-#include "Stream.h"
+#include "StreamManager.h"
 #include "Shell.h"
 #include "utils.h"
 #include <set>
 #include "Completion.h"
 
 #include <commands/RemoteCommand.h>
-
-
 
 #include <stdlib.h>
 #include <fcntl.h>
@@ -167,7 +165,7 @@ namespace RhIO
         std::cout << "RhIO, connecting to " << server << std::endl;
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
-        stream = new Stream(this);
+        stream = new StreamManager(this);
 
         sync();
 
@@ -1034,7 +1032,7 @@ namespace RhIO
         return node->getNodeValue(name);
     }
 
-    Stream *Shell::getStream()
+    StreamManager *Shell::getStream()
     {
         return stream;
     }

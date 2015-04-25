@@ -10,11 +10,11 @@
 namespace RhIO
 {
     class NodePool;
-    class Stream
+    class StreamManager
     {
         public:
-            Stream(Shell*);
-            ~Stream();
+            StreamManager(Shell*);
+            ~StreamManager();
 
             void boolHandler(const std::string &name, long timestamp, bool val);
             void intHandler(const std::string &name, long timestamp, int val);

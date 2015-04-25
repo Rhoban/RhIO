@@ -122,22 +122,15 @@ namespace RhIO
                 draw(names, SLIDER_WIDTH*pos, buffer);
 
                 int center_x = SLIDER_WIDTH*(pos+1)-(SLIDER_WIDTH/2)-2;
+                    
+                if (form == NULL || pos != selected) {
+                    std::string strVal = Node::toString(value);
+                    draw(names+1, SLIDER_WIDTH*pos+1, strVal.c_str());
+                }
 
                 if (Node::asInt(value) || Node::asFloat(value)) {
                     float min, max, cvalue;
                     getMinMax(value, &min, &max);
-
-                    if (auto val = Node::asInt(value)) {
-                        sprintf(buffer, " %ld", val->value);
-                        cvalue = (float)val->value;
-                    } else if (auto val = Node::asFloat(value)) {
-                        sprintf(buffer, " %g", val->value);
-                        cvalue = val->value;
-                    }
-
-                    if (form == NULL || pos != selected) {
-                        draw(names+1, SLIDER_WIDTH*pos, buffer);
-                    }
 
                     int kmin = 2;
                     int kmax = names-1;
@@ -154,8 +147,6 @@ namespace RhIO
                 }
 
                 if (auto val = Node::asBool(value)) {
-                    draw(names+1, SLIDER_WIDTH*pos, (char*)(val->value ? " True" : " False"));
-
                     int kpos = row-6;
                     if (val->value) {
                         attron(COLOR_PAIR(4));
@@ -181,14 +172,7 @@ namespace RhIO
                     if (c == 10) {
                         form_driver(form, REQ_VALIDATION);
                         char *buf = field_buffer(field[0], 0);
-
-                        if (auto v = Node::asInt(value)) {
-                            v->value = atoi(buf);
-                        }
-                        if (auto v = Node::asFloat(value)) {
-                            v->value = atof(buf);
-                        }
-                        shell->setToServer(nodeValue);
+                        shell->setFromString(nodeValue, std::string(buf));
                     }
 
                     unpost_form(form);
@@ -210,18 +194,19 @@ namespace RhIO
                 if (c == 'g') {
                     granularity = (granularity+1)%GRANULARITIES;
                 }
+
+                if (c == 'v') {
+                    field[0] = new_field(1, SLIDER_WIDTH-2, names+1, 1+SLIDER_WIDTH*selected, 0, 0);
+                    set_field_back(field[0], A_UNDERLINE);
+                    form = new_form(field);
+                    post_form(form);
+                    refresh();
+                }
                 
                 if (Node::asInt(value) || Node::asFloat(value)) {
                     float min, max;
                     getMinMax(value, &min, &max);
 
-                    if (c == 'v') {
-                        field[0] = new_field(1, SLIDER_WIDTH-2, names+1, 1+SLIDER_WIDTH*selected, 0, 0);
-                        set_field_back(field[0], A_UNDERLINE);
-                        form = new_form(field);
-                        post_form(form);
-                        refresh();
-                    }
                     if (c == '0') {
                         if (auto v = Node::asInt(value)) {
                             v->value = 0;

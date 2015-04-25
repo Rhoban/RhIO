@@ -3,7 +3,7 @@
 #include "WatchCommand.h"
 #include "Node.h"
 #include "NodePool.h"
-#include "Stream.h"
+#include "StreamManager.h"
 
 using namespace std::placeholders;
 

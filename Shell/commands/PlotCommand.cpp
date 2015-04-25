@@ -3,7 +3,7 @@
 #include "PlotCommand.h"
 #include "Node.h"
 #include "NodePool.h"
-#include "Stream.h"
+#include "StreamManager.h"
 #include <GnuPlot.h>
 
 using namespace std::placeholders;
