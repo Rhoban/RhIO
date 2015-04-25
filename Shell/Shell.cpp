@@ -1067,12 +1067,21 @@ namespace RhIO
             for (int k=start; k<names.size(); k++) {
                 auto val = getNodeValue(names[k]);
                 if (val.value == NULL) {
-                    std::ostringstream oss;
-                    oss << "Unknown parameter: " << names[k];
-                    throw std::runtime_error(oss.str());
+                    auto node = getNode(names[k]);
+                    if (node == NULL) {
+                        std::ostringstream oss;
+                        oss << "Unknown parameter: " << names[k];
+                        throw std::runtime_error(oss.str());
+                    } else {
+                        for (auto n : node->getAll()) {
+                            getFromServer(n);
+                            pool.push_back(n);
+                        }
+                    }
+                } else {
+                    getFromServer(val);
+                    pool.push_back(val);
                 }
-                getFromServer(val);
-                pool.push_back(val);
             }
 
             return pool;

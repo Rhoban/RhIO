@@ -11,6 +11,7 @@
 #include "StreamManager.h"
 #include "Curse.h"
 #include "Shell.h"
+#include "utils.h"
 
 using namespace std::placeholders;
 
@@ -223,6 +224,7 @@ namespace RhIO
             }
             attron(COLOR_PAIR(5));
             mvwprintw(stdscr, 0, 0, "Parameters tuner, granularity: 1/%g", granularities[granularity]);
+            refresh();
 
             /**
              * Wait for the stream to refresh or the user to press any key
@@ -233,7 +235,6 @@ namespace RhIO
                 std::this_thread::sleep_for(
                     std::chrono::milliseconds(10));
             } while (!inputAvailable() && !streamUpdated);
-            refresh();
 
             /**
              * Handle key press
@@ -248,7 +249,9 @@ namespace RhIO
                         if (c == 10) {
                             form_driver(form, REQ_VALIDATION);
                             char *buf = field_buffer(field[0], 0);
-                            shell->setFromString(nodeValue, std::string(buf));
+                            auto str = std::string(buf);
+                            trim(str);
+                            shell->setFromString(nodeValue, str);
                         }
 
                         unpost_form(form);
