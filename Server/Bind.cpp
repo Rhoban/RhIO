@@ -2,71 +2,191 @@
 #include "Bind.hpp"
 
 namespace RhIO {
+        
+Bind::Bind(const std::string& prefixChild) :
+    _prefix(prefixChild)
+{
+    if (
+        _prefix != "" && 
+        _prefix[_prefix.length()] != '/'
+    ) {
+        _prefix = _prefix + '/';
+    }
+}
+        
+std::unique_ptr<ValueBuilderBool> 
+    Bind::bindNew(const std::string& name, bool& var)
+{
+    //Check values exist
+    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
+        throw std::logic_error(
+            "RhIO already created value name: " + name);
+    }
+    //Add to bind container
+    _bindsBool.push_back({
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
+        &var});
+    //Create new value
+    return RhIO::Root.newBool(_prefix+name);
+}
+std::unique_ptr<ValueBuilderInt> 
+    Bind::bindNew(const std::string& name, int& var)
+{
+    //Check values exist
+    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
+        throw std::logic_error(
+            "RhIO already created value name: " + name);
+    }
+    //Add to bind container
+    _bindsInt.push_back({
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
+        &var});
+    //Create new value
+    return RhIO::Root.newInt(_prefix+name);
+}
+std::unique_ptr<ValueBuilderInt> 
+    Bind::bindNew(const std::string& name, long& var)
+{
+    //Check values exist
+    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
+        throw std::logic_error(
+            "RhIO already created value name: " + name);
+    }
+    //Add to bind container
+    _bindsLong.push_back({
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
+        &var});
+    //Create new value
+    return RhIO::Root.newInt(_prefix+name);
+}
+std::unique_ptr<ValueBuilderFloat> 
+    Bind::bindNew(const std::string& name, float& var)
+{
+    //Check values exist
+    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
+        throw std::logic_error(
+            "RhIO already created value name: " + name);
+    }
+    //Add to bind container
+    _bindsFloat.push_back({
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
+        &var});
+    //Create new value
+    return RhIO::Root.newFloat(_prefix+name);
+}
+std::unique_ptr<ValueBuilderFloat> 
+    Bind::bindNew(const std::string& name, double& var)
+{
+    //Check values exist
+    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
+        throw std::logic_error(
+            "RhIO already created value name: " + name);
+    }
+    //Add to bind container
+    _bindsDouble.push_back({
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
+        &var});
+    //Create new value
+    return RhIO::Root.newFloat(_prefix+name);
+}
+std::unique_ptr<ValueBuilderStr> 
+    Bind::bindNew(const std::string& name, std::string& var)
+{
+    //Check values exist
+    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
+        throw std::logic_error(
+            "RhIO already created value name: " + name);
+    }
+    //Add to bind container
+    _bindsStr.push_back({
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
+        &var});
+    //Create new value
+    return RhIO::Root.newStr(_prefix+name);
+}
 
 void Bind::bind(const std::string& name, bool& var)
 {
     //Check values exist
-    if (RhIO::Root.getValueType(name) != TypeBool) {
-        RhIO::Root.newBool(name);
+    if (RhIO::Root.getValueType(_prefix+name) != TypeBool) {
+        throw std::logic_error(
+            "RhIO not created value name: " + name);
     }
+    //Add to bind container
     _bindsBool.push_back({
-        relativeName(name), 
-        getChildPtr(name), 
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
         &var});
 }
 void Bind::bind(const std::string& name, int& var)
 {
     //Check values exist
-    if (RhIO::Root.getValueType(name) != TypeInt) {
-        RhIO::Root.newInt(name);
+    if (RhIO::Root.getValueType(_prefix+name) != TypeInt) {
+        throw std::logic_error(
+            "RhIO not created value name: " + name);
     }
+    //Add to bind container
     _bindsInt.push_back({
-        relativeName(name), 
-        getChildPtr(name), 
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
         &var});
 }
 void Bind::bind(const std::string& name, long& var)
 {
     //Check values exist
-    if (RhIO::Root.getValueType(name) != TypeInt) {
-        RhIO::Root.newInt(name);
+    if (RhIO::Root.getValueType(_prefix+name) != TypeInt) {
+        throw std::logic_error(
+            "RhIO not created value name: " + name);
     }
+    //Add to bind container
     _bindsLong.push_back({
-        relativeName(name), 
-        getChildPtr(name), 
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
         &var});
 }
 void Bind::bind(const std::string& name, float& var)
 {
     //Check values exist
-    if (RhIO::Root.getValueType(name) != TypeFloat) {
-        RhIO::Root.newFloat(name);
+    if (RhIO::Root.getValueType(_prefix+name) != TypeFloat) {
+        throw std::logic_error(
+            "RhIO not created value name: " + name);
     }
+    //Add to bind container
     _bindsFloat.push_back({
-        relativeName(name), 
-        getChildPtr(name), 
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
         &var});
 }
 void Bind::bind(const std::string& name, double& var)
 {
     //Check values exist
-    if (RhIO::Root.getValueType(name) != TypeFloat) {
-        RhIO::Root.newFloat(name);
+    if (RhIO::Root.getValueType(_prefix+name) != TypeFloat) {
+        throw std::logic_error(
+            "RhIO not created value name: " + name);
     }
+    //Add to bind container
     _bindsDouble.push_back({
-        relativeName(name), 
-        getChildPtr(name), 
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
         &var});
 }
 void Bind::bind(const std::string& name, std::string& var)
 {
     //Check values exist
-    if (RhIO::Root.getValueType(name) != TypeStr) {
-        RhIO::Root.newStr(name);
+    if (RhIO::Root.getValueType(_prefix+name) != TypeStr) {
+        throw std::logic_error(
+            "RhIO not created value name: " + name);
     }
+    //Add to bind container
     _bindsStr.push_back({
-        relativeName(name), 
-        getChildPtr(name), 
+        relativeName(_prefix+name), 
+        getChildPtr(_prefix+name), 
         &var});
 }
 

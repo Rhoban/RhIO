@@ -20,13 +20,42 @@ class Bind
     public:
 
         /**
-         * Register a variable binding
-         * with given absolute name and given
+         * Initialization with child
+         * node absolute path to prefix on each call
+         * of bind and bindNew
+         */
+        Bind(const std::string& prefixChild = "");
+
+        /**
+         * Create a new value and register a variable
+         * for binding for given value name and given
          * variable reference.
          * Variable address must not be changed
          * during this instance lifetime.
-         * if variable does not exist, a new values
-         * is created with default parameter
+         * Return ValueBuilder for setting values meta
+         * information on creation
+         */
+        std::unique_ptr<ValueBuilderBool> 
+            bindNew(const std::string& name, bool& var);
+        std::unique_ptr<ValueBuilderInt> 
+            bindNew(const std::string& name, int& var);
+        std::unique_ptr<ValueBuilderInt> 
+            bindNew(const std::string& name, long& var);
+        std::unique_ptr<ValueBuilderFloat> 
+            bindNew(const std::string& name, float& var);
+        std::unique_ptr<ValueBuilderFloat> 
+            bindNew(const std::string& name, double& var);
+        std::unique_ptr<ValueBuilderStr> 
+            bindNew(const std::string& name, std::string& var);
+
+        /**
+         * Register a variable binding
+         * with given name and given
+         * variable reference.
+         * Variable address must not be changed
+         * during this instance lifetime.
+         * if value name does not exist, throw
+         * std::logic_error
          */
         void bind(const std::string& name, bool& var);
         void bind(const std::string& name, int& var);
@@ -61,6 +90,12 @@ class Bind
             IONode* node;
             T* ptr;
         };
+
+        /**
+         * Absolute name prefix to add
+         * before each bind name
+         */
+        std::string _prefix;
 
         /**
          * Binded information container

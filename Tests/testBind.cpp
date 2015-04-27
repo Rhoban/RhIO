@@ -6,18 +6,25 @@ class Test
 {
     public:
 
-        Test()
+        Test() :
+            _bind("test")
         {
-            _bind.bind("test/valueBool", _valueBool);
+            _bind.bindNew("valueBool", _valueBool)
+                ->comment("bool value")
+                ->persisted(true);
             _bind.bind("valueInt1", _valueInt);
-            _bind.bind("test/test2/valueFloat1", _valueFloat);
+            _bind.bind("test2/valueFloat1", _valueFloat);
             _bind.bind("valueInt2", _valueInt2);
-            _bind.bind("test/test2/valueFloat2", _valueFloat2);
-            _bind.bind("test/valueStr", _valueStr);
+            _bind.bindNew("test2/valueFloat2", _valueFloat2)
+                ->minimum(-100.0);
+            _bind.bind("test2/test3/valueStr", _valueStr);
+            assert(RhIO::Root.getValueType("test/valueBool") == RhIO::TypeBool);
+            assert(RhIO::Root.getValueBool("test/valueBool").comment == "bool value");
         }
 
         inline void tick1()
         {
+            RhIO::Root.setBool("test/valueBool", true);
             _bind.pull();
             assert(_valueBool == true);
             assert(_valueInt == 2);
@@ -52,23 +59,20 @@ class Test
 int main()
 {
     RhIO::Root.newChild("test");
-    RhIO::Root.newBool("test/valueBool");
-    RhIO::Root.newInt("valueInt1");
-    RhIO::Root.newInt("valueInt2");
+    RhIO::Root.newInt("test/valueInt1");
+    RhIO::Root.newInt("test/valueInt2");
     RhIO::Root.newFloat("test/test2/valueFloat1");
-    RhIO::Root.newFloat("test/test2/valueFloat2");
-    RhIO::Root.newStr("test/valueStr");
+    RhIO::Root.newStr("test/test2/test3/valueStr");
 
-    RhIO::Root.setBool("test/valueBool", true);
-    RhIO::Root.setInt("valueInt1", 2);
+    RhIO::Root.setInt("test/valueInt1", 2);
     RhIO::Root.setFloat("test/test2/valueFloat1", 42.0);
-    RhIO::Root.setStr("test/valueStr", "str1");
+    RhIO::Root.setStr("test/test2/test3/valueStr", "str1");
 
     Test test;
     test.tick1();
-    assert(RhIO::Root.getInt("valueInt1") == 3);
+    assert(RhIO::Root.getInt("test/valueInt1") == 3);
     assert(RhIO::Root.getFloat("test/test2/valueFloat1") == 42.0);
-    RhIO::Root.setStr("test/valueStr", "str2");
+    RhIO::Root.setStr("test/test2/test3/valueStr", "str2");
     test.tick2();
 
     return 0;
