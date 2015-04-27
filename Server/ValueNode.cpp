@@ -127,9 +127,11 @@ void ValueNode::setBool(const std::string& name, bool val,
         _valuesBool[name].value = val;
         _valuesBool[name].timestamp = timestamp;
         //Publish value
-        ServerStream->publishBool(BaseNode::pwd + separator + name, val,
-            std::chrono::duration_cast<std::chrono::milliseconds>
-                (timestamp.time_since_epoch()).count());
+        if (_valuesBool.at(name).streamWatchers > 0) {
+            ServerStream->publishBool(BaseNode::pwd + separator + name, val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
     }
 }
 void ValueNode::setInt(const std::string& name, long val,
@@ -164,9 +166,11 @@ void ValueNode::setInt(const std::string& name, long val,
         _valuesInt[name].value = val;
         _valuesInt[name].timestamp = timestamp;
         //Publish value
-        ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
-            std::chrono::duration_cast<std::chrono::milliseconds>
-                (timestamp.time_since_epoch()).count());
+        if (_valuesInt.at(name).streamWatchers > 0) {
+            ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
     }
 }
 void ValueNode::setFloat(const std::string& name, double val,
@@ -201,9 +205,11 @@ void ValueNode::setFloat(const std::string& name, double val,
         _valuesFloat[name].value = val;
         _valuesFloat[name].timestamp = timestamp;
         //Publish value
-        ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
-            std::chrono::duration_cast<std::chrono::milliseconds>
-                (timestamp.time_since_epoch()).count());
+        if (_valuesFloat.at(name).streamWatchers > 0) {
+            ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
     }
 }
 void ValueNode::setStr(const std::string& name, const std::string& val,
@@ -238,9 +244,11 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
             _valuesStr[name].value = _valuesStr.at(name).max;
         }
         //Publish value
-        ServerStream->publishStr(BaseNode::pwd + separator + name, val,
-            std::chrono::duration_cast<std::chrono::milliseconds>
-                (timestamp.time_since_epoch()).count());
+        if (_valuesStr.at(name).streamWatchers > 0) {
+            ServerStream->publishStr(BaseNode::pwd + separator + name, val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
     }
 }
 
@@ -407,6 +415,67 @@ const ValueStr& ValueNode::getValueStr(const std::string& name) const
         throw std::logic_error("RhIO unknown value Str name: " + name);
     } else {
         return _valuesStr.at(name);
+    }
+}
+        
+void ValueNode::enableStreamingValue(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->enableStreamingValue(tmpName);
+        return;
+    }
+    
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesBool.count(name) > 0) {
+        _valuesBool.at(name).streamWatchers++;
+    } else if (_valuesInt.count(name) > 0) {
+        _valuesInt.at(name).streamWatchers++;
+    } else if (_valuesFloat.count(name) > 0) {
+        _valuesFloat.at(name).streamWatchers++;
+    } else if (_valuesStr.count(name) > 0) {
+        _valuesStr.at(name).streamWatchers++;
+    } else {
+        throw std::logic_error(
+            "RhIO unknown value name: " + name);
+    }
+}
+void ValueNode::disableStreamingValue(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->disableStreamingValue(tmpName);
+        return;
+    }
+    
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesBool.count(name) > 0) {
+        _valuesBool.at(name).streamWatchers--;
+        if (_valuesBool.at(name).streamWatchers < 0) {
+            _valuesBool.at(name).streamWatchers = 0;
+        }
+    } else if (_valuesInt.count(name) > 0) {
+        _valuesInt.at(name).streamWatchers--;
+        if (_valuesInt.at(name).streamWatchers < 0) {
+            _valuesInt.at(name).streamWatchers = 0;
+        }
+    } else if (_valuesFloat.count(name) > 0) {
+        _valuesFloat.at(name).streamWatchers--;
+        if (_valuesFloat.at(name).streamWatchers < 0) {
+            _valuesFloat.at(name).streamWatchers = 0;
+        }
+    } else if (_valuesStr.count(name) > 0) {
+        _valuesStr.at(name).streamWatchers--;
+        if (_valuesStr.at(name).streamWatchers < 0) {
+            _valuesStr.at(name).streamWatchers = 0;
+        }
+    } else {
+        throw std::logic_error(
+            "RhIO unknown value name: " + name);
     }
 }
 

@@ -42,6 +42,13 @@ struct ValueBase
      * saved in config files
      */
     bool persisted;
+
+    /**
+     * The number of registered watcher
+     * Streaming is enabled while at least
+     * one watcher is registered
+     */
+    long streamWatchers;
 };
 
 /**
@@ -121,6 +128,7 @@ struct ValueBuilder final
                 _value.value = T();
                 _value.valuePersisted = T();
                 _value.persisted = false;
+                _value.streamWatchers = 0;
             }
         }
 

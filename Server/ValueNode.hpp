@@ -99,6 +99,13 @@ class ValueNode : public BaseNode<ValueNode>
         const ValueStr& getValueStr(const std::string& name) const;
 
         /**
+         * Enable or disable (increase or decrease stream watchers) 
+         * for given value name
+         */
+        void enableStreamingValue(const std::string& name);
+        void disableStreamingValue(const std::string& name);
+
+        /**
          * Return the relative name list of all registered
          * values for each type
          */

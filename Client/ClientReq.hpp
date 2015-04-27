@@ -99,6 +99,14 @@ class ClientReq
         ValueStr metaValueStr(const std::string& name);
 
         /**
+         * Enable and disable streaming for given
+         * absolute value name
+         * (Increment and decrement stream watchers number)
+         */
+        void enableStreamingValue(const std::string& name);
+        void disableStreamingValue(const std::string& name);
+
+        /**
          * Return the list of available stream on 
          * a given absolute node name
          */

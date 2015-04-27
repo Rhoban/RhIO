@@ -82,6 +82,12 @@ void ServerRep::handleRequest()
             case MsgAskMetaStr:
                   valMetaStr(req);
                   return;
+            case MsgEnableStreamingValue:
+                  enableStreamingValue(req);
+                  return;
+            case MsgDisableStreamingValue:
+                  disableStreamingValue(req);
+                  return;
             case MsgAskSave:
                   save(req);
                   return;
@@ -431,13 +437,14 @@ void ServerRep::valMetaBool(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 3*sizeof(uint8_t));
+        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(uint8_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaBool);
     rep.writeStr(val.comment);
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
+    rep.writeInt(val.streamWatchers);
     
     rep.writeBool(val.min);
     rep.writeBool(val.max);
@@ -461,13 +468,14 @@ void ServerRep::valMetaInt(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 3*sizeof(long));
+        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(long));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaInt);
     rep.writeStr(val.comment);
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
+    rep.writeInt(val.streamWatchers);
     
     rep.writeInt(val.min);
     rep.writeInt(val.max);
@@ -491,13 +499,14 @@ void ServerRep::valMetaFloat(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 3*sizeof(double));
+        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(double));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaFloat);
     rep.writeStr(val.comment);
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
+    rep.writeInt(val.streamWatchers);
     
     rep.writeFloat(val.min);
     rep.writeFloat(val.max);
@@ -521,7 +530,7 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + 3*sizeof(long) 
+        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(long) 
         + val.min.length() + val.max.length() + val.valuePersisted.length());
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaStr);
@@ -529,10 +538,42 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
+    rep.writeInt(val.streamWatchers);
     
     rep.writeStr(val.min);
     rep.writeStr(val.max);
     rep.writeStr(val.valuePersisted);
+
+    //Send reply
+    _socket.send(reply);
+}
+        
+void ServerRep::enableStreamingValue(DataBuffer& buffer)
+{
+    //Get asked value name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.enableStreamingValue(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::disableStreamingValue(DataBuffer& buffer)
+{
+    //Get asked value name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.disableStreamingValue(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
 
     //Send reply
     _socket.send(reply);

@@ -21,41 +21,31 @@ int main()
     RhIO::Root.newStream("test/stream1", "stream1");
 
     std::cout << "Waiting" << std::endl;
-    RhIO::Root.setBool("test/paramBool", true);
-    RhIO::Root.setInt("test/test3/paramInt", 2);
-    RhIO::Root.setFloat("test/paramFloat", 3.0);
-    RhIO::Root.setStr("test/test3/paramStr", "4");
-    RhIO::Root.setBool("test/paramBool", true);
-    RhIO::Root.setInt("test/test3/paramInt", 2);
-    RhIO::Root.setFloat("test/paramFloat", 3.0);
-    RhIO::Root.setStr("test/test3/paramStr", "4");
-    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
-    std::this_thread::sleep_for(
-        std::chrono::milliseconds(100));
-
-    RhIO::Root.setBool("test/paramBool", true);
-    RhIO::Root.setInt("test/test3/paramInt", 2);
-    RhIO::Root.setFloat("test/paramFloat", 3.0);
-    RhIO::Root.setStr("test/test3/paramStr", "4");
-    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
-    std::this_thread::sleep_for(
-        std::chrono::milliseconds(100));
-
-    RhIO::Root.setBool("test/paramBool", true);
-    RhIO::Root.setInt("test/test3/paramInt", 2);
-    RhIO::Root.setFloat("test/paramFloat", 3.0);
-    RhIO::Root.setStr("test/test3/paramStr", "4");
-    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
-    std::this_thread::sleep_for(
-        std::chrono::milliseconds(100));
-
-    RhIO::Root.setBool("test/paramBool", true);
-    RhIO::Root.setInt("test/test3/paramInt", 2);
-    RhIO::Root.setFloat("test/paramFloat", 3.0);
-    RhIO::Root.setStr("test/test3/paramStr", "4");
-    RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
-    std::this_thread::sleep_for(
-        std::chrono::milliseconds(1000));
+    for (size_t k=0;k<50;k++) {
+        RhIO::Root.setBool("test/paramBool", true);
+        RhIO::Root.setInt("test/test3/paramInt", 2);
+        RhIO::Root.setFloat("test/paramFloat", 3.0);
+        RhIO::Root.setStr("test/test3/paramStr", "4");
+        RhIO::Root.setBool("test/paramBool", true);
+        RhIO::Root.setInt("test/test3/paramInt", 2);
+        RhIO::Root.setFloat("test/paramFloat", 3.0);
+        RhIO::Root.setStr("test/test3/paramStr", "4");
+        RhIO::Root.out("test/stream1") << "test stream1" << std::endl;
+        std::this_thread::sleep_for(
+            std::chrono::milliseconds(100));
+        if (k == 20) {
+            RhIO::Root.enableStreamingValue("test/paramBool");
+        }
+        if (k == 30) {
+            RhIO::Root.enableStreamingValue("test/test3/paramInt");
+            RhIO::Root.enableStreamingValue("test/paramFloat");
+            RhIO::Root.enableStreamingValue("test/test3/paramStr");
+        }
+        if (k == 40) {
+            RhIO::Root.disableStreamingValue("test/paramBool");
+            RhIO::Root.disableStreamingValue("test/test3/paramStr");
+        }
+    }
 
     return 0;
 }

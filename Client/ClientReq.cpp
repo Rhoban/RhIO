@@ -257,6 +257,7 @@ ValueBool ClientReq::metaValueBool(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readBool();
     val.max = rep.readBool();
     val.valuePersisted = rep.readBool();
@@ -285,6 +286,7 @@ ValueInt ClientReq::metaValueInt(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readInt();
     val.max = rep.readInt();
     val.valuePersisted = rep.readInt();
@@ -313,6 +315,7 @@ ValueFloat ClientReq::metaValueFloat(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readFloat();
     val.max = rep.readFloat();
     val.valuePersisted = rep.readFloat();
@@ -341,11 +344,45 @@ ValueStr ClientReq::metaValueStr(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readStr();
     val.max = rep.readStr();
     val.valuePersisted = rep.readStr();
 
     return val;
+}
+        
+void ClientReq::enableStreamingValue(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgEnableStreamingValue);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
+}
+void ClientReq::disableStreamingValue(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(long) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgDisableStreamingValue);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
 }
         
 std::vector<std::string> ClientReq::listStreams
