@@ -11,15 +11,13 @@ namespace RhIO
     class CSV
     {
         public:
-            CSV();
+            CSV(std::ostream *os);
 
-            void open(std::string);
             void push(std::string column, double value);
             void newLine();
-            void close();
 
         protected:
-            std::ofstream ofs;
+            std::ostream *os;
             bool header;
             std::map<std::string, int> columns;
             std::map<int, std::string> columnIndexes;

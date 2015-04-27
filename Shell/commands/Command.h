@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -18,9 +20,21 @@ namespace RhIO
 
             void setShell(Shell *shell_);
             void errorUsage();
+
+            /**
+             * Get the node corresponding to given args
+             */
             Node *getNode(std::vector<std::string> args);
 
+            /**
+             * Getting the stream where data should be put
+             */
+            std::ostream *getStream(std::vector<std::string> &args);
+            void clearStream();
+
         protected:
+            bool hasFile;
+            std::ofstream ofs;
             Shell *shell;
     };
 }

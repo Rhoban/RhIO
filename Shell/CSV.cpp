@@ -2,17 +2,12 @@
 
 namespace RhIO
 {
-    CSV::CSV()
+    CSV::CSV(std::ostream *os_)
+        : os(os_)
     {
-    }
-
-    void CSV::open(std::string filename)
-    {
-        ofs.open(filename.c_str());
-        ofs.precision(10);
         header = false;
     }
-
+    
     void CSV::push(std::string column, double value)
     {
         if (columns.count(column)) {
@@ -33,22 +28,16 @@ namespace RhIO
         }
 
         for (unsigned int index=0; index<columns.size(); index++) {
-            ofs << values[index] << " ";
+            *os << values[index] << " ";
         }
-        ofs << std::endl;
-        ofs.flush();
+        *os << std::endl;
+        os->flush();
     }
 
     void CSV::produceHeader()
     {
         for (unsigned int index=0; index<columnIndexes.size(); index++) {
-            ofs << "# " << (index+1) << ": " << columnIndexes[index] << std::endl;
+            *os << "# " << (index+1) << ": " << columnIndexes[index] << std::endl;
         }
     }
-    
-    void CSV::close()
-    {
-        ofs.close();
-    }
-
 }
