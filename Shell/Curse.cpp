@@ -76,7 +76,7 @@ namespace RhIO
         // Enabling streaming callback
         values.setCallback(std::bind(&Curse::update, this, _1));
         shell->getStream()->setFrequency(25);
-        shell->getStream()->addPool(&values);
+        shell->getStream()->addPool(shell, &values);
     }
 
     void Curse::getMinMax(ValueBase *value, float *min, float *max)
@@ -329,7 +329,7 @@ namespace RhIO
 
     void Curse::end()
     {
-        shell->getStream()->removePool(&values);
+        shell->getStream()->removePool(shell, &values);
         curs_set(1);
         endwin();
         echo();

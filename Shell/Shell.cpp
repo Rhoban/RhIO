@@ -1128,9 +1128,9 @@ namespace RhIO
 
     void Shell::streamWait(NodePool *pool)
     {
-        stream->addPool(pool);
+        stream->addPool(this, pool);
         wait();
-        stream->removePool(pool);
+        stream->removePool(this, pool);
     }
 
     void Shell::wait()

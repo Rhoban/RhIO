@@ -35,8 +35,8 @@ namespace RhIO
             /**
              * Add a node pool to monitor
              */
-            void addPool(NodePool *pool);
-            void removePool(NodePool *pool);
+            void addPool(Shell *shell, NodePool *pool);
+            void removePool(Shell *shell, NodePool *pool);
 
             /**
              * Sets the frequency limit for the flush

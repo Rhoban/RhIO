@@ -110,16 +110,24 @@ namespace RhIO
         }
     }
     
-    void StreamManager::addPool(NodePool *pool)
+    void StreamManager::addPool(Shell *shell, NodePool *pool)
     {
         mutex.lock();
+        auto client = shell->getClient();
+        for (auto entry : *pool) {
+            client->enableStreamingValue(entry.getName());
+        }
         pools.insert(pool);
         mutex.unlock();
     }
 
-    void StreamManager::removePool(NodePool *pool)
+    void StreamManager::removePool(Shell *shell, NodePool *pool)
     {
         mutex.lock();
+        auto client = shell->getClient();
+        for (auto entry : *pool) {
+            client->disableStreamingValue(entry.getName());
+        }
         pools.erase(pool);
         mutex.unlock();
     }
