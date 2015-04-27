@@ -52,7 +52,7 @@ bool ValueNode::getBool(const std::string& name) const
         return _valuesBool.at(name).value;
     }
 }
-long ValueNode::getInt(const std::string& name) const
+int64_t ValueNode::getInt(const std::string& name) const
 {
     //Forward to subtree
     std::string tmpName;
@@ -134,7 +134,7 @@ void ValueNode::setBool(const std::string& name, bool val,
         }
     }
 }
-void ValueNode::setInt(const std::string& name, long val,
+void ValueNode::setInt(const std::string& name, int64_t val,
     std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree

@@ -20,16 +20,16 @@ class ClientSub
          * Typedef for stream custom handlers for each type
          */
         typedef std::function<void
-            (const std::string& name, long timestamp, bool val)> 
+            (const std::string& name, int64_t timestamp, bool val)> 
             StreamBoolHandler;
         typedef std::function<void
-            (const std::string& name, long timestamp, long val)> 
+            (const std::string& name, int64_t timestamp, int64_t val)> 
             StreamIntHandler;
         typedef std::function<void
-            (const std::string& name, long timestamp, double val)> 
+            (const std::string& name, int64_t timestamp, double val)> 
             StreamFloatHandler;
         typedef std::function<void
-            (const std::string& name, long timestamp, const std::string& val)> 
+            (const std::string& name, int64_t timestamp, const std::string& val)> 
             StreamStrHandler;
         
         /**

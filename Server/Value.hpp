@@ -48,7 +48,7 @@ struct ValueBase
      * Streaming is enabled while at least
      * one watcher is registered
      */
-    long streamWatchers;
+    int64_t streamWatchers;
 };
 
 /**
@@ -87,7 +87,7 @@ struct Value : public ValueBase
  * Typedef for used value types
  */
 typedef Value<bool> ValueBool;
-typedef Value<long> ValueInt;
+typedef Value<int64_t> ValueInt;
 typedef Value<double> ValueFloat;
 typedef Value<std::string> ValueStr;
 
@@ -184,7 +184,7 @@ struct ValueBuilder final
  * Typedef for ValueBuilder
  */
 typedef ValueBuilder<bool> ValueBuilderBool;
-typedef ValueBuilder<long> ValueBuilderInt;
+typedef ValueBuilder<int64_t> ValueBuilderInt;
 typedef ValueBuilder<double> ValueBuilderFloat;
 typedef ValueBuilder<std::string> ValueBuilderStr;
 

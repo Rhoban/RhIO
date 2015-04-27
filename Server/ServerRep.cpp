@@ -130,10 +130,10 @@ void ServerRep::listChildren(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listChildren();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -158,10 +158,10 @@ void ServerRep::listValuesBool(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listValuesBool();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -185,10 +185,10 @@ void ServerRep::listValuesInt(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listValuesInt();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -212,10 +212,10 @@ void ServerRep::listValuesFloat(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listValuesFloat();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -239,10 +239,10 @@ void ServerRep::listValuesStr(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listValuesStr();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -288,7 +288,7 @@ void ServerRep::getInt(DataBuffer& buffer)
     }
 
     //Allocate message data
-    zmq::message_t reply(sizeof(MsgType) + sizeof(long));
+    zmq::message_t reply(sizeof(MsgType) + sizeof(int64_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValInt);
     rep.writeInt(RhIO::Root.getInt(name));
@@ -328,7 +328,7 @@ void ServerRep::getStr(DataBuffer& buffer)
     //Allocate message data
     std::string str = RhIO::Root.getStr(name);
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + str.length());
+        sizeof(MsgType) + sizeof(int64_t) + str.length());
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValStr);
     rep.writeStr(str);
@@ -436,8 +436,8 @@ void ServerRep::valMetaBool(DataBuffer& buffer)
 
     //Allocate message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(uint8_t));
+        sizeof(MsgType) + sizeof(int64_t) + val.comment.length()
+        + 3*sizeof(uint8_t) + sizeof(int64_t) + 3*sizeof(uint8_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaBool);
     rep.writeStr(val.comment);
@@ -467,8 +467,8 @@ void ServerRep::valMetaInt(DataBuffer& buffer)
 
     //Allocate message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(long));
+        sizeof(MsgType) + sizeof(int64_t) + val.comment.length()
+        + 3*sizeof(uint8_t) + sizeof(int64_t) + 3*sizeof(int64_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaInt);
     rep.writeStr(val.comment);
@@ -498,8 +498,8 @@ void ServerRep::valMetaFloat(DataBuffer& buffer)
 
     //Allocate message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(double));
+        sizeof(MsgType) + sizeof(int64_t) + val.comment.length()
+        + 3*sizeof(uint8_t) + sizeof(int64_t) + 3*sizeof(double));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaFloat);
     rep.writeStr(val.comment);
@@ -529,8 +529,8 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
 
     //Allocate message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + val.comment.length()
-        + 3*sizeof(uint8_t) + sizeof(long) + 3*sizeof(long) 
+        sizeof(MsgType) + sizeof(int64_t) + val.comment.length()
+        + 3*sizeof(uint8_t) + sizeof(int64_t) + 3*sizeof(int64_t) 
         + val.min.length() + val.max.length() + val.valuePersisted.length());
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaStr);
@@ -633,10 +633,10 @@ void ServerRep::listCommands(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listCommands();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -664,7 +664,7 @@ void ServerRep::commandDescription(DataBuffer& buffer)
     //Allocate message data
     std::string str = RhIO::Root.commandDescription(name);
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + str.length());
+        sizeof(MsgType) + sizeof(int64_t) + str.length());
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgCommandDescription);
     rep.writeStr(str);
@@ -693,7 +693,7 @@ void ServerRep::callResult(DataBuffer& buffer)
 
     //Allocate message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + result.length());
+        sizeof(MsgType) + sizeof(int64_t) + result.length());
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgCallResult);
     rep.writeStr(result);
@@ -711,10 +711,10 @@ void ServerRep::listStreams(DataBuffer& buffer)
 
     //Compute message size
     size_t size = sizeof(MsgType);
-    size += sizeof(long);
+    size += sizeof(int64_t);
     std::vector<std::string> list = node->listStreams();
     for (size_t i=0;i<list.size();i++) {
-        size += sizeof(long) + list[i].length();
+        size += sizeof(int64_t) + list[i].length();
     }
 
     //Allocate message data
@@ -744,8 +744,8 @@ void ServerRep::descriptionStream(DataBuffer& buffer)
 
     //Allocate message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + comment.length()
-        + sizeof(long));
+        sizeof(MsgType) + sizeof(int64_t) + comment.length()
+        + sizeof(int64_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgDescriptionStream);
     rep.writeStr(comment);
@@ -758,7 +758,7 @@ void ServerRep::error(const std::string& msg)
 {
     //Initialize message data
     zmq::message_t reply(
-        sizeof(MsgType) + sizeof(long) + msg.length());
+        sizeof(MsgType) + sizeof(int64_t) + msg.length());
     DataBuffer req(reply.data(), reply.size());
     
     //Build error message

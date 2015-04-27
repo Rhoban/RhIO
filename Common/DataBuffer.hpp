@@ -31,7 +31,7 @@ class DataBuffer
          */
         void writeType(uint8_t val);
         void writeBool(bool val);
-        void writeInt(long val);
+        void writeInt(int64_t val);
         void writeFloat(double val);
         void writeStr(const std::string& val);
 
@@ -41,7 +41,7 @@ class DataBuffer
          */
         uint8_t readType();
         bool readBool();
-        long readInt();
+        int64_t readInt();
         double readFloat();
         std::string readStr();
 

@@ -28,7 +28,7 @@ ServerPub::ServerPub(const std::string& endpoint) :
 }
 
 void ServerPub::publishBool(const std::string& name, 
-    bool val, long timestamp)
+    bool val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueBool);
     if (_isWritingTo1) {
@@ -38,7 +38,7 @@ void ServerPub::publishBool(const std::string& name,
     }
 }
 void ServerPub::publishInt(const std::string& name, 
-    long val, long timestamp)
+    int64_t val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueInt);
     if (_isWritingTo1) {
@@ -48,7 +48,7 @@ void ServerPub::publishInt(const std::string& name,
     }
 }
 void ServerPub::publishFloat(const std::string& name, 
-    double val, long timestamp)
+    double val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueFloat);
     if (_isWritingTo1) {
@@ -58,7 +58,7 @@ void ServerPub::publishFloat(const std::string& name,
     }
 }
 void ServerPub::publishStr(const std::string& name, 
-    const std::string& val, long timestamp)
+    const std::string& val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueStr);
     if (_isWritingTo1) {
@@ -69,7 +69,7 @@ void ServerPub::publishStr(const std::string& name,
 }
 
 void ServerPub::publishStream(const std::string& name, 
-    const std::string& val, long timestamp)
+    const std::string& val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueStream);
     if (_isWritingTo1) {
@@ -101,9 +101,9 @@ void ServerPub::sendToClient()
     while (!queueBool.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(long) 
+            sizeof(MsgType) + sizeof(int64_t) 
             + queueBool.front().name.length()
-            + sizeof(long) + sizeof(uint8_t));
+            + sizeof(int64_t) + sizeof(uint8_t));
         DataBuffer pub(packet.data(), packet.size());
         pub.writeType(MsgStreamBool);
         pub.writeStr(queueBool.front().name);
@@ -120,9 +120,9 @@ void ServerPub::sendToClient()
     while (!queueInt.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(long) 
+            sizeof(MsgType) + sizeof(int64_t) 
             + queueInt.front().name.length()
-            + sizeof(long) + sizeof(long));
+            + sizeof(int64_t) + sizeof(int64_t));
         DataBuffer pub(packet.data(), packet.size());
         pub.writeType(MsgStreamInt);
         pub.writeStr(queueInt.front().name);
@@ -139,9 +139,9 @@ void ServerPub::sendToClient()
     while (!queueFloat.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(long) 
+            sizeof(MsgType) + sizeof(int64_t) 
             + queueFloat.front().name.length()
-            + sizeof(long) + sizeof(double));
+            + sizeof(int64_t) + sizeof(double));
         DataBuffer pub(packet.data(), packet.size());
         pub.writeType(MsgStreamFloat);
         pub.writeStr(queueFloat.front().name);
@@ -158,9 +158,9 @@ void ServerPub::sendToClient()
     while (!queueStr.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(long) 
+            sizeof(MsgType) + sizeof(int64_t) 
             + queueStr.front().name.length()
-            + sizeof(long) + sizeof(long)
+            + sizeof(int64_t) + sizeof(int64_t)
             + queueStr.front().value.length());
         DataBuffer pub(packet.data(), packet.size());
         pub.writeType(MsgStreamStr);
@@ -178,9 +178,9 @@ void ServerPub::sendToClient()
     while (!queueStream.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(long) 
+            sizeof(MsgType) + sizeof(int64_t) 
             + queueStream.front().name.length()
-            + sizeof(long) + sizeof(long)
+            + sizeof(int64_t) + sizeof(int64_t)
             + queueStream.front().value.length());
         DataBuffer pub(packet.data(), packet.size());
         pub.writeType(MsgStreamStream);

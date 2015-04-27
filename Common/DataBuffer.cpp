@@ -41,15 +41,15 @@ void DataBuffer::writeBool(bool val)
     *p = (val) ? 1 : 0;
     _offset += sizeof(uint8_t);
 }
-void DataBuffer::writeInt(long val)
+void DataBuffer::writeInt(int64_t val)
 {
-    if (_offset + sizeof(long) > _size) {
+    if (_offset + sizeof(int64_t) > _size) {
         throw std::logic_error("RhIO buffer size overflow");
     }
 
-    long* p = (long*)(_data + _offset);
+    int64_t* p = (int64_t*)(_data + _offset);
     *p = val;
-    _offset += sizeof(long);
+    _offset += sizeof(int64_t);
 }
 void DataBuffer::writeFloat(double val)
 {
@@ -95,14 +95,14 @@ bool DataBuffer::readBool()
 
     return (*p > 0) ? true : false;
 }
-long DataBuffer::readInt()
+int64_t DataBuffer::readInt()
 {
-    if (_offset + sizeof(long) > _size) {
+    if (_offset + sizeof(int64_t) > _size) {
         throw std::logic_error("RhIO buffer size overflow");
     }
 
-    long* p = (long*)(_data + _offset);
-    _offset += sizeof(long);
+    int64_t* p = (int64_t*)(_data + _offset);
+    _offset += sizeof(int64_t);
 
     return *p;
 }
@@ -119,7 +119,7 @@ double DataBuffer::readFloat()
 }
 std::string DataBuffer::readStr()
 {
-    long len = readInt();
+    int64_t len = readInt();
     
     if (_offset + len > _size) {
         throw std::logic_error("RhIO buffer size overflow");

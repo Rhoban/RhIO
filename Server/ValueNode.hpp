@@ -48,7 +48,7 @@ class ValueNode : public BaseNode<ValueNode>
          * does not exist
          */
         bool getBool(const std::string& name) const;
-        long getInt(const std::string& name) const;
+        int64_t getInt(const std::string& name) const;
         double getFloat(const std::string& name) const;
         const std::string& getStr(const std::string& name) const;
 
@@ -64,7 +64,7 @@ class ValueNode : public BaseNode<ValueNode>
         void setBool(const std::string& name, bool val,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
-        void setInt(const std::string& name, long val,
+        void setInt(const std::string& name, int64_t val,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
         void setFloat(const std::string& name, double val,
