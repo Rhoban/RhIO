@@ -1033,6 +1033,42 @@ namespace RhIO
 
         return node->getNodeValue(name);
     }
+    
+    NodeStream Shell::getNodeStream(std::string path)
+    {
+        auto parts = pathToParts(path);
+
+        if (parts.size() != 0) {
+            // Child name
+            auto name = parts[parts.size()-1];
+            parts.pop_back();
+
+            // Creating value path
+            std::string prefix = "";
+            for (auto part : parts) {
+                if (prefix != "") prefix += "/";
+                prefix += part;
+            }
+            if (path[0] == '/') {
+                prefix = "/" + prefix;
+            }
+
+            // Getting node
+            auto node = getNode(prefix);
+            if (node != NULL) {
+                // Getting stream
+                for (auto stream : node->getStreams()) {
+                    if (stream.name == name) {
+                        return stream;
+                    }
+                }
+            }
+        }
+
+        std::stringstream ss;
+        ss << path << " is not a stream" << std::endl;
+        throw std::runtime_error(ss.str());
+    }
 
     StreamManager *Shell::getStream()
     {
@@ -1093,9 +1129,14 @@ namespace RhIO
     void Shell::streamWait(NodePool *pool)
     {
         stream->addPool(pool);
+        wait();
+        stream->removePool(pool);
+    }
+
+    void Shell::wait()
+    {
         std::string line;
         std::getline(std::cin, line);
-        stream->removePool(pool);
     }
 
     std::vector<std::string> Shell::getPossibilities()
@@ -1115,6 +1156,11 @@ namespace RhIO
 
         for (NodeValue nodeValue : node->getAll()) {
             auto name = prefix+nodeValue.value->name;
+            possibilities.push_back(name);
+        }
+
+        for (auto stream : node->getStreams()) {
+            auto name = prefix+stream.name;
             possibilities.push_back(name);
         }
 

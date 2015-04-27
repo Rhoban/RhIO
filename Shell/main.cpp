@@ -11,6 +11,7 @@
 #include "commands/LoadCommand.h"
 #include "commands/SaveCommand.h"
 #include "commands/TreeCommand.h"
+#include "commands/CatCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -51,6 +52,7 @@ int main(int argc, char *argv[])
     shell->registerCommand(new LoadCommand);
     shell->registerCommand(new SaveCommand);
     shell->registerCommand(new TreeCommand);
+    shell->registerCommand(new CatCommand);
 #ifdef HAS_CURSES
     shell->registerCommand(new TuneCommand);
 #endif
