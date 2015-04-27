@@ -26,17 +26,13 @@ namespace RhIO
 
     void LogCommand::process(std::vector<std::string> args)
     {
-        if (args.size() < 1) {
-            errorUsage();
-        } else {
-            auto output = getStream(args);
-            NodePool pool = shell->getPool(args, 1);
+        auto output = getStream(args);
+        NodePool pool = shell->getPool(args);
 
-            CSV csv(output);
-            pool.setCallback(std::bind(&LogCommand::update, this, &csv, _1));
-            shell->streamWait(&pool);
-            clearStream();
-        }
+        CSV csv(output);
+        pool.setCallback(std::bind(&LogCommand::update, this, &csv, _1));
+        shell->streamWait(&pool);
+        clearStream();
     }
 
     void LogCommand::update(CSV *csv, NodePool *pool)

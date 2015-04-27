@@ -23,11 +23,7 @@ namespace RhIO
     void PlotCommand::process(std::vector<std::string> args)
     {
         NodePool pool;
-        if (args.size() == 0) {
-            pool = shell->poolForNode(shell->getCurrentNode());
-        } else {
-            pool = shell->getPool(args);
-        }
+        pool = shell->getPool(args);
 
         Terminal::setColor("white", true);
         std::cout << "Plotting." << std::endl;
