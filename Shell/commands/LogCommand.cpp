@@ -21,22 +21,18 @@ namespace RhIO
 
     std::string LogCommand::getUsage()
     {
-        return "log <filename> [param1 [param2 [param3 ...]]]";
+        return "log [param1 [param2 [param3 ...]]] [> filename]";
     }
 
     void LogCommand::process(std::vector<std::string> args)
     {
-        if (args.size() < 2) {
-            errorUsage();
-        } else {
-            NodePool pool = shell->getPool(args, 1);
+        auto output = getStream(args);
+        NodePool pool = shell->getPool(args);
 
-            CSV csv;
-            csv.open(args[0]);
-            pool.setCallback(std::bind(&LogCommand::update, this, &csv, _1));
-            shell->streamWait(&pool);
-            csv.close();
-        }
+        CSV csv(output);
+        pool.setCallback(std::bind(&LogCommand::update, this, &csv, _1));
+        shell->streamWait(&pool);
+        clearStream();
     }
 
     void LogCommand::update(CSV *csv, NodePool *pool)

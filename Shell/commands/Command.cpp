@@ -45,4 +45,30 @@ namespace RhIO
 
         return node;
     }
+            
+    std::ostream *Command::getStream(std::vector<std::string> &args)
+    {
+        hasFile = false;
+        int n = args.size();
+        if (n >= 2) {
+            if (args[n-2] == ">") {
+                auto name = args.back();
+                args.pop_back();
+                args.pop_back();
+                ofs.open(name);
+                ofs.precision(10);
+                return &ofs;
+            }
+        }
+        std::cout.precision(10);
+        return &std::cout;
+    }
+            
+    void Command::clearStream()
+    {
+        if (hasFile) {
+            hasFile = false;
+            ofs.close();
+        }
+    }
 }

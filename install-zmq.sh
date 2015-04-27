@@ -19,4 +19,4 @@ rm -rf zeromq-${version}.tar.gz
 
 # Installing CPP ZMQ binding
 git clone https://github.com/zeromq/cppzmq.git &&
-ln -s cppzmq/zmq.hpp ZeroMQ/include/zmq.hpp
+ln -s $dir/cppzmq/zmq.hpp ZeroMQ/include/zmq.hpp

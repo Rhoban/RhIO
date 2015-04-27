@@ -16,6 +16,7 @@ namespace RhIO
         sub->setHandlerInt(std::bind(&StreamManager::intHandler, this, _1, _2, _3));
         sub->setHandlerFloat(std::bind(&StreamManager::floatHandler, this, _1, _2, _3));
         sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
+        sub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
     }
 
     StreamManager::~StreamManager()
@@ -90,6 +91,10 @@ namespace RhIO
             }
         }
         mutex.unlock();
+    }
+            
+    void StreamManager::streamHandler(const std::string &name, long timestamp, const std::string &str)
+    {
     }
     
     void StreamManager::addPool(NodePool *pool)

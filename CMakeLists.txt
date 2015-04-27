@@ -15,7 +15,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Client)
 
 #Include ZMQ (Network Library)
-set(ZMQ_DIRECTORY "ZeroMQ" CACHE STRING "ZMQ lib directory")
+set(ZMQ_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ZeroMQ" CACHE STRING "ZMQ lib directory")
 include_directories(${ZMQ_DIRECTORY}/include)
 link_directories(${ZMQ_DIRECTORY}/lib)
 
