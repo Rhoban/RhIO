@@ -126,21 +126,17 @@ namespace RhIO
         for (auto name : toDelete) {
             commands.erase(name);
         }
+    
         updateCommands(tree);
     }
 
     void Shell::updateCommands(Node *node)
     {
-        for (auto name : node->getCommands()) {
-            std::string fullName = node->getPath();
-            if (fullName != "") {
-                fullName += "/";
-            }
-            fullName += name;
-            registerCommand(new RemoteCommand(node->getPath(), name, fullName, client->commandDescription(fullName)));
+        for (auto cmd : node->getCommands()) {
+            registerCommand(new RemoteCommand(cmd.node->getPath(), cmd.name, cmd.getName(), cmd.desc));
         }
-        for (auto entry : node->getChildren()) {
-            updateCommands(entry.second);
+        for (auto child : node->getChildren()) {
+            updateCommands(child.second);
         }
     }
 

@@ -34,6 +34,25 @@ namespace RhIO
             std::string getName();
     };
 
+    class NodeItem
+    {
+        public:
+            Node *node;
+            std::string name;
+            std::string desc;
+
+            std::string getPath();
+            std::string getName();
+    };
+
+    class NodeCommand : public NodeItem
+    {
+    };
+
+    class NodeStream : public NodeItem
+    {
+    };
+
     class Node
     {
         public:
@@ -50,7 +69,8 @@ namespace RhIO
              */
             Node *getChild(std::string name);
             NodeValue getNodeValue(std::string name);
-            std::vector<std::string> getCommands();
+            std::vector<NodeCommand> getCommands();
+            std::vector<NodeStream> getStreams();
             std::map<std::string, Node*> getChildren();
 
             /**
@@ -107,7 +127,8 @@ namespace RhIO
             std::vector<ValueFloat> floats;
             std::vector<ValueStr> strings;
             std::map<std::string, Node*> children;
-            std::vector<std::string> commands;
+            std::vector<NodeCommand> commands;
+            std::vector<NodeStream> streams;
             
             /**
              * Parent node, NULL if root

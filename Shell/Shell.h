@@ -23,6 +23,7 @@ namespace RhIO
         public:
             Shell(std::string server);
             ~Shell();
+
             /**
              * Updates the local node tree
              */
