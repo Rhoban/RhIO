@@ -69,6 +69,16 @@ enum MsgType : uint8_t {
     MsgAskMetaFloat,
     MsgAskMetaStr,
     /**
+     * Client
+     * Ask for streaming enable and disable 
+     * on given absolute value name (for any type).
+     * (Streaming watcher is incremented/decremented)
+     * Args:
+     * String: absolute value name
+     */
+    MsgEnableStreamingValue,
+    MsgDisableStreamingValue,
+    /**
      * Client.
      * Ask for Server persist dump and load for all
      * subtree below given node into given server
@@ -173,6 +183,7 @@ enum MsgType : uint8_t {
      * Bool: has minimum
      * Bool: has maximum
      * Bool: is persisted
+     * Int: number of watcher for streaming
      *
      * Bool: minimum value
      * Bool: maximum value
@@ -242,6 +253,12 @@ enum MsgType : uint8_t {
      * stream
      */
     MsgDescriptionStream,
+    /**
+     * Server.
+     * Acknowledge previous streaming
+     * config update
+     */
+    MsgStreamingOK,
 };
 
 }

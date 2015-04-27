@@ -85,7 +85,7 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         if (type == MsgStreamBool) {
             //Stream Bool value
             std::string name = sub.readStr();
-            long timestamp = sub.readInt();
+            int64_t timestamp = sub.readInt();
             bool val = sub.readBool();
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerBool) {
@@ -95,8 +95,8 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         } else if (type == MsgStreamInt) {
             //Stream Int value
             std::string name = sub.readStr();
-            long timestamp = sub.readInt();
-            long val = sub.readInt();
+            int64_t timestamp = sub.readInt();
+            int64_t val = sub.readInt();
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerInt) {
                 _handlerInt(name, timestamp, val);
@@ -105,7 +105,7 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         } else if (type == MsgStreamFloat) {
             //Stream Float value
             std::string name = sub.readStr();
-            long timestamp = sub.readInt();
+            int64_t timestamp = sub.readInt();
             double val = sub.readFloat();
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerFloat) {
@@ -115,7 +115,7 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         } else if (type == MsgStreamStr) {
             //Stream Str value
             std::string name = sub.readStr();
-            long timestamp = sub.readInt();
+            int64_t timestamp = sub.readInt();
             std::string val = sub.readStr();
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerStr) {
@@ -125,7 +125,7 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         } else if (type == MsgStreamStream) {
             //Stream Stream value
             std::string name = sub.readStr();
-            long timestamp = sub.readInt();
+            int64_t timestamp = sub.readInt();
             std::string val = sub.readStr();
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerStream) {

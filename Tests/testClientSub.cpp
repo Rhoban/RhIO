@@ -11,7 +11,7 @@ int main()
         std::string("tcp://localhost:") + RhIO::ServerPubPort);
     
     client.setHandlerBool(
-        [](const std::string name, long timestamp, bool val) 
+        [](const std::string name, int64_t timestamp, bool val) 
     {
         std::cout << "Receiving Bool:" << std::endl;
         std::cout << name << " " 
@@ -20,7 +20,7 @@ int main()
         assert(val == true);
     });
     client.setHandlerInt(
-        [](const std::string name, long timestamp, long val) 
+        [](const std::string name, int64_t timestamp, int64_t val) 
     {
         std::cout << "Receiving Int:" << std::endl;
         std::cout << name << " " 
@@ -29,7 +29,7 @@ int main()
         assert(val == 2);
     });
     client.setHandlerFloat(
-        [](const std::string name, long timestamp, double val) 
+        [](const std::string name, int64_t timestamp, double val) 
     {
         std::cout << "Receiving Float:" << std::endl;
         std::cout << name << " " 
@@ -38,7 +38,7 @@ int main()
         assert(val == 3.0);
     });
     client.setHandlerStr(
-        [](const std::string name, long timestamp, const std::string& val) 
+        [](const std::string name, int64_t timestamp, const std::string& val) 
     {
         std::cout << "Receiving Str:" << std::endl;
         std::cout << name << " " 
@@ -47,7 +47,7 @@ int main()
         assert(val == "4");
     });
     client.setHandlerStream(
-        [](const std::string name, long timestamp, const std::string& val) 
+        [](const std::string name, int64_t timestamp, const std::string& val) 
     {
         std::cout << "Receiving Stream:" << std::endl;
         std::cout << name << " " 
@@ -58,7 +58,7 @@ int main()
     
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(
-        std::chrono::milliseconds(3000));
+        std::chrono::milliseconds(5000));
 
     return 0;
 }

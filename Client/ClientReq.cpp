@@ -47,7 +47,7 @@ std::string ClientReq::commandDescription(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskCommandDescription);
@@ -72,9 +72,9 @@ std::string ClientReq::call(const std::string& name,
 
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length()
-        + sizeof(long)
-        + arguments.size()*sizeof(long) + size);
+        sizeof(MsgType) + sizeof(int64_t) + name.length()
+        + sizeof(int64_t)
+        + arguments.size()*sizeof(int64_t) + size);
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskCall);
@@ -96,7 +96,7 @@ bool ClientReq::getBool(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgGetBool);
@@ -109,11 +109,11 @@ bool ClientReq::getBool(const std::string& name)
     DataBuffer rep = waitReply(reply, MsgValBool);
     return rep.readBool();
 }
-long ClientReq::getInt(const std::string& name)
+int64_t ClientReq::getInt(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgGetInt);
@@ -130,7 +130,7 @@ double ClientReq::getFloat(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgGetFloat);
@@ -147,7 +147,7 @@ std::string ClientReq::getStr(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgGetStr);
@@ -165,7 +165,7 @@ void ClientReq::setBool(const std::string& name, bool val)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) 
+        sizeof(MsgType) + sizeof(int64_t) 
         + name.length() + sizeof(uint8_t));
     DataBuffer req(request.data(), request.size());
     //Build data message
@@ -179,12 +179,12 @@ void ClientReq::setBool(const std::string& name, bool val)
     zmq::message_t reply;
     waitReply(reply, MsgSetOk);
 }
-void ClientReq::setInt(const std::string& name, long val)
+void ClientReq::setInt(const std::string& name, int64_t val)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) 
-        + name.length() + sizeof(long));
+        sizeof(MsgType) + sizeof(int64_t) 
+        + name.length() + sizeof(int64_t));
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgSetInt);
@@ -201,7 +201,7 @@ void ClientReq::setFloat(const std::string& name, double val)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) 
+        sizeof(MsgType) + sizeof(int64_t) 
         + name.length() + sizeof(double));
     DataBuffer req(request.data(), request.size());
     //Build data message
@@ -220,8 +220,8 @@ void ClientReq::setStr(const std::string& name,
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) 
-        + name.length() + sizeof(long) + val.length());
+        sizeof(MsgType) + sizeof(int64_t) 
+        + name.length() + sizeof(int64_t) + val.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgSetStr);
@@ -239,7 +239,7 @@ ValueBool ClientReq::metaValueBool(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskMetaBool);
@@ -257,6 +257,7 @@ ValueBool ClientReq::metaValueBool(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readBool();
     val.max = rep.readBool();
     val.valuePersisted = rep.readBool();
@@ -267,7 +268,7 @@ ValueInt ClientReq::metaValueInt(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskMetaInt);
@@ -285,6 +286,7 @@ ValueInt ClientReq::metaValueInt(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readInt();
     val.max = rep.readInt();
     val.valuePersisted = rep.readInt();
@@ -295,7 +297,7 @@ ValueFloat ClientReq::metaValueFloat(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskMetaFloat);
@@ -313,6 +315,7 @@ ValueFloat ClientReq::metaValueFloat(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readFloat();
     val.max = rep.readFloat();
     val.valuePersisted = rep.readFloat();
@@ -323,7 +326,7 @@ ValueStr ClientReq::metaValueStr(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskMetaStr);
@@ -341,11 +344,45 @@ ValueStr ClientReq::metaValueStr(const std::string& name)
     val.hasMin = rep.readBool();
     val.hasMax = rep.readBool();
     val.persisted = rep.readBool();
+    val.streamWatchers = rep.readInt();
     val.min = rep.readStr();
     val.max = rep.readStr();
     val.valuePersisted = rep.readStr();
 
     return val;
+}
+        
+void ClientReq::enableStreamingValue(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgEnableStreamingValue);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
+}
+void ClientReq::disableStreamingValue(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgDisableStreamingValue);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
 }
         
 std::vector<std::string> ClientReq::listStreams
@@ -358,7 +395,7 @@ std::string ClientReq::streamDescription(const std::string& name)
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(MsgAskDescriptionStream);
@@ -377,7 +414,7 @@ void ClientReq::save(const std::string& name,
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + 2*sizeof(long) + name.length()
+        sizeof(MsgType) + 2*sizeof(int64_t) + name.length()
         + serverPath.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
@@ -396,7 +433,7 @@ void ClientReq::load(const std::string& name,
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + 2*sizeof(long) + name.length()
+        sizeof(MsgType) + 2*sizeof(int64_t) + name.length()
         + serverPath.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
@@ -444,7 +481,7 @@ std::vector<std::string> ClientReq::listNames(MsgType msgType,
 {
     //Allocate message data
     zmq::message_t request(
-        sizeof(MsgType) + sizeof(long) + name.length());
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
     DataBuffer req(request.data(), request.size());
     //Build data message
     req.writeType(msgType);

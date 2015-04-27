@@ -48,7 +48,7 @@ class ValueNode : public BaseNode<ValueNode>
          * does not exist
          */
         bool getBool(const std::string& name) const;
-        long getInt(const std::string& name) const;
+        int64_t getInt(const std::string& name) const;
         double getFloat(const std::string& name) const;
         const std::string& getStr(const std::string& name) const;
 
@@ -64,7 +64,7 @@ class ValueNode : public BaseNode<ValueNode>
         void setBool(const std::string& name, bool val,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
-        void setInt(const std::string& name, long val,
+        void setInt(const std::string& name, int64_t val,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
         void setFloat(const std::string& name, double val,
@@ -97,6 +97,13 @@ class ValueNode : public BaseNode<ValueNode>
         const ValueInt& getValueInt(const std::string& name) const;
         const ValueFloat& getValueFloat(const std::string& name) const;
         const ValueStr& getValueStr(const std::string& name) const;
+
+        /**
+         * Enable or disable (increase or decrease stream watchers) 
+         * for given value name
+         */
+        void enableStreamingValue(const std::string& name);
+        void disableStreamingValue(const std::string& name);
 
         /**
          * Return the relative name list of all registered

@@ -73,7 +73,7 @@ class ClientReq
          * absolute name for each type
          */
         bool getBool(const std::string& name);
-        long getInt(const std::string& name);
+        int64_t getInt(const std::string& name);
         double getFloat(const std::string& name);
         std::string getStr(const std::string& name);
 
@@ -82,7 +82,7 @@ class ClientReq
          * absolute value name
          */
         void setBool(const std::string& name, bool val);
-        void setInt(const std::string& name, long val);
+        void setInt(const std::string& name, int64_t val);
         void setFloat(const std::string& name, double val);
         void setStr(const std::string& name, 
             const std::string& val);
@@ -97,6 +97,14 @@ class ClientReq
         ValueInt metaValueInt(const std::string& name);
         ValueFloat metaValueFloat(const std::string& name);
         ValueStr metaValueStr(const std::string& name);
+
+        /**
+         * Enable and disable streaming for given
+         * absolute value name
+         * (Increment and decrement stream watchers number)
+         */
+        void enableStreamingValue(const std::string& name);
+        void disableStreamingValue(const std::string& name);
 
         /**
          * Return the list of available stream on 

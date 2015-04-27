@@ -42,6 +42,13 @@ struct ValueBase
      * saved in config files
      */
     bool persisted;
+
+    /**
+     * The number of registered watcher
+     * Streaming is enabled while at least
+     * one watcher is registered
+     */
+    int64_t streamWatchers;
 };
 
 /**
@@ -80,7 +87,7 @@ struct Value : public ValueBase
  * Typedef for used value types
  */
 typedef Value<bool> ValueBool;
-typedef Value<long> ValueInt;
+typedef Value<int64_t> ValueInt;
 typedef Value<double> ValueFloat;
 typedef Value<std::string> ValueStr;
 
@@ -121,6 +128,7 @@ struct ValueBuilder final
                 _value.value = T();
                 _value.valuePersisted = T();
                 _value.persisted = false;
+                _value.streamWatchers = 0;
             }
         }
 
@@ -176,7 +184,7 @@ struct ValueBuilder final
  * Typedef for ValueBuilder
  */
 typedef ValueBuilder<bool> ValueBuilderBool;
-typedef ValueBuilder<long> ValueBuilderInt;
+typedef ValueBuilder<int64_t> ValueBuilderInt;
 typedef ValueBuilder<double> ValueBuilderFloat;
 typedef ValueBuilder<std::string> ValueBuilderStr;
 

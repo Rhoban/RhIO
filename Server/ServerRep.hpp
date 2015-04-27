@@ -92,6 +92,13 @@ class ServerRep
         void valMetaStr(DataBuffer& buffer);
 
         /**
+         * Implement MsgEnableStreamingValue and MsgDisableStreamingValue
+         * (MsgStreamingOK)
+         */
+        void enableStreamingValue(DataBuffer& buffer);
+        void disableStreamingValue(DataBuffer& buffer);
+
+        /**
          * Implement MsgAskSave ans MsgAskLoad (MsgPersistOK)
          */
         void save(DataBuffer& buffer);

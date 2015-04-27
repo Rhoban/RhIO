@@ -102,6 +102,26 @@ int main()
     assert(client.listStreams("test")[0] == "stream1");
     assert(client.streamDescription("test/stream1") == "stream1");
 
+    assert(client.metaValueBool(
+        "test/paramBool").streamWatchers == 0);
+    assert(client.metaValueInt(
+        "test/test3/paramInt").streamWatchers == 0);
+    client.enableStreamingValue("test/test3/paramInt");
+    assert(client.metaValueBool(
+        "test/paramBool").streamWatchers == 0);
+    assert(client.metaValueInt(
+        "test/test3/paramInt").streamWatchers == 1);
+    client.disableStreamingValue("test/test3/paramInt");
+    assert(client.metaValueBool(
+        "test/paramBool").streamWatchers == 0);
+    assert(client.metaValueInt(
+        "test/test3/paramInt").streamWatchers == 0);
+    client.disableStreamingValue("test/test3/paramInt");
+    assert(client.metaValueBool(
+        "test/paramBool").streamWatchers == 0);
+    assert(client.metaValueInt(
+        "test/test3/paramInt").streamWatchers == 0);
+
     //client.save("/", "/tmp/root");
     //client.load("/", "/tmp/root");
 

@@ -32,20 +32,20 @@ class ServerPub
          * name and timestamp
          */
         void publishBool(const std::string& name, 
-            bool val, long timestamp);
+            bool val, int64_t timestamp);
         void publishInt(const std::string& name, 
-            long val, long timestamp);
+            int64_t val, int64_t timestamp);
         void publishFloat(const std::string& name, 
-            double val, long timestamp);
+            double val, int64_t timestamp);
         void publishStr(const std::string& name, 
-            const std::string& val, long timestamp);
+            const std::string& val, int64_t timestamp);
 
         /**
          * Append to publish buffer stream
          * given absolute name, string and timestamp
          */
         void publishStream(const std::string& name,
-            const std::string& val, long timestamp);
+            const std::string& val, int64_t timestamp);
 
         /**
          * Switch values buffer and publish to Client
@@ -63,14 +63,14 @@ class ServerPub
         struct PubValue {
             std::string name;
             T value;
-            long timestamp;
+            int64_t timestamp;
         };
 
         /**
          * Typedef for typed values
          */
         typedef PubValue<bool> PubValBool;
-        typedef PubValue<long> PubValInt;
+        typedef PubValue<int64_t> PubValInt;
         typedef PubValue<double> PubValFloat;
         typedef PubValue<std::string> PubValStr;
         
