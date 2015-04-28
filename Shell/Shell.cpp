@@ -994,7 +994,7 @@ namespace RhIO
 
         Node *node = tree;
         for (auto part : path) {
-            node = node->getChild(part, false);
+            node = node->getChild(part);
             if (node == NULL) {
                 return NULL;
             }
@@ -1166,7 +1166,7 @@ namespace RhIO
         for (auto entry : node->getChildren()) {
             auto name = prefix+entry;
             possibilities.push_back(name);
-            auto child = node->getChild(entry);
+            auto child = node->getChild(entry, false);
             if (child) {
                 getPossibilitiesRec(possibilities, child, prefix+entry);
             }
