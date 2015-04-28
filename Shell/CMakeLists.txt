@@ -49,6 +49,7 @@ include_directories ("${RHIO_DIR}/Client")
 include_directories ("${RHIO_DIR}/Common")
 include_directories ("${RHIO_DIR}/Server")
 include_directories ("${RHIO_DIR}/include")
+include_directories ("${RHIO_DIR}/contrib")
 
 set (EXTRA_LIBS
     RhIOClient
