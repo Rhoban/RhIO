@@ -4,10 +4,16 @@
 
 namespace RhIO
 {
-    RemoteCommand::RemoteCommand(std::string origin_, std::string name_, 
-            std::string fullName_, std::string desc_)
-        : origin(origin_), name(name_), fullName(fullName_), desc(desc_)
+    RemoteCommand::RemoteCommand(std::string fullName_, std::string desc_)
+        : fullName(fullName_), desc(desc_), origin(""), name("")
     {
+        auto found = fullName.find_last_of("/");
+        if (found > 0) {
+            origin = fullName.substr(0, found);
+            name = fullName.substr(found+1);
+        } else {
+            name = fullName;
+        }
     }
 
     std::string RemoteCommand::getName()

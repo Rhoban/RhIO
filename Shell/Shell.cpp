@@ -133,7 +133,7 @@ namespace RhIO
     void Shell::updateCommands(Node *node)
     {
         for (auto cmd : node->getCommands()) {
-            registerCommand(new RemoteCommand(cmd.node->getPath(), cmd.name, cmd.getName(), cmd.desc));
+            registerCommand(new RemoteCommand(cmd.getName(), cmd.desc));
         }
         for (auto child : node->getChildren()) {
             updateCommands(child.second);
