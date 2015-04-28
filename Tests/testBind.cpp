@@ -20,6 +20,7 @@ class Test
             _bind.bind("test2/test3/valueStr", _valueStr);
             assert(RhIO::Root.getValueType("test/valueBool") == RhIO::TypeBool);
             assert(RhIO::Root.getValueBool("test/valueBool").comment == "bool value");
+            _bind.newStream("output", "a test stream");
         }
 
         inline void tick1()
@@ -33,6 +34,7 @@ class Test
             _valueInt = 3;
             _bind.push();
             _valueFloat = 1.0;
+            _bind.out("output") << "test" << std::endl;
         }
         
         inline void tick2()

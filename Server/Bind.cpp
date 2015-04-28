@@ -190,6 +190,33 @@ void Bind::bind(const std::string& name, std::string& var)
         &var});
 }
 
+const IONode& Bind::child() const
+{
+    if (_prefix == "") {
+        return RhIO::Root;
+    } else {
+        return *(getChildPtr(_prefix));
+    }
+}
+IONode& Bind::child()
+{
+    if (_prefix == "") {
+        return RhIO::Root;
+    } else {
+        return *(getChildPtr(_prefix));
+    }
+}
+
+void Bind::newStream(const std::string& name, 
+    const std::string& comment)
+{
+    child().newStream(name, comment);
+}
+std::ostream& Bind::out(const std::string& name)
+{
+    return child().out(name);
+}
+
 void Bind::pull()
 {
     for (auto& b : _bindsBool) {

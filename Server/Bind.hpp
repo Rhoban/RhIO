@@ -65,6 +65,22 @@ class Bind
         void bind(const std::string& name, std::string& var);
 
         /**
+         * Return the child associated with
+         * given prefix 
+         */
+        const IONode& child() const;
+        IONode& child();
+
+        /**
+         * Alias to StreamNode::newStream
+         * and StreamNode::out
+         * using internal prefix child
+         */
+        void newStream(const std::string& name, 
+            const std::string& comment);
+        std::ostream& out(const std::string& name);
+
+        /**
          * Import RhIO global values to
          * binded pointer
          */
