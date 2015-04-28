@@ -114,8 +114,13 @@ namespace RhIO
         } else {
             hostname = "RhIO";
         }
+    
+        updateCommands();
+    }
 
-        // Updating the commands
+    void Shell::updateCommands()
+    {
+        // Cleaning current remote commands
         std::vector<std::string> toDelete;
         for (auto entry : commands) {
             if (dynamic_cast<RemoteCommand*>(entry.second)) {
@@ -126,17 +131,11 @@ namespace RhIO
         for (auto name : toDelete) {
             commands.erase(name);
         }
-    
-        updateCommands(tree);
-    }
 
-    void Shell::updateCommands(Node *node)
-    {
-        for (auto cmd : node->getCommands()) {
-            registerCommand(new RemoteCommand(cmd.getName(), cmd.desc));
-        }
-        for (auto child : node->getChildren()) {
-            updateCommands(child.second);
+        // Getting commands
+        auto commands = client->listAllCommands();
+        for (auto name : commands) {
+            registerCommand(new RemoteCommand(name, client->commandDescription(name)));
         }
     }
 

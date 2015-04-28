@@ -28,7 +28,7 @@ namespace RhIO
              * Updates the local node tree
              */
             void sync();
-            void updateCommands(Node *node);
+            void updateCommands();
 
             /**
              * Runs the interactive shell, will get lines from stdin
