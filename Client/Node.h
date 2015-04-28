@@ -67,7 +67,7 @@ namespace RhIO
             /**
              * Accessing children
              */
-            Node *getChild(std::string name);
+            Node *getChild(std::string name, bool loadIt=true);
             NodeValue getNodeValue(std::string name);
             std::vector<NodeCommand> getCommands();
             std::vector<NodeStream> getStreams();

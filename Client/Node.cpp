@@ -120,10 +120,10 @@ namespace RhIO
         }
     }
 
-    Node *Node::getChild(std::string name)
+    Node *Node::getChild(std::string name, bool loadIt)
     {
         if (children.count(name)) {
-            if (children[name] == NULL) {
+            if (children[name] == NULL && loadIt) {
                 children[name] = new Node(client, slashed+name);
                 children[name]->name = name;
                 children[name]->parent = this;
