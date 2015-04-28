@@ -994,7 +994,7 @@ namespace RhIO
 
         Node *node = tree;
         for (auto part : path) {
-            node = node->getChild(part);
+            node = node->getChild(part, false);
             if (node == NULL) {
                 return NULL;
             }
