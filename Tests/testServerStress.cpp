@@ -14,8 +14,8 @@ void generate(int depth=0, std::string prefix="")
         prefix += "/";
     }
 
-    if (depth < 5) {
-        for (int k=0; k<5; k++) {
+    if (depth < 4) {
+        for (int k=0; k<9; k++) {
             values++;
             std::stringstream ss, ssc;
             ss << "float" << k;
@@ -23,7 +23,6 @@ void generate(int depth=0, std::string prefix="")
 
             ssc << "child" << k;
             std::string name = prefix+ssc.str();
-            RhIO::Root.newFloat(name);
             generate(depth+1, name);
         }
     }
