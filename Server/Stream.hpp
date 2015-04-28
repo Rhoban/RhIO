@@ -26,6 +26,13 @@ struct StreamBuffer : public std::stringbuf
          * Override to catch ostream flush
          */
         virtual int sync() override;
+        
+        /**
+         * The number of registered watcher.
+         * Streaming is enabled while at least
+         * one watcher is registered
+         */
+        int64_t _streamWatchers;
 
     private:
 

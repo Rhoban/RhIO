@@ -97,6 +97,13 @@ class ServerRep
          */
         void enableStreamingValue(DataBuffer& buffer);
         void disableStreamingValue(DataBuffer& buffer);
+        
+        /**
+         * Implement MsgEnableStreamingStream and MsgDisableStreamingStream
+         * (MsgStreamingOK)
+         */
+        void enableStreamingStream(DataBuffer& buffer);
+        void disableStreamingStream(DataBuffer& buffer);
 
         /**
          * Implement MsgAskSave ans MsgAskLoad (MsgPersistOK)

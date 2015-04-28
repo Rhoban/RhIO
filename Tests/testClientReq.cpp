@@ -125,6 +125,9 @@ int main()
     assert(client.listAllCommands().size() == 2);
     assert(client.listAllCommands()[0] == "test/command1");
     assert(client.listAllCommands()[1] == "test/test3/command2");
+    
+    client.enableStreamingStream("test/stream1");
+    client.disableStreamingStream("test/stream1");
 
     //client.save("/", "/tmp/root");
     //client.load("/", "/tmp/root");

@@ -35,11 +35,13 @@ int main()
             std::chrono::milliseconds(100));
         if (k == 20) {
             RhIO::Root.enableStreamingValue("test/paramBool");
+            RhIO::Root.enableStreamingStream("test/stream1");
         }
         if (k == 30) {
             RhIO::Root.enableStreamingValue("test/test3/paramInt");
             RhIO::Root.enableStreamingValue("test/paramFloat");
             RhIO::Root.enableStreamingValue("test/test3/paramStr");
+            RhIO::Root.disableStreamingStream("test/stream1");
         }
         if (k == 40) {
             RhIO::Root.disableStreamingValue("test/paramBool");

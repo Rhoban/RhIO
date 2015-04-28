@@ -79,6 +79,16 @@ enum MsgType : uint8_t {
     MsgEnableStreamingValue,
     MsgDisableStreamingValue,
     /**
+     * Client
+     * Ask for streaming enable and disable 
+     * on given absolute stream name (for any type).
+     * (Streaming watcher is incremented/decremented)
+     * Args:
+     * String: absolute stream name
+     */
+    MsgEnableStreamingStream,
+    MsgDisableStreamingStream,
+    /**
      * Client.
      * Ask for Server persist dump and load for all
      * subtree below given node into given server

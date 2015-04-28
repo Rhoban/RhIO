@@ -125,6 +125,14 @@ class ClientReq
          * Absolute name, comment, and timestamp
          */
         std::string streamDescription(const std::string& name);
+        
+        /**
+         * Enable and disable streaming for given
+         * absolute stream name
+         * (Increment and decrement stream watchers number)
+         */
+        void enableStreamingStream(const std::string& name);
+        void disableStreamingStream(const std::string& name);
 
         /**
          * Save and Load into given absolute node name

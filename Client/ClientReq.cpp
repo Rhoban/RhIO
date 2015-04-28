@@ -432,6 +432,39 @@ std::string ClientReq::streamDescription(const std::string& name)
     return rep.readStr();
 }
 
+void ClientReq::enableStreamingStream(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgEnableStreamingStream);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
+}
+void ClientReq::disableStreamingStream(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgDisableStreamingStream);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
+}
+        
 void ClientReq::save(const std::string& name, 
     const std::string& serverPath)
 {

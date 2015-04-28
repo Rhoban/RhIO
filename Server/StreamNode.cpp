@@ -38,6 +38,46 @@ std::string StreamNode::streamDescription(
     }
 }
         
+void StreamNode::enableStreamingStream(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    StreamNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->enableStreamingStream(tmpName);
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_streams.count(name) > 0) {
+        _streams.at(name).buffer->_streamWatchers++;
+    } else {
+        throw std::logic_error(
+            "RhIO unknown stream name: " + name);
+    }
+}
+void StreamNode::disableStreamingStream(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    StreamNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->disableStreamingStream(tmpName);
+        return;
+    }
+    
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_streams.count(name) > 0) {
+        _streams.at(name).buffer->_streamWatchers--;
+        if (_streams.at(name).buffer->_streamWatchers < 0) {
+            _streams.at(name).buffer->_streamWatchers = 0;
+        }
+    } else {
+        throw std::logic_error(
+            "RhIO unknown stream name: " + name);
+    }
+}
+        
 std::ostream& StreamNode::out(const std::string& name)
 {
     //Forward to subtree
@@ -70,8 +110,8 @@ void StreamNode::newStream(const std::string& name,
         _streams[name] = Stream();
         _streams.at(name).comment = comment;
         _streams.at(name).buffer = 
-            std::make_shared<StreamBuffer>(BaseNode::pwd
-                + separator + name);
+            std::make_shared<StreamBuffer>(
+                BaseNode::pwd + separator + name);
         _streams.at(name).stream = 
             std::make_shared<std::ostream>(
             _streams.at(name).buffer.get());

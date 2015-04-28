@@ -89,6 +89,12 @@ void ServerRep::handleRequest()
             case MsgDisableStreamingValue:
                   disableStreamingValue(req);
                   return;
+            case MsgEnableStreamingStream:
+                  enableStreamingStream(req);
+                  return;
+            case MsgDisableStreamingStream:
+                  disableStreamingStream(req);
+                  return;
             case MsgAskSave:
                   save(req);
                   return;
@@ -573,6 +579,37 @@ void ServerRep::disableStreamingValue(DataBuffer& buffer)
     std::string name = buffer.readStr();
     //Update streaming mode
     RhIO::Root.disableStreamingValue(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+    
+void ServerRep::enableStreamingStream(DataBuffer& buffer)
+{
+    //Get asked stream name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.enableStreamingStream(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::disableStreamingStream(DataBuffer& buffer)
+{
+    //Get asked stream name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.disableStreamingStream(name);
 
     //Allocate message data
     zmq::message_t reply(sizeof(MsgType));
