@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=4.0.5
+version=3.2.5
 dir=$PWD
 rm -rf zeromq-${version}*
 rm -rf ZeroMQ
