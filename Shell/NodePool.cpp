@@ -22,13 +22,17 @@ namespace RhIO
         dirty = false;
     }
 
-    void NodePool::draw()
+    void NodePool::draw(bool fullName)
     {
         for (auto nodeVal : *this) {
             auto val = nodeVal.value;
 
             Terminal::setColor("white", val->persisted);
-            printf("%-15s", val->name.c_str());
+            if (fullName) {
+                printf("%-35s", nodeVal.getName().c_str());
+            } else {
+                printf("%-15s", val->name.c_str());
+            }
             std::cout << " ";
 
             Terminal::setColor("grey", false);
