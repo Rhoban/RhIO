@@ -15,7 +15,7 @@ class Test
             _bind.bind("valueInt1", _valueInt);
             _bind.bind("test2/valueFloat1", _valueFloat);
             _bind.bind("valueInt2", _valueInt2);
-            _bind.bindNew("test2/valueFloat2", _valueFloat2)
+            _bind.bindNew("test2/test4/valueFloat2", _valueFloat2)
                 ->minimum(-100.0);
             _bind.bind("test2/test3/valueStr", _valueStr);
             assert(RhIO::Root.getValueType("test/valueBool") == RhIO::TypeBool);

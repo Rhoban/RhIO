@@ -125,6 +125,12 @@ class Bind
         std::vector<BindInfo<std::string>> _bindsStr;
 
         /**
+         * Create given absolute path if
+         * it does not exist
+         */
+        void createPath(const std::string& path);
+
+        /**
          * Extract absolute child name and
          * return node pointer from
          * given value absolute name

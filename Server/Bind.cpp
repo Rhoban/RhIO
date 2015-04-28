@@ -17,11 +17,8 @@ Bind::Bind(const std::string& prefixChild) :
 std::unique_ptr<ValueBuilderBool> 
     Bind::bindNew(const std::string& name, bool& var)
 {
-    //Check values exist
-    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
-        throw std::logic_error(
-            "RhIO already created value name: " + name);
-    }
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Add to bind container
     _bindsBool.push_back({
         relativeName(_prefix+name), 
@@ -33,11 +30,8 @@ std::unique_ptr<ValueBuilderBool>
 std::unique_ptr<ValueBuilderInt> 
     Bind::bindNew(const std::string& name, int& var)
 {
-    //Check values exist
-    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
-        throw std::logic_error(
-            "RhIO already created value name: " + name);
-    }
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Add to bind container
     _bindsInt.push_back({
         relativeName(_prefix+name), 
@@ -49,11 +43,8 @@ std::unique_ptr<ValueBuilderInt>
 std::unique_ptr<ValueBuilderInt> 
     Bind::bindNew(const std::string& name, long& var)
 {
-    //Check values exist
-    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
-        throw std::logic_error(
-            "RhIO already created value name: " + name);
-    }
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Add to bind container
     _bindsLong.push_back({
         relativeName(_prefix+name), 
@@ -65,11 +56,8 @@ std::unique_ptr<ValueBuilderInt>
 std::unique_ptr<ValueBuilderFloat> 
     Bind::bindNew(const std::string& name, float& var)
 {
-    //Check values exist
-    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
-        throw std::logic_error(
-            "RhIO already created value name: " + name);
-    }
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Add to bind container
     _bindsFloat.push_back({
         relativeName(_prefix+name), 
@@ -81,11 +69,8 @@ std::unique_ptr<ValueBuilderFloat>
 std::unique_ptr<ValueBuilderFloat> 
     Bind::bindNew(const std::string& name, double& var)
 {
-    //Check values exist
-    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
-        throw std::logic_error(
-            "RhIO already created value name: " + name);
-    }
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Add to bind container
     _bindsDouble.push_back({
         relativeName(_prefix+name), 
@@ -97,11 +82,8 @@ std::unique_ptr<ValueBuilderFloat>
 std::unique_ptr<ValueBuilderStr> 
     Bind::bindNew(const std::string& name, std::string& var)
 {
-    //Check values exist
-    if (RhIO::Root.getValueType(_prefix+name) != NoValue) {
-        throw std::logic_error(
-            "RhIO already created value name: " + name);
-    }
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Add to bind container
     _bindsStr.push_back({
         relativeName(_prefix+name), 
@@ -258,6 +240,14 @@ void Bind::push()
     }
     for (auto& b : _bindsStr) {
         b.node->setStr(b.name, *(b.ptr));
+    }
+}
+        
+void Bind::createPath(const std::string& path)
+{
+    //Create non existing hierarchy
+    if (!RhIO::Root.childExist(path)) {
+        RhIO::Root.newChild(path);
     }
 }
         
