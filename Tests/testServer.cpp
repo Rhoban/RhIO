@@ -43,6 +43,10 @@ int main()
         });
 
     std::cout << "Waiting" << std::endl;
+
+    float angle = 0.0;
+    RhIO::Bind bind("lowlevel/servos/ChevilleG");
+    bind.bindNew("angle", angle);
         
     auto &out = RhIO::Root.out("test/stream1");
 
@@ -50,11 +54,15 @@ int main()
     while (true) {
         std::this_thread::sleep_for(
             std::chrono::milliseconds(10));
-        float f = RhIO::Root.getFloat("test/freq");
+        // float f = RhIO::Root.getFloat("test/freq");
+        float f = 0.2;
         t += 0.01*f;
     
-        RhIO::Root.setFloat("test/sin", sin(t*2*M_PI));
+        // RhIO::Root.setFloat("test/sin", sin(t*2*M_PI));
         out << "Debug, t=" << t << ", sin(t) = " << sin(t*2*M_PI) << std::flush;
+    
+        angle = sin(t)*1.0;
+        bind.push();
     }
 
     return 0;
