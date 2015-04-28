@@ -245,9 +245,18 @@ void Bind::push()
         
 void Bind::createPath(const std::string& path)
 {
-    //Create non existing hierarchy
-    if (!RhIO::Root.childExist(path)) {
-        RhIO::Root.newChild(path);
+    if (path == "") return;
+
+    //Extract absolute path
+    std::string tmp = path;
+    size_t pos = tmp.find_last_of("/");
+    if (pos != std::string::npos) {
+        tmp = tmp.substr(0, pos);
+    }
+
+    //Create ono existing math
+    if (!RhIO::Root.childExist(tmp)) {
+        RhIO::Root.newChild(tmp);
     }
 }
         
