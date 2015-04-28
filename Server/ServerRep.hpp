@@ -110,6 +110,11 @@ class ServerRep
         void listCommands(DataBuffer& buffer);
 
         /**
+         * Implement MsgAskAllCommands (MsgListNames)
+         */
+        void listAllCommands(DataBuffer& buffer);
+
+        /**
          * Implement MsgAskCommandDescription (MsgCommandDescription)
          */
         void commandDescription(DataBuffer& buffer);

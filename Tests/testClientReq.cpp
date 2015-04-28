@@ -122,6 +122,10 @@ int main()
     assert(client.metaValueInt(
         "test/test3/paramInt").streamWatchers == 0);
 
+    assert(client.listAllCommands().size() == 2);
+    assert(client.listAllCommands()[0] == "test/command1");
+    assert(client.listAllCommands()[1] == "test/test3/command2");
+
     //client.save("/", "/tmp/root");
     //client.load("/", "/tmp/root");
 

@@ -24,6 +24,12 @@ int main()
         {
             return "OK " + args[0];
         });
+    RhIO::Root.newCommand("test/test3/command2", 
+        "command2", 
+        [](const std::vector<std::string>& args) -> std::string
+        {
+            return "OK " + args[0];
+        });
 
     RhIO::Root.newStream("test/stream1", "stream1");
 

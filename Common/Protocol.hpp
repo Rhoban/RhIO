@@ -107,6 +107,14 @@ enum MsgType : uint8_t {
     MsgAskCommandDescription,
     /**
      * Client.
+     * Ask for listing all commands
+     * alsolute name.
+     * Args:
+     * None
+     */
+    MsgAskAllCommands,
+    /**
+     * Client.
      * Call the given absolute name command
      * with given string arguments list
      * Args:

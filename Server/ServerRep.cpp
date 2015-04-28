@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <iostream>
+#include <list>
 #include "ServerRep.hpp"
 #include "Protocol.hpp"
 #include "RhIO.hpp"
@@ -96,6 +97,9 @@ void ServerRep::handleRequest()
                   return;
             case MsgAskCommands:
                   listCommands(req);
+                  return;
+            case MsgAskAllCommands:
+                  listAllCommands(req);
                   return;
             case MsgAskCommandDescription:
                   commandDescription(req);
@@ -651,6 +655,74 @@ void ServerRep::listCommands(DataBuffer& buffer)
     //Send reply
     _socket.send(reply);
 }
+
+void ServerRep::listAllCommands(DataBuffer& buffer)
+{
+    (void) buffer;
+
+    //Build all commands name 
+    //by iterating over the whole tree
+    //All command sname set
+    std::vector<std::string> list;
+    //Explored nodes
+    std::vector<IONode*> done;
+    //Nodes to be explored
+    std::list<IONode*> stack;
+    //Initialization
+    stack.push_back(&(RhIO::Root));
+    done.push_back(&(RhIO::Root));
+    //Tree traversing
+    while (!stack.empty()) {
+        //Get next node to explore
+        IONode* node = stack.front();
+        stack.pop_front();
+        //Get current node commands list
+        std::vector<std::string> commands = node->listCommands();
+        for (size_t i=0;i<commands.size();i++) {
+            list.push_back(node->pwd() + separator + commands[i]);
+        }
+        //Iterate over node children
+        std::vector<std::string> children = node->listChildren();
+        for (size_t i=0;i<children.size();i++) {
+            IONode* child = &(node->child(children[i]));
+            //Check if child has benn already marked
+            //as explored
+            bool found = false;
+            for (size_t j=0;j<done.size();j++) {
+                if (done[i] == child) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                //Add to explore queue
+                stack.push_back(child);
+                //Mark as explored
+                done.push_back(child);
+            }
+        }
+    }
+
+    //Compute message size
+    size_t size = sizeof(MsgType);
+    size += sizeof(int64_t);
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(int64_t) + list[i].length();
+    }
+
+    //Allocate message data
+    zmq::message_t reply(size);
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgListNames);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
+    }
+
+    //Send reply
+    _socket.send(reply);
+}
+
 void ServerRep::commandDescription(DataBuffer& buffer)
 {
     //Get asked command name

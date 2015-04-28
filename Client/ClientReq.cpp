@@ -43,6 +43,29 @@ std::vector<std::string> ClientReq::listCommands
     return listNames(MsgAskCommands, name);
 }
         
+std::vector<std::string> ClientReq::listAllCommands()
+{
+    //Allocate message data
+    zmq::message_t request(sizeof(MsgType));
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskAllCommands);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgListNames);
+
+    //Parsing reply
+    size_t size = rep.readInt();
+    std::vector<std::string> list;
+    for (size_t k=0;k<size;k++) {
+        list.push_back(rep.readStr());
+    }
+    return list;
+}
+        
 std::string ClientReq::commandDescription(const std::string& name)
 {
     //Allocate message data

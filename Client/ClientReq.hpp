@@ -55,6 +55,12 @@ class ClientReq
             (const std::string& name);
 
         /**
+         * Return the absolute name list of all
+         * registered commands in global tree
+         */
+        std::vector<std::string> listAllCommands();
+
+        /**
          * Return the textual command description of 
          * given absolute command name
          */
