@@ -93,7 +93,7 @@ namespace RhIO
         Terminal::clear();
         std::cout << ":";
         Terminal::setColor("blue", true);
-        std::cout << getPath();
+        std::cout << "/" << getPath();
         Terminal::clear();
         std::cout << "# " << std::flush;
     }
@@ -1164,9 +1164,8 @@ namespace RhIO
         }
 
         for (auto entry : node->getChildren()) {
-            auto name = prefix+entry.first;
+            auto name = prefix+entry;
             possibilities.push_back(name);
-            getPossibilitiesRec(possibilities, entry.second, name);
         }
     }
 

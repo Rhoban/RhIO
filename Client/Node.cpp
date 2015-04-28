@@ -39,15 +39,21 @@ namespace RhIO
         return streams;
     }
 
-    std::map<std::string, Node*> Node::getChildren()
+    std::vector<std::string> Node::getChildren()
     {
-        return children;
+        std::vector<std::string> names;
+
+        for (auto entry : children) {
+            names.push_back(entry.first);
+        }
+
+        return names;
     }
 
-    Node::Node(ClientReq *client, std::string path)
-        : parent(NULL), name("")
+    Node::Node(ClientReq *client_, std::string path)
+        : parent(NULL), name(""), client(client_)
     {
-        std::string slashed = path;
+        slashed = path;
         if (path != "") {
             slashed += "/";
         }
@@ -87,9 +93,7 @@ namespace RhIO
 
         // Getting childrens
         for (auto name : client->listChildren(path)) {
-            children[name] = new Node(client, slashed+name);
-            children[name]->name = name;
-            children[name]->parent = this;
+            children[name] = NULL;
         }
     }
 
@@ -110,13 +114,21 @@ namespace RhIO
     Node::~Node()
     {
         for (auto entry : children) {
-            delete entry.second;
+            if (entry.second != NULL) {
+                delete entry.second;
+            }
         }
     }
 
     Node *Node::getChild(std::string name)
     {
         if (children.count(name)) {
+            if (children[name] == NULL) {
+                children[name] = new Node(client, slashed+name);
+                children[name]->name = name;
+                children[name]->parent = this;
+            }
+
             return children[name];
         }
 

@@ -51,8 +51,8 @@ namespace RhIO
             }
         }
 
-        for (auto entry : node->getChildren()) {
-            diff += showDiff(entry.second);
+        for (auto name : node->getChildren()) {
+            diff += showDiff(node->getChild(name));
         }
         return diff;
     }

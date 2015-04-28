@@ -23,8 +23,8 @@ namespace RhIO
 
         // Listing sub directories
         Terminal::setColor("blue", true);
-        for (auto child : node->getChildren()) {
-            std::cout << child.first;
+        for (auto name : node->getChildren()) {
+            std::cout << name;
             std::cout << "/" << std::endl;
         }
         Terminal::clear();

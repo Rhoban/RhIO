@@ -71,7 +71,7 @@ namespace RhIO
             NodeValue getNodeValue(std::string name);
             std::vector<NodeCommand> getCommands();
             std::vector<NodeStream> getStreams();
-            std::map<std::string, Node*> getChildren();
+            std::vector<std::string> getChildren();
 
             /**
              * Getting all nodes
@@ -134,6 +134,7 @@ namespace RhIO
              * Parent node, NULL if root
              */
             Node *parent;
-            std::string name;
+            std::string name, slashed;
+            ClientReq *client;
     };
 }

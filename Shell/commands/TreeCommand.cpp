@@ -32,7 +32,9 @@ namespace RhIO
         auto all = node->getAll();
         auto children = node->getChildren();
         int k = 0, n = children.size() + all.size();
-        for (auto entry : children) {
+        for (auto name : children) {
+            auto child = node->getChild(name);
+
             std::string subleft;
             k++;
             Terminal::setColor("white", true);
@@ -43,7 +45,7 @@ namespace RhIO
                 subleft = left + "│   ";
                 std::cout << left << "├── ";
             }
-            showTree(entry.second, subleft, entry.first);
+            showTree(child, subleft, name);
         }
         for (auto nodeVal : all) {
             k++;
