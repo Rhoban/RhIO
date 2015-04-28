@@ -45,6 +45,21 @@ namespace RhIO
             Terminal::clear();
         }
         */
+        
+        // Listing streams
+        for (auto stream : node->getStreams()) {
+            Terminal::setColor("darkblue", true);
+            printf("%-32s", stream.name.c_str());
+       
+            if (stream.desc != "") {
+                Terminal::setColor("grey", false);
+                std::cout << "desc: ";
+                Terminal::clear();
+                std::cout << stream.desc;
+            }
+            std::cout << std::endl;
+            Terminal::clear();
+        }
 
         NodePool pool = shell->poolForNode(node);
         pool.draw();

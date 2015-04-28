@@ -18,6 +18,16 @@ namespace RhIO
         sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
         sub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
     }
+    
+    void StreamManager::setStreamCallback(StreamUpdateHandler handler_)
+    {
+        handler = handler_;
+    }
+
+    void StreamManager::unsetStreamCallback()
+    {
+        handler = StreamUpdateHandler();
+    }
 
     StreamManager::~StreamManager()
     {
@@ -95,18 +105,29 @@ namespace RhIO
             
     void StreamManager::streamHandler(const std::string &name, long timestamp, const std::string &str)
     {
+        if (handler) {
+            handler(name, str);
+        }
     }
     
-    void StreamManager::addPool(NodePool *pool)
+    void StreamManager::addPool(Shell *shell, NodePool *pool)
     {
         mutex.lock();
+        auto client = shell->getClient();
+        for (auto entry : *pool) {
+            client->enableStreamingValue(entry.getName());
+        }
         pools.insert(pool);
         mutex.unlock();
     }
 
-    void StreamManager::removePool(NodePool *pool)
+    void StreamManager::removePool(Shell *shell, NodePool *pool)
     {
         mutex.lock();
+        auto client = shell->getClient();
+        for (auto entry : *pool) {
+            client->disableStreamingValue(entry.getName());
+        }
         pools.erase(pool);
         mutex.unlock();
     }

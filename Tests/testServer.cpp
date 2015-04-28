@@ -1,3 +1,4 @@
+#include <math.h>
 #include <iostream>
 #include <cassert>
 #include <chrono>
@@ -9,6 +10,10 @@ int main()
     RhIO::Root.newChild("test");
     RhIO::Root.newChild("test2/pouet");
     RhIO::Root.newBool("test/paramBool");
+    RhIO::Root.newFloat("test/freq");
+    RhIO::Root.newFloat("test/sin")
+        ->minimum(-1)
+        ->maximum(1);
     RhIO::Root.newInt("test/test3/paramInt")
         ->minimum(-1)
         ->maximum(10);
@@ -20,13 +25,36 @@ int main()
    
     RhIO::Root.newChild("server");
     RhIO::Root.child("server").newStr("hostname")
-        ->defaultValue("testServ");
+        ->defaultValue("testServ")
+        ->persisted(true)
+        ;
+    
+    RhIO::Root.newStream("test/stream1", "Some stream");
+    
+    RhIO::Root.newCommand("test/command1", 
+        "command1", 
+        [](const std::vector<std::string>& args) -> std::string
+        {
+            if (args.size()!=1) {
+                return "Usage: command1 arg";
+            } else {
+                return "OK " + args[0];
+            }
+        });
 
     std::cout << "Waiting" << std::endl;
+        
+    auto &out = RhIO::Root.out("test/stream1");
 
+    float t = 0.0;
     while (true) {
         std::this_thread::sleep_for(
-            std::chrono::milliseconds(1000));
+            std::chrono::milliseconds(10));
+        float f = RhIO::Root.getFloat("test/freq");
+        t += 0.01*f;
+    
+        RhIO::Root.setFloat("test/sin", sin(t*2*M_PI));
+        out << "Debug, t=" << t << ", sin(t) = " << sin(t*2*M_PI) << std::flush;
     }
 
     return 0;

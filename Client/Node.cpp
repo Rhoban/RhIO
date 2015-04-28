@@ -4,6 +4,21 @@
 
 namespace RhIO
 {       
+    std::string NodeItem::getPath()
+    {
+        return node->getPath();
+    }
+
+    std::string NodeItem::getName()
+    {
+        auto path = getPath();
+        if (path != "") {
+            path += "/";
+        }
+
+        return path + name;
+    }
+
     NodeValue::NodeValue(Node *node_, ValueBase *value_)
         : value(value_), node(node_)
     {
@@ -13,12 +28,17 @@ namespace RhIO
     {
         return node->getPath() + "/" + value->name;
     }
-            
-    std::vector<std::string> Node::getCommands()
+
+    std::vector<NodeCommand> Node::getCommands()
     {
         return commands;
     }
-            
+
+    std::vector<NodeStream> Node::getStreams()
+    {
+        return streams;
+    }
+
     std::map<std::string, Node*> Node::getChildren()
     {
         return children;
@@ -48,7 +68,22 @@ namespace RhIO
         GET_CHILDREN(Str, strings)
 
         // Commands
-        commands = client->listCommands(path);
+        for (auto name : client->listCommands(path)) {
+            NodeCommand command;
+            command.node = this;
+            command.name = name;
+            command.desc = client->commandDescription(slashed+name);
+            commands.push_back(command);
+        }
+
+        // Streams
+        for (auto name : client->listStreams(path)) {
+            NodeStream stream;
+            stream.node = this;
+            stream.name = name;
+            stream.desc = client->streamDescription(slashed+name);
+            streams.push_back(stream);
+        }
 
         // Getting childrens
         for (auto name : client->listChildren(path)) {
@@ -78,16 +113,16 @@ namespace RhIO
             delete entry.second;
         }
     }
-            
+
     Node *Node::getChild(std::string name)
     {
         if (children.count(name)) {
             return children[name];
         }
-        
+
         return NULL;
     }
-            
+
     NodeValue Node::getNodeValue(std::string name)
     {
         auto all = getAll();
@@ -151,7 +186,7 @@ namespace RhIO
             return "?";
         }
     }
-            
+
     double Node::toNumber(ValueBase *value)
     {
         if (auto val = asBool(value)) {
@@ -164,7 +199,7 @@ namespace RhIO
 
         return 0;
     }
-            
+
     std::string Node::getType(ValueBase *value)
     {
         if (asBool(value)) {
@@ -179,7 +214,7 @@ namespace RhIO
             return "?";
         }
     }
-    
+
     std::string Node::persistedToString(ValueBase *value)
     {
         if (auto val = asBool(value)) {

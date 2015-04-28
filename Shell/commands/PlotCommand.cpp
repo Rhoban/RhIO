@@ -37,7 +37,7 @@ namespace RhIO
         pool.setCallback(std::bind(&PlotCommand::update, this, &plot, _1));
 
         auto stream = shell->getStream();
-        stream->addPool(&pool);
+        stream->addPool(shell, &pool);
         while (true) {
             char c;
             if ((c=getchar())>0) {
@@ -57,7 +57,7 @@ namespace RhIO
                 }
             }
         }
-        stream->removePool(&pool);
+        stream->removePool(shell, &pool);
 
         plot.closeWindow();
     }

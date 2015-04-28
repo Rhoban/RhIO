@@ -23,6 +23,7 @@ namespace RhIO
         public:
             Shell(std::string server);
             ~Shell();
+
             /**
              * Updates the local node tree
              */
@@ -91,6 +92,7 @@ namespace RhIO
             Node *getCurrentNode();
             ValueBase *getValue(std::string path);
             NodeValue getNodeValue(std::string path);
+            NodeStream getNodeStream(std::string path);
 
             /**
              * Current directory
@@ -106,6 +108,7 @@ namespace RhIO
              * remove the pool from the stream
              */
             void streamWait(NodePool *pool);
+            void wait();
             StreamManager *getStream();
             NodePool poolForNode(Node *node);
             NodePool getPool(std::vector<std::string> names, int start=0);

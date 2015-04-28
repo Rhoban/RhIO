@@ -15,6 +15,13 @@ namespace RhIO
         public:
             StreamManager(Shell*);
             ~StreamManager();
+            
+            /**
+             * Handler to update the stream
+             */
+            typedef std::function<void (std::string name, std::string)> StreamUpdateHandler;
+            void setStreamCallback(StreamUpdateHandler handler);
+            void unsetStreamCallback();
 
             /**
              * Handlers
@@ -28,15 +35,15 @@ namespace RhIO
             /**
              * Add a node pool to monitor
              */
-            void addPool(NodePool *pool);
-            void removePool(NodePool *pool);
+            void addPool(Shell *shell, NodePool *pool);
+            void removePool(Shell *shell, NodePool *pool);
 
             /**
              * Sets the frequency limit for the flush
              */
             void setFrequency(int frequency=DEFAULT_FREQ);
 
-            void update();
+            void update();            
 
         protected:
             int frequency;
@@ -44,5 +51,6 @@ namespace RhIO
             std::thread worker;
             std::mutex mutex;
             std::set<NodePool*> pools;
+            StreamUpdateHandler handler;
     };
 }

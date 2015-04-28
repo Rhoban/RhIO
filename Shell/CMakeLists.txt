@@ -10,6 +10,11 @@ option (COLORS "Enable colors" ON)
 # Enable curses
 option (CURSES "Enable curses" ON)
 
+#Include ZMQ (Network Library)
+set(ZMQ_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../ZeroMQ" CACHE STRING "ZMQ lib directory")
+include_directories(${ZMQ_DIRECTORY}/include)
+link_directories(${ZMQ_DIRECTORY}/lib)
+
 set (SOURCES
     commands/Command.cpp
     commands/ClearCommand.cpp
@@ -25,6 +30,7 @@ set (SOURCES
     commands/SaveCommand.cpp
     commands/LoadCommand.cpp
     commands/TreeCommand.cpp
+    commands/CatCommand.cpp
     GnuPlot.cpp
     Shell.cpp
     CSV.cpp
