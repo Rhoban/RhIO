@@ -10,6 +10,7 @@ project(RhIO)
 option(BUILD_RHIO_TESTS "Build RhIO Tests" OFF)
 
 #Include sources directory
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Server)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Client)
