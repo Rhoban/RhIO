@@ -48,6 +48,7 @@ include_directories ("${CMAKE_SOURCE_DIR}")
 include_directories ("${RHIO_DIR}/Client")
 include_directories ("${RHIO_DIR}/Common")
 include_directories ("${RHIO_DIR}/Server")
+include_directories ("${RHIO_DIR}/include")
 
 set (EXTRA_LIBS
     RhIOClient
