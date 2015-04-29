@@ -87,7 +87,7 @@ void createDirectory(const std::string& path,
 
     //Find all non existing directories in path
     int index = 0;
-    for (;index<parts.size();index++) {
+    for (;index<(int)parts.size();index++) {
         if (isDirectory(parts[index])) {
             break;
         }

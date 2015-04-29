@@ -82,12 +82,30 @@ struct FromString<int> {
     }
 };
 template <>
+struct FromString<unsigned int> {
+    inline static unsigned int convert(const std::string& str) {
+        return stoi(str);
+    }
+    inline static std::string type() {
+        return "unsigned int";
+    }
+};
+template <>
 struct FromString<long> {
     inline static long convert(const std::string& str) {
         return stol(str);
     }
     inline static std::string type() {
         return "long";
+    }
+};
+template <>
+struct FromString<unsigned long> {
+    inline static unsigned long convert(const std::string& str) {
+        return stol(str);
+    }
+    inline static std::string type() {
+        return "unsigned long";
     }
 };
 template <>
@@ -106,6 +124,24 @@ struct FromString<double> {
     }
     inline static std::string type() {
         return "double";
+    }
+};
+template <>
+struct FromString<char> {
+    inline static char convert(const std::string& str) {
+        return (str.length() > 0) ? str[0] : 0;
+    }
+    inline static std::string type() {
+        return "char";
+    }
+};
+template <>
+struct FromString<unsigned char> {
+    inline static unsigned char convert(const std::string& str) {
+        return (str.length() > 0) ? str[0] : 0;
+    }
+    inline static std::string type() {
+        return "unsigned char";
     }
 };
 template <>
@@ -231,6 +267,27 @@ std::string bind_usage(const std::vector<std::string>& defaultArgs)
 }
 
 /**
+ * Conditionaly apply and forward return value of
+ * given binded function.
+ * If return value is void, return empty string
+ */
+template <typename Ret>
+struct BindApply {
+    static std::string apply(std::function<Ret()> func)
+    {
+        return std::to_string(func());
+    }
+};
+template <>
+struct BindApply<void> {
+    static std::string apply(std::function<void()> func)
+    {
+        func();
+        return std::string();
+    }
+};
+
+/**
  * Implement command method binding
  */
 template <typename T, typename Ret, typename ... Args>
@@ -263,7 +320,7 @@ void Bind::bindFunc(
         try {
             auto tmpFunc2 = params_bind<0, Ret, Args...>(
                 tmpFunc, params, defaultArgs);
-            return std::to_string(tmpFunc2());
+            return BindApply<Ret>::apply(tmpFunc2);
         } catch (const std::exception& e) {
             if (std::string(e.what()).find("RhIO bind error") != 
                 std::string::npos

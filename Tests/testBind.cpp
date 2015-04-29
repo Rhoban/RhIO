@@ -38,6 +38,9 @@ class Test
             
             _bind.bindFunc("command4", "test command4", &Test::command4, *this);
             assert(RhIO::Root.call("test/command4", {}) == "pouet");
+            
+            _bind.bindFunc("command5", "test command5", &Test::command5, *this);
+            assert(RhIO::Root.call("test/command5", {}) == "");
         }
 
         inline void tick1()
@@ -64,7 +67,7 @@ class Test
             assert(_valueStr == "str2");
         }
 
-        inline int command1(int a, int b)
+        inline int command1(int a, unsigned int b)
         {
             return a + b;
         }
@@ -79,6 +82,9 @@ class Test
         inline std::string command4()
         {
             return "pouet";
+        }
+        inline void command5()
+        {
         }
 
     private:
