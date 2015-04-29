@@ -79,3 +79,5 @@ endif ()
 # Adding shell binary
 add_executable (rhio ${SOURCES})
 target_link_libraries (rhio ${EXTRA_LIBS})
+
+install(TARGETS rhio DESTINATION bin)
