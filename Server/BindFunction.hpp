@@ -21,6 +21,15 @@ namespace std {
 template <int N>
 struct is_placeholder<RhIO::placeholder_custom<N>> : integral_constant<int, N+1> {};
 
+/**
+ * Overloading standart to_string
+ * with dummy string conversion
+ */
+inline string to_string(const string& str)
+{
+    return str;
+}
+
 }
 
 namespace RhIO {
