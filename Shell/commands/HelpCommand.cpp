@@ -21,7 +21,9 @@ namespace RhIO
 
         for (auto entry : commands) {
             auto command = entry.second;
-            Terminal::setColor("white", true);
+            bool isRemote = (NULL!=dynamic_cast<RemoteCommand*>(command));
+
+            Terminal::setColor(isRemote ? "green" : "white", true);
             std::cout << command->getName() << ": ";
             Terminal::clear();
             

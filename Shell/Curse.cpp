@@ -286,12 +286,12 @@ namespace RhIO
                         float min, max;
                         getMinMax(value, &min, &max);
 
-                        if (c == '0') {
+                        if (c >= '0' && c<='9') {
                             if (auto v = Node::asInt(value)) {
-                                v->value = 0;
+                                v->value = (c-'0');
                             }
                             if (auto v = Node::asFloat(value)) {
-                                v->value = 0;
+                                v->value = (c-'0');
                             }
                             bound(value);
                             shell->setToServer(nodeValue);
