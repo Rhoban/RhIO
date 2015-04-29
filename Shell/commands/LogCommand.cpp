@@ -39,7 +39,7 @@ namespace RhIO
     {
         csv->push("t", pool->timestamp);
         for (auto val : *pool) {
-            csv->push(val.value->name, Node::toNumber(val.value));
+            csv->push(val.getName(), Node::toNumber(val.value));
         }
         csv->newLine();
     }

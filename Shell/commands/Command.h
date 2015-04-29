@@ -33,7 +33,6 @@ namespace RhIO
             void clearStream();
 
         protected:
-            bool hasFile;
             std::ofstream ofs;
             Shell *shell;
     };

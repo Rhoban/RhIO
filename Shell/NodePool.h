@@ -16,7 +16,7 @@ namespace RhIO
             bool dirty;
             long timestamp;
 
-            void draw();
+            void draw(bool fullName=false);
 
         protected:
             PoolUpdateHandler handler;

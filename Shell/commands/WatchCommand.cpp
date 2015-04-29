@@ -31,7 +31,7 @@ namespace RhIO
         pool.setCallback(std::bind(&WatchCommand::update, this, _1));
     
         system("clear");
-        pool.draw();
+        pool.draw(true);
 
         // Reducing frequency when watching values, avoiding shell flickering.
         // We can't see more than 25 fps anyway.
@@ -42,6 +42,6 @@ namespace RhIO
     void WatchCommand::update(NodePool *pool)
     {
         system("clear");
-        pool->draw();
+        pool->draw(true);
     }
 }

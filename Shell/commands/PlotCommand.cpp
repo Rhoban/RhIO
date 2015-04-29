@@ -67,7 +67,7 @@ namespace RhIO
         if (!paused) {
             plot->setX(pool->timestamp);
             for (auto node : *pool) {
-                plot->push(node.value->name, Node::toNumber(node.value));
+                plot->push(node.getName(), Node::toNumber(node.value));
             }
             plot->render();
         }

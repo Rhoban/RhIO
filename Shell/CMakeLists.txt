@@ -49,6 +49,7 @@ include_directories ("${RHIO_DIR}/Client")
 include_directories ("${RHIO_DIR}/Common")
 include_directories ("${RHIO_DIR}/Server")
 include_directories ("${RHIO_DIR}/include")
+include_directories ("${RHIO_DIR}/contrib")
 
 set (EXTRA_LIBS
     RhIOClient
@@ -78,3 +79,5 @@ endif ()
 # Adding shell binary
 add_executable (rhio ${SOURCES})
 target_link_libraries (rhio ${EXTRA_LIBS})
+
+install(TARGETS rhio DESTINATION bin)
