@@ -185,19 +185,15 @@ std::function<Ret(void)> params_bind(
     const std::vector<std::string>& defaultArgs)
 {
     Arg val;
-    if (params.size() <= N) {
-        if (
-            defaultArgs.size() >= N && 
-            defaultArgs.at(N) != ""
-        ) {
-            val = FromString<Arg>::convert(defaultArgs.at(N));
-        } else {
-            throw std::runtime_error(std::string(
-                "RhIO bind error at argument ") + std::to_string(N+1));
-        }
-    } else {
+    if (N < params.size()) {
         val = FromString<Arg>::convert(params.at(N));
+    } else if (N < defaultArgs.size() && defaultArgs.at(N) != "") {
+        val = FromString<Arg>::convert(defaultArgs.at(N));
+    } else {
+        throw std::runtime_error(std::string(
+            "RhIO bind error at argument ") + std::to_string(N+1));
     }
+
     return params_bind<N+1, Ret, Args...>(
         custom_bind(func, val), params, defaultArgs);
 }
@@ -218,7 +214,7 @@ std::string bind_usage_aux(const std::vector<std::string>& defaultArgs)
 {
     std::string part = FromString<Arg>::type();
     if (
-        defaultArgs.size() >= N && 
+        N < defaultArgs.size() && 
         defaultArgs.at(N) != ""
     ) {
         //Print default value

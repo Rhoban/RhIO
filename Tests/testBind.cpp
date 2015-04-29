@@ -33,6 +33,8 @@ class Test
             _bind.bindFunc("command3", "test command3", &Test::command3, *this);
             assert(RhIO::Root.call("test/command3", {"3.0", "2", "toto"}) > "8.99");
             assert(RhIO::Root.call("test/command3", {"3.0", "2", "toto"}) < "9.01");
+            assert(RhIO::Root.call("test/command3", {"3.0", "2"})
+                .find("USAGE: command3 <float> <long> <string> --> <float>") != std::string::npos);
             
             _bind.bindFunc("command4", "test command4", &Test::command4, *this);
             assert(RhIO::Root.call("test/command4", {}) == "pouet");
