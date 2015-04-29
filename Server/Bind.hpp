@@ -67,13 +67,13 @@ class Bind
         /**
          * TODO
          */
-        template <typename T, typename Ret, typename ... Args, typename ... DefaultArgs>
+        template <typename T, typename Ret, typename ... Args>
         void bindFunc(
             const std::string& name, 
             const std::string& comment, 
             Ret(T::*func)(Args...), 
-            T* self, 
-            DefaultArgs ...);
+            T& self,
+            const std::vector<std::string>& defaultArgs = {});
 
         /**
          * Return the child IONode associated with

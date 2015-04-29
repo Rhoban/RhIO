@@ -145,32 +145,29 @@ std::function<Ret(Args...)> custom_bind_member(Ret (T::*func)(Args...), T* self)
 /**
  * Bind given string parameters to function
  */
-template <int N, typename Ret, typename ... DefaultArgs> 
+template <int N, typename Ret> 
 std::function<Ret(void)> params_bind(
     std::function<Ret(void)> func, 
-    const std::vector<std::string>& params,
-    DefaultArgs ... defaultArgs)
+    const std::vector<std::string>& params)
 {
     (void)params;
     return func;
 }
-template <int N, typename Ret, typename Arg, typename ... Args, typename ... DefaultArgs>
+template <int N, typename Ret, typename Arg, typename ... Args>
 std::function<Ret(void)> params_bind(
     std::function<Ret(Arg, Args...)> func, 
-    const std::vector<std::string>& params,
-    DefaultArgs ... defaultArgs)
+    const std::vector<std::string>& params)
 {
     if (params.size() <= N) {
         throw std::runtime_error("RhIO bind error: not enough parameters");
     }
     Arg val = FromString<Arg>::convert(params.at(N));
-    return params_bind<N+1, Ret, Args...>(custom_bind(func, val), params, defaultArgs...);
+    return params_bind<N+1, Ret, Args...>(custom_bind(func, val), params);
 }
-template <int N, typename Ret, typename Arg, typename ... DefaultArgs>
+template <int N, typename Ret, typename Arg>
 std::function<Ret(void)> params_bind(
     std::function<Ret(Arg)> func, 
-    const std::vector<std::string>& params,
-    DefaultArgs ... defaultArgs)
+    const std::vector<std::string>& params)
 {
     if (params.size() != N-1) {
         throw std::runtime_error("RhIO bind error: size mismatch");
@@ -182,22 +179,27 @@ std::function<Ret(void)> params_bind(
 /**
  *
  */
-template <typename T, typename Ret, typename ... Args, typename ... DefaultArgs>
+template <typename T, typename Ret, typename ... Args>
 void Bind::bindFunc(
     const std::string& name, 
     const std::string& comment, 
     Ret (T::*func)(Args...), 
-    T* self, 
-    DefaultArgs ... defaultArgs)
+    T& self,
+    const std::vector<std::string>& defaultArgs)
 {
-    if (self == nullptr) {
+    //Check that if default arguments value are given, 
+    //all arguments are listed
+    if (
+        defaultArgs.size() > 0 && 
+        defaultArgs.size() != sizeof...(Args)
+    ) {
         throw std::logic_error(
-            "RhIO null pointer in function bind");
+            "RhIO default parameters given with invalid size");
     }
     node().newCommand(name, comment, 
-    [func, &self, &name, &defaultArgs...](const std::vector<std::string>& params) -> std::string {
-        auto tmpFunc = custom_bind_member(func, self);
-        auto tmpFunc2 = params_bind<0, Ret, Args...>(tmpFunc, params, defaultArgs...);
+    [func, &self, &name](const std::vector<std::string>& params) -> std::string {
+        auto tmpFunc = custom_bind_member(func, &self);
+        auto tmpFunc2 = params_bind<0, Ret, Args...>(tmpFunc, params);
         return std::to_string(tmpFunc2());
     });
 }
