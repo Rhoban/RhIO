@@ -65,11 +65,22 @@ class Bind
         void bind(const std::string& name, std::string& var);
 
         /**
-         * Return the child associated with
+         * TODO
+         */
+        template <typename T, typename Ret, typename ... Args, typename ... DefaultArgs>
+        void bindFunc(
+            const std::string& name, 
+            const std::string& comment, 
+            Ret(T::*func)(Args...), 
+            T* self, 
+            DefaultArgs ...);
+
+        /**
+         * Return the child IONode associated with
          * given prefix 
          */
-        const IONode& child() const;
-        IONode& child();
+        const IONode& node() const;
+        IONode& node();
 
         /**
          * Alias to StreamNode::newStream
@@ -145,6 +156,8 @@ class Bind
 };
 
 }
+
+#include "BindFunction.hpp"
 
 #endif
 

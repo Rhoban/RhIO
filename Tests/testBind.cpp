@@ -21,6 +21,14 @@ class Test
             assert(RhIO::Root.getValueType("test/valueBool") == RhIO::TypeBool);
             assert(RhIO::Root.getValueBool("test/valueBool").comment == "bool value");
             _bind.newStream("output", "a test stream");
+            
+            _bind.bindFunc("command1", "test command1", &Test::command1, this);
+            assert(RhIO::Root.call("test/command1", {"2", "3"}) == "5");
+            _bind.bindFunc("command2", "test command2", &Test::command2, this);
+            assert(RhIO::Root.call("test/command2", {}) == "1");
+            _bind.bindFunc("command3", "test command3", &Test::command3, this);
+            assert(RhIO::Root.call("test/command3", {"3.0", "2", "toto"}) > "8.99");
+            assert(RhIO::Root.call("test/command3", {"3.0", "2", "toto"}) < "9.01");
         }
 
         inline void tick1()
@@ -45,6 +53,19 @@ class Test
             assert(_valueInt == 3);
             assert(_valueFloat == 42.0);
             assert(_valueStr == "str2");
+        }
+
+        inline int command1(int a, int b)
+        {
+            return a + b;
+        }
+        inline bool command2(void)
+        {
+            return true;
+        }
+        inline float command3(float a, long b, std::string c)
+        {
+            return a + b + c.length();
         }
 
     private:
