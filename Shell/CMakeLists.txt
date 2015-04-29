@@ -38,6 +38,7 @@ set (SOURCES
     NodePool.cpp
     StreamManager.cpp
     Completion.cpp
+    Node.cpp
 
     main.cpp
     )
