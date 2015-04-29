@@ -7,7 +7,8 @@ class Test
     public:
 
         Test() :
-            _bind("test")
+            _bind("test"),
+            _bind2("test5")
         {
             _bind.bindNew("valueBool", _valueBool)
                 ->comment("bool value")
@@ -22,13 +23,19 @@ class Test
             assert(RhIO::Root.getValueBool("test/valueBool").comment == "bool value");
             _bind.newStream("output", "a test stream");
             
-            _bind.bindFunc("command1", "test command1", &Test::command1, *this);
-            assert(RhIO::Root.call("test/command1", {"2", "3"}) == "5");
+            _bind2.bindFunc("command1", "test command1", &Test::command1, *this, {"", "42"});
+            assert(RhIO::Root.call("test5/command1", {"2", "3"}) == "5");
+            assert(RhIO::Root.call("test5/command1", {"2"}) == "44");
+            assert(RhIO::Root.call("test5/command1", {})
+                .find("USAGE: command1 <int> <int|42> --> <int>") != std::string::npos);
             _bind.bindFunc("command2", "test command2", &Test::command2, *this);
             assert(RhIO::Root.call("test/command2", {}) == "1");
             _bind.bindFunc("command3", "test command3", &Test::command3, *this);
             assert(RhIO::Root.call("test/command3", {"3.0", "2", "toto"}) > "8.99");
             assert(RhIO::Root.call("test/command3", {"3.0", "2", "toto"}) < "9.01");
+            
+            _bind.bindFunc("command4", "test command4", &Test::command4, *this);
+            assert(RhIO::Root.call("test/command4", {}) == "pouet");
         }
 
         inline void tick1()
@@ -67,6 +74,10 @@ class Test
         {
             return a + b + c.length();
         }
+        inline std::string command4()
+        {
+            return "pouet";
+        }
 
     private:
 
@@ -77,6 +88,7 @@ class Test
         float _valueFloat2;
         std::string _valueStr;
         RhIO::Bind _bind;
+        RhIO::Bind _bind2;
 };
 
 int main()
