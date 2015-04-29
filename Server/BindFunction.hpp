@@ -19,7 +19,8 @@ namespace std {
  * inside std namespace
  */
 template <int N>
-struct is_placeholder<RhIO::placeholder_custom<N>> : integral_constant<int, N+1> {};
+struct is_placeholder<RhIO::placeholder_custom<N>> 
+    : integral_constant<int, N+1> {};
 
 /**
  * Overloading standart to_string
@@ -35,11 +36,14 @@ inline string to_string(const string& str)
 namespace RhIO {
 
 /**
- * Generic conbersion from string to typed value
- * (only for typical type)
+ * Generic conversion from string to typed value
+ * (only for typical type) and print type textual
+ * name
  */
+//Used to fail static_assert
 template<typename T>
 struct FromStringError : std::false_type {};
+//Default (not implemented) implemented case
 template <typename T>
 struct FromString {
     inline static T convert(const std::string& str) {
@@ -52,6 +56,7 @@ struct FromString {
         return "ERROR";
     }
 };
+//Type specialization
 template <>
 struct FromString<bool> {
     inline static bool convert(const std::string& str) {
@@ -125,68 +130,112 @@ struct make_int_sequence<0, IntSeq...> : int_sequence<IntSeq...> {};
 
 /**
  * Custom binding for std::function
+ * Bind one given argument at first place 
+ * and set all remaining arguements as placeholder
  */
 template <typename Ret, typename Arg, typename ... Args, int ... IntSeq>
-std::function<Ret(Args...)> custom_bind_aux(std::function<Ret(Arg, Args...)> func, Arg arg, int_sequence<IntSeq...>)
+std::function<Ret(Args...)> custom_bind_aux(
+    std::function<Ret(Arg, Args...)> func, Arg arg, int_sequence<IntSeq...>)
 {
     return std::bind(func, arg, placeholder_custom<IntSeq>()...);
 }
 template <typename Ret, typename Arg, typename ... Args>
-std::function<Ret(Args...)> custom_bind(std::function<Ret(Arg, Args...)> func, Arg arg)
+std::function<Ret(Args...)> custom_bind(
+    std::function<Ret(Arg, Args...)> func, Arg arg)
 {
     return custom_bind_aux(func, arg, make_int_sequence<sizeof...(Args)>());
 }
 
 /**
  * Custom binding for this to member method
+ * Bind given member method to its instance object
+ * and set all remaining arguments to placeholders
  */
 template <typename T, typename Ret, typename ... Args, int ... IntSeq>
-std::function<Ret(Args...)> custom_bind_member_aux(Ret (T::*func)(Args...), T* self, int_sequence<IntSeq...>)
+std::function<Ret(Args...)> custom_bind_member_aux(
+    Ret (T::*func)(Args...), T* self, int_sequence<IntSeq...>)
 {
     return std::bind(func, self, placeholder_custom<IntSeq>()...);
 }
 template <typename T, typename Ret, typename ... Args>
 std::function<Ret(Args...)> custom_bind_member(Ret (T::*func)(Args...), T* self)
 {
-    return custom_bind_member_aux(func, self, make_int_sequence<sizeof...(Args)>());
+    return custom_bind_member_aux(
+        func, self, make_int_sequence<sizeof...(Args)>());
 }
 
 /**
- * Bind given string parameters to function
+ * Parse given string arguments and default values
+ * and bind to given function
  */
 template <int N, typename Ret> 
 std::function<Ret(void)> params_bind(
     std::function<Ret(void)> func, 
-    const std::vector<std::string>& params)
+    const std::vector<std::string>& params,
+    const std::vector<std::string>& defaultArgs)
 {
     (void)params;
+    (void)defaultArgs;
     return func;
 }
 template <int N, typename Ret, typename Arg, typename ... Args>
 std::function<Ret(void)> params_bind(
     std::function<Ret(Arg, Args...)> func, 
-    const std::vector<std::string>& params)
+    const std::vector<std::string>& params,
+    const std::vector<std::string>& defaultArgs)
 {
+    Arg val;
     if (params.size() <= N) {
-        throw std::runtime_error("RhIO bind error: not enough parameters");
+        if (
+            defaultArgs.size() >= N && 
+            defaultArgs.at(N) != ""
+        ) {
+            val = FromString<Arg>::convert(defaultArgs.at(N));
+        } else {
+            throw std::runtime_error(std::string(
+                "RhIO bind error at argument ") + std::to_string(N+1));
+        }
+    } else {
+        val = FromString<Arg>::convert(params.at(N));
     }
-    Arg val = FromString<Arg>::convert(params.at(N));
-    return params_bind<N+1, Ret, Args...>(custom_bind(func, val), params);
-}
-template <int N, typename Ret, typename Arg>
-std::function<Ret(void)> params_bind(
-    std::function<Ret(Arg)> func, 
-    const std::vector<std::string>& params)
-{
-    if (params.size() != N-1) {
-        throw std::runtime_error("RhIO bind error: size mismatch");
-    }
-    Arg val = FromString<Arg>::convert(params[N]);
-    return custom_bind(func, val);
+    return params_bind<N+1, Ret, Args...>(
+        custom_bind(func, val), params, defaultArgs);
 }
 
 /**
- *
+ * Build and return given function type argument 
+ * textual parameters usage using given default
+ * arguments
+ */
+template <int N>
+std::string bind_usage_aux(const std::vector<std::string>& defaultArgs)
+{
+    (void)defaultArgs;
+    return std::string();
+}
+template <int N, typename Arg, typename ... Args>
+std::string bind_usage_aux(const std::vector<std::string>& defaultArgs)
+{
+    std::string part = FromString<Arg>::type();
+    if (
+        defaultArgs.size() >= N && 
+        defaultArgs.at(N) != ""
+    ) {
+        //Print default value
+        part += "|" + defaultArgs.at(N);
+    } 
+    return "<" + part + "> " + bind_usage_aux<N+1, Args...>(defaultArgs);
+}
+template <typename Ret, typename ... Args>
+std::string bind_usage(const std::vector<std::string>& defaultArgs)
+{
+    //Print arguments and return type
+    return bind_usage_aux<0, Args...>(defaultArgs) 
+        + "--> <" + FromString<Ret>::type() + ">";
+}
+
+/**
+ * Implement command method binding
  */
 template <typename T, typename Ret, typename ... Args>
 void Bind::bindFunc(
@@ -196,6 +245,8 @@ void Bind::bindFunc(
     T& self,
     const std::vector<std::string>& defaultArgs)
 {
+    //Create non existing hierarchy
+    createPath(_prefix+name);
     //Check that if default arguments value are given, 
     //all arguments are listed
     if (
@@ -205,11 +256,32 @@ void Bind::bindFunc(
         throw std::logic_error(
             "RhIO default parameters given with invalid size");
     }
+    //Create and implement the command
     node().newCommand(name, comment, 
-    [func, &self, &name](const std::vector<std::string>& params) -> std::string {
+    [func, &self, name, defaultArgs]
+    (const std::vector<std::string>& params) -> std::string {
+        //Bind member method with given class instance
         auto tmpFunc = custom_bind_member(func, &self);
-        auto tmpFunc2 = params_bind<0, Ret, Args...>(tmpFunc, params);
-        return std::to_string(tmpFunc2());
+        //Bind function parameters with parsed value on
+        //command line
+        try {
+            auto tmpFunc2 = params_bind<0, Ret, Args...>(
+                tmpFunc, params, defaultArgs);
+            return std::to_string(tmpFunc2());
+        } catch (const std::exception& e) {
+            if (std::string(e.what()).find("RhIO bind error") != 
+                std::string::npos
+            ) {
+                //Catch bind error and display usage
+                return std::string(e.what()) + ".\nUSAGE: " 
+                    + std::string(name) + " " 
+                    + bind_usage<Ret, Args...>(defaultArgs);
+            } else {
+                //Catch user exception and forward
+                return "User exception: " + std::string(e.what());
+            }
+        }
+
     });
 }
 

@@ -65,7 +65,15 @@ class Bind
         void bind(const std::string& name, std::string& var);
 
         /**
-         * TODO
+         * Register given member method and create a new
+         * command with given name and description of
+         * generic type.
+         * Object instance reference is given (to call 
+         * the member function)
+         * If default arguments are provided, defaultArgs
+         * contains the same number of string than the 
+         * member number of parameters. Default value
+         * are given in string format or empty string "".
          */
         template <typename T, typename Ret, typename ... Args>
         void bindFunc(

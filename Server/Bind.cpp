@@ -12,6 +12,9 @@ Bind::Bind(const std::string& prefixChild) :
     ) {
         _prefix = _prefix + '/';
     }
+    
+    //Create non existing hierarchy
+    createPath(_prefix);
 }
         
 std::unique_ptr<ValueBuilderBool> 
@@ -192,6 +195,9 @@ IONode& Bind::node()
 void Bind::newStream(const std::string& name, 
     const std::string& comment)
 {
+    //Create non existing hierarchy
+    createPath(_prefix+name);
+
     node().newStream(name, comment);
 }
 std::ostream& Bind::out(const std::string& name)
