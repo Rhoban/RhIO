@@ -9,6 +9,9 @@ project(RhIO)
 #Option for compiling Tests
 option(BUILD_RHIO_TESTS "Build RhIO Tests" OFF)
 
+#Option for compiling Examples
+option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
+
 #Include sources directory
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Server)
@@ -118,4 +121,13 @@ if (BUILD_RHIO_TESTS)
     add_executable(testBind Tests/testBind.cpp)
     target_link_libraries(testBind RhIO)
 endif (BUILD_RHIO_TESTS)
+
+#Build Examples
+if (BUILD_RHIO_EXAMPLES)
+    add_executable(exampleIntro Examples/exampleIntro.cpp)
+    target_link_libraries(exampleIntro RhIO)
+    
+    add_executable(exampleValues Examples/exampleValues.cpp)
+    target_link_libraries(exampleValues RhIO)
+endif (BUILD_RHIO_EXAMPLES)
 
