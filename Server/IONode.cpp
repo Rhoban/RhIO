@@ -244,7 +244,12 @@ std::vector<std::string> IONode::listChildren() const
 void IONode::save(const std::string& path)
 {
     std::lock_guard<std::mutex> lock(_mutex);
-    std::vector<std::string> list = listDirectories(path);
+    std::vector<std::string> list;
+    try {
+        list = listDirectories(path);
+    } catch (const std::runtime_error& e) {
+        createDirectory(path, "");
+    }
 
     //Check that all folder is associated with a children
     for (size_t i=0;i<list.size();i++) {

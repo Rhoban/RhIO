@@ -26,11 +26,6 @@ int main()
         ->persisted(true)
         ->defaultValue("off");
     
-    try {
-        RhIO::createDirectory("/tmp/", "testRhIO");
-    } catch (const std::runtime_error& e) {
-    }
-
     RhIO::Root.setFloat("test/paramFloat", 3.14);
     assert(RhIO::Root.getValueFloat("test/paramFloat").valuePersisted == 0.0);
     RhIO::Root.save("/tmp/testRhIO");

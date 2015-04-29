@@ -50,13 +50,9 @@ std::vector<std::string> listFiles(const std::string& path)
 void createDirectory(const std::string& path, 
     const std::string& name)
 {
-    if (name.length() == 0) {
-        throw std::logic_error(
-            "RhIO invalid directory name: " + name);
-    }
-
     std::string newPath;
     if (
+        name.length() > 0 && 
         name[0] != separator && 
         path.length() > 0 && 
         path[path.length()-1] != separator
