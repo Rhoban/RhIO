@@ -7,6 +7,12 @@
 namespace RhIO {
 
 /**
+ * Return true of given directory path exist
+ * or false if an error occurs (not exist or not a directory)
+ */
+bool isDirectory(const std::string& path);
+
+/**
  * List and return all forders name in
  * given directory path
  * Throw std::runtime_error is given path 

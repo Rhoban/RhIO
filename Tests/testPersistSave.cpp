@@ -30,6 +30,14 @@ int main()
     assert(RhIO::Root.getValueFloat("test/paramFloat").valuePersisted == 0.0);
     RhIO::Root.save("/tmp/testRhIO");
     assert(RhIO::Root.getValueFloat("test/paramFloat").valuePersisted == 3.14);
+    
+    RhIO::Root.child("test").save("/tmp/testRhIO/test");
+
+    RhIO::Root.newChild("test4/test5");
+    RhIO::Root.newFloat("test4/test5/paramFloat")
+        ->persisted(true)
+        ->defaultValue(123);
+    RhIO::Root.child("test4/test5").save("/tmp/testRhIOTest4/test4/test5");
 
     return 0;
 }
