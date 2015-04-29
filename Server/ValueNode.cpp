@@ -19,10 +19,14 @@ ValueNode& ValueNode::operator=(const ValueNode& node)
         
 ValueType ValueNode::getValueType(const std::string& name) const
 {
-    //Forward to subtree
-    std::string tmpName;
-    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
-    if (child != nullptr) return child->getValueType(tmpName);
+    try {
+        //Forward to subtree
+        std::string tmpName;
+        ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+        if (child != nullptr) return child->getValueType(tmpName);
+    } catch (const std::logic_error& e) {
+        return NoValue;
+    }
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) > 0) {
