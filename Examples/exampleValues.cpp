@@ -3,6 +3,13 @@
 
 int main()
 {
+    //Values are typed variables which can
+    //be get or set, accessed and update across
+    //network. Supported types are Bool, Int, 
+    //Float and String.
+    //Values (any number for each type) are associated
+    //with a textual name and are stored into any tree node.
+    
     //On creation, optionnal meta information 
     //can be added to values by using the ValueBuilder
     //returned by newBool, newInt, newFloat and newStr
