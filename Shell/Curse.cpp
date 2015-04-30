@@ -136,7 +136,9 @@ namespace RhIO
             }
 
             // Drawing parameters
-            for (int pos=offset; pos<offset+maxSliders; pos++) {
+            int last = offset+maxSliders;
+            if (last > values.size()) last = values.size();
+            for (int pos=offset; pos<last; pos++) {
                 auto nodeValue = values[pos];
                 int center_x = SLIDER_WIDTH*(pos-offset+1)-(SLIDER_WIDTH/2)-2;
                 auto value = nodeValue.value;
