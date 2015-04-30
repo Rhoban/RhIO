@@ -326,7 +326,7 @@ namespace RhIO
                             shell->setToServer(nodeValue);
                         }
                     }
-                    if (c == 'q' || c == '\n') {
+                    if (c == 'q' || c == '\n' || c == 27) {
                         break;
                     }
                 }
