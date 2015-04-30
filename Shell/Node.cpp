@@ -253,7 +253,7 @@ namespace RhIO
         } else if (auto val = asInt(value)) {
             return val->value != val->valuePersisted;
         } else if (auto val = asFloat(value)) {
-            return val->value != val->valuePersisted;
+            return fabs(val->value-val->valuePersisted) >= 1e-4;
         } else if (auto val = asString(value)) {
             return val->value != val->valuePersisted;
         } else {
