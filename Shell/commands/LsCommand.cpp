@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <sstream>
 #include <iostream>
 #include "Shell.h"
@@ -48,14 +49,14 @@ namespace RhIO
         
         // Listing streams
         for (auto stream : node->getStreams()) {
+            std::cout << std::left;
             Terminal::setColor("darkblue", true);
-            printf("%-32s", stream.name.c_str());
+            std::cout << std::setw(21) << stream.name;
        
             if (stream.desc != "") {
                 Terminal::setColor("grey", false);
-                std::cout << "desc: ";
-                Terminal::clear();
                 std::cout << stream.desc;
+                Terminal::clear();
             }
             std::cout << std::endl;
             Terminal::clear();

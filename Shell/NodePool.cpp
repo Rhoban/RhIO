@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 #include "Terminal.h"
 #include "NodePool.h"
@@ -27,26 +28,25 @@ namespace RhIO
         for (auto nodeVal : *this) {
             auto val = nodeVal.value;
 
+            std::cout << std::left;
             Terminal::setColor("white", val->persisted);
             if (fullName) {
-                printf("%-35s", nodeVal.getName().c_str());
+                std::cout << std::setw(35) << nodeVal.getName();
             } else {
-                printf("%-15s", val->name.c_str());
+                std::cout << std::setw(20) << nodeVal.value->name;
             }
             std::cout << " ";
 
             Terminal::setColor("grey", false);
-            printf("%6s ", Node::getType(val).c_str());
+            std::cout << std::setw(6) << Node::getType(val);
             Terminal::clear();
 
-            printf("%-8s", Node::toString(val).c_str());
+            std::cout << std::setw(9) << Node::toString(val);
 
-            if (val->comment != "") {
-                Terminal::setColor("grey", false);
-                std::cout << " desc: ";
-                Terminal::clear();
-                std::cout << val->comment;
-            }
+            std::cout << " ";
+            Terminal::setColor("grey", false);
+            std::cout << std::setw(25) << val->comment;
+            Terminal::clear();
 
             if (val->persisted) {
                 Terminal::setColor("grey", false);

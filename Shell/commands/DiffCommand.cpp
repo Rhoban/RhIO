@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <sstream>
 #include <iostream>
 #include "Shell.h"
@@ -31,6 +32,7 @@ namespace RhIO
     int DiffCommand::showDiff(Node *node)
     {
         int diff = 0;
+        std::cout << std::left;
 
         for (auto nodeVal : node->getAll()) {
             auto value = nodeVal.value;
@@ -38,14 +40,14 @@ namespace RhIO
                 Terminal::clear();
                 diff++;
                 std::string name = std::string("/") + nodeVal.getName() + ":";
-                printf("%-20s ", name.c_str());
+                std::cout << std::setw(35) << name;
                 
                 Terminal::setColor("red", true);
-                printf("%-5s", Node::persistedToString(value).c_str());
+                std::cout << std::setw(5) << Node::persistedToString(value);
                 Terminal::setColor("white", false);
                 std::cout << " → ";
                 Terminal::setColor("green", true);
-                printf("%-5s", Node::toString(value).c_str());
+                std::cout << std::setw(5) << Node::toString(value);
 
                 std::cout << std::endl;
             }
