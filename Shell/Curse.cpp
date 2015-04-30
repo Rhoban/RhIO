@@ -59,6 +59,8 @@ namespace RhIO
         keypad(stdscr, TRUE);
         refresh();
         selected = 0;
+        offset = 0;
+        maxSliders = col/SLIDER_WIDTH;
         curs_set(0);
         start_color();
         init_pair(1, COLOR_BLACK, COLOR_WHITE);
@@ -128,15 +130,15 @@ namespace RhIO
 
         while(1) {   
             attron(COLOR_PAIR(1));
-            int pos = 0;
 
             if (form == NULL) {
                 clear();
             }
 
             // Drawing parameters
-            for (auto nodeValue : values) {
-                int center_x = SLIDER_WIDTH*(pos+1)-(SLIDER_WIDTH/2)-2;
+            for (int pos=offset; pos<offset+maxSliders; pos++) {
+                auto nodeValue = values[pos];
+                int center_x = SLIDER_WIDTH*(pos-offset+1)-(SLIDER_WIDTH/2)-2;
                 auto value = nodeValue.value;
 
                 /**
@@ -147,7 +149,7 @@ namespace RhIO
                     attron(COLOR_PAIR(3));
                     for (int k=0; k<SLIDER_WIDTH; k++) {
                         for (int r=0; r<row; r++) {
-                            draw(r, k+SLIDER_WIDTH*pos, " ");
+                            draw(r, k+SLIDER_WIDTH*(pos-offset), " ");
                         }
                     }
                 } else {
@@ -159,14 +161,14 @@ namespace RhIO
                  */
                 char buffer[SLIDER_WIDTH+2];
                 sprintf(buffer, " %-10s", value->name.c_str());
-                draw(names, SLIDER_WIDTH*pos, buffer);
+                draw(names, SLIDER_WIDTH*(pos-offset), buffer);
                  
                 /**
                  * Drawing value
                  */
                 if (form == NULL || pos != selected) {
                     std::string strVal = Node::toString(value);
-                    draw(names+1, SLIDER_WIDTH*pos+1, strVal.c_str());
+                    draw(names+1, SLIDER_WIDTH*(pos-offset)+1, strVal.c_str());
                 }
 
                 /**
@@ -211,8 +213,6 @@ namespace RhIO
                     draw(kpos, center_x-1, "******");
                     draw(kpos+1, center_x-1, "******");
                 }
-
-                pos++;
             }
 
             /**
@@ -265,10 +265,12 @@ namespace RhIO
                     if (c == KEY_LEFT) {
                         selected--;
                         if (selected < 0) selected = 0;
+                        if (selected < offset) offset = selected;
                     }
                     if (c == KEY_RIGHT) {
                         selected++;
                         if (selected >= values.size()) selected = values.size()-1;
+                        if (selected >= offset+maxSliders) offset = selected-maxSliders+1;
                     }
                     if (c == 'g') {
                         granularity = (granularity+1)%GRANULARITIES;

@@ -38,3 +38,18 @@ static inline std::vector<std::string> split(const std::string &s, char delim, i
     }
     return parts;
 }
+
+template<typename T>void 
+inline unique_vect(T &k)
+{
+    auto w = k.begin();
+    std::set< std::string > tmpset ;
+    for(auto r = k.begin(); r != k.end(); ++r)
+    {
+        if(tmpset.insert(*r).second)
+        {
+            *w++ = *r ;
+        }
+    }
+    k.erase(w, k.end());
+}
