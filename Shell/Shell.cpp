@@ -966,6 +966,10 @@ namespace RhIO
 
     Node *Shell::getNode(std::string spath)
     {
+        if (spath == ".") {
+            spath = "";
+        }
+
         if (spath.size()==0 || spath[0]!='/') {
             auto myPath = getPath();
             if (myPath != "") {
