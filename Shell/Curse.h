@@ -22,6 +22,7 @@ namespace RhIO
             int selected;
             int row, col;
             int granularity;
+            int maxSliders, offset;
     
             void getMinMax(ValueBase *value, float *min, float *max);
             void increment(ValueBase *value, int delta);

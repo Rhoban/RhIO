@@ -21,22 +21,6 @@
 
 namespace RhIO
 {
-        //just a function to remove duplicates on vector string (maybe put that somewhere else)
-        //template and auto? Yeah :)
-    template<typename T>void unique_vect(T &k)
-    {
-        auto w = k.begin();
-        std::set< std::string > tmpset ;
-        for(auto r = k.begin(); r != k.end(); ++r)
-        {
-            if(tmpset.insert(*r).second)
-            {
-                *w++ = *r ;
-            }
-        }
-        k.erase(w, k.end());
-    }
-
     Shell::Shell(std::string server_)
         : server(server_), client(NULL), clientSub(NULL), stream(NULL), tree(NULL)
     {
@@ -982,6 +966,10 @@ namespace RhIO
 
     Node *Shell::getNode(std::string spath)
     {
+        if (spath == ".") {
+            spath = "";
+        }
+
         if (spath.size()==0 || spath[0]!='/') {
             auto myPath = getPath();
             if (myPath != "") {

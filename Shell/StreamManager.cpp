@@ -115,7 +115,11 @@ namespace RhIO
         mutex.lock();
         auto client = shell->getClient();
         for (auto entry : *pool) {
-            client->enableStreamingValue(entry.getName());
+            try {
+                client->enableStreamingValue(entry.getName());
+            } catch (...)
+            {
+            }
         }
         pools.insert(pool);
         mutex.unlock();
@@ -126,7 +130,11 @@ namespace RhIO
         mutex.lock();
         auto client = shell->getClient();
         for (auto entry : *pool) {
-            client->disableStreamingValue(entry.getName());
+            try {
+                client->disableStreamingValue(entry.getName());
+            } catch (...)
+            {
+            }
         }
         pools.erase(pool);
         mutex.unlock();
