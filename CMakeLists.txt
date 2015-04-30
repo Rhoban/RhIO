@@ -129,5 +129,11 @@ if (BUILD_RHIO_EXAMPLES)
     
     add_executable(exampleValues Examples/exampleValues.cpp)
     target_link_libraries(exampleValues RhIO)
+    
+    add_executable(exampleStreamsAndCommands Examples/exampleStreamsAndCommands.cpp)
+    target_link_libraries(exampleStreamsAndCommands RhIO)
+    
+    add_executable(exampleBind Examples/exampleBind.cpp)
+    target_link_libraries(exampleBind RhIO)
 endif (BUILD_RHIO_EXAMPLES)
 

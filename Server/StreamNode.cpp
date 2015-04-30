@@ -99,7 +99,7 @@ void StreamNode::newStream(const std::string& name,
 {
     //Forward to subtree
     std::string tmpName;
-    StreamNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    StreamNode* child = BaseNode::forwardFunc(name, tmpName, true);
     if (child != nullptr) {
         child->newStream(tmpName, comment);
         return;
