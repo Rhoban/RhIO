@@ -790,7 +790,13 @@ namespace RhIO
                 std::string rvalue = line.substr(i+1);
                 trim(lvalue);
                 trim(rvalue);
-                set(lvalue, rvalue);
+                try {
+                    set(lvalue, rvalue);
+                } catch(...) {
+                    Terminal::setColor("red", true);
+                    std::cout << "Unable to set remote value (are you out of sync?)" << std::endl;
+                    Terminal::clear();
+                }
                 return;
             }
         }
@@ -850,8 +856,14 @@ namespace RhIO
                 auto value = nodeValue.value;
 
                 if (value) {
-                    getFromServer(nodeValue);
-                    std::cout << command << "=" << Node::toString(value) << std::endl;
+                    try {
+                        getFromServer(nodeValue);
+                        std::cout << command << "=" << Node::toString(value) << std::endl;
+                    } catch(...) {
+                        Terminal::setColor("red", true);
+                        std::cout << "Unable to retrieve remote value (are you out of sync?)" << std::endl;
+                        Terminal::clear();
+                    }
                 } else {
                     Terminal::setColor("red", true);
                     std::cout << "Unknown command: " << command << std::endl;
