@@ -44,7 +44,10 @@ namespace RhIO
     void Curse::run()
     {
         init();
-        loop();
+        try {
+            loop();
+        } catch (...) {
+        }
         end();
     }
 
