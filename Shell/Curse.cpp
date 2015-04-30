@@ -282,7 +282,7 @@ namespace RhIO
                     }
 
                     if (c == 'v') {
-                        field[0] = new_field(1, SLIDER_WIDTH-2, names+1, 1+SLIDER_WIDTH*selected, 0, 0);
+                        field[0] = new_field(1, SLIDER_WIDTH-2, names+1, 1+SLIDER_WIDTH*(selected-offset), 0, 0);
                         set_field_back(field[0], A_UNDERLINE);
                         form = new_form(field);
                         post_form(form);
