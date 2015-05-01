@@ -24,6 +24,7 @@ Shell *shell = NULL;
 
 void shell_quit(int s)
 {
+    (void) s;
     if (shell != NULL) {
         shell->quit();
     }

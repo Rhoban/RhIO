@@ -105,6 +105,7 @@ namespace RhIO
             
     void StreamManager::streamHandler(const std::string &name, long timestamp, const std::string &str)
     {
+        (void) timestamp;
         if (handler) {
             handler(name, str);
         }

@@ -9,7 +9,7 @@
 namespace RhIO
 {
     class Shell;
-    class ValueBase;
+    struct ValueBase;
     class Curse
     {
         public:

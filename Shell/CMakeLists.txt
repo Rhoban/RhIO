@@ -60,8 +60,8 @@ set (EXTRA_LIBS
     RhIOClient
     )
 
-set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-reorder")
 
 if (COLORS)
     add_definitions(-DHAS_COLORS)

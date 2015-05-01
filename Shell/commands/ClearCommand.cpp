@@ -17,6 +17,7 @@ namespace RhIO
 
     void ClearCommand::process(std::vector<std::string> args)
     {
+        (void) args;
         system("clear");
     }
 }

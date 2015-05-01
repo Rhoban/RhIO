@@ -69,11 +69,6 @@ namespace RhIO
              bool replot;
 
             /**
-             * Paused?
-             */
-            bool paused;
-
-            /**
              * Current history size
              */
             int history;

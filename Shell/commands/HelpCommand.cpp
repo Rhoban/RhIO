@@ -17,6 +17,7 @@ namespace RhIO
 
     void HelpCommand::process(std::vector<std::string> args)
     {
+        (void) args;
         auto commands = shell->getCommands();
 
         for (auto entry : commands) {

@@ -16,6 +16,7 @@ namespace RhIO
 
     void SyncCommand::process(std::vector<std::string> args)
     {
+        (void) args;
         shell->sync();
     }
 }

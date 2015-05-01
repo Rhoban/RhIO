@@ -140,7 +140,7 @@ namespace RhIO
 
             // Drawing parameters
             int last = offset+maxSliders;
-            if (last > values.size()) last = values.size();
+            if (last > (int)values.size()) last = values.size();
             for (int pos=offset; pos<last; pos++) {
                 auto nodeValue = values[pos];
                 int center_x = SLIDER_WIDTH*(pos-offset+1)-(SLIDER_WIDTH/2)-2;
@@ -150,7 +150,7 @@ namespace RhIO
                  * If this value is selected, draw the blue background
                  * behind
                  */
-                if (pos == selected && form==NULL) {
+                if (pos == selected && form == NULL) {
                     attron(COLOR_PAIR(3));
                     for (int k=0; k<SLIDER_WIDTH; k++) {
                         for (int r=0; r<row; r++) {
@@ -274,7 +274,7 @@ namespace RhIO
                     }
                     if (c == KEY_RIGHT) {
                         selected++;
-                        if (selected >= values.size()) selected = values.size()-1;
+                        if (selected >= (int)values.size()) selected = values.size()-1;
                         if (selected >= offset+maxSliders) offset = selected-maxSliders+1;
                     }
                     if (c == 'g') {

@@ -89,7 +89,7 @@ namespace RhIO
             }
 
             std::ostringstream oss;
-            for (int k=0; k<timeRef.size(); k++) {
+            for (size_t k=0; k<timeRef.size(); k++) {
                 oss << timeRef[k] << " " << signal->values[k] << std::endl;
             }
             data += oss.str();
