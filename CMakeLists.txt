@@ -29,7 +29,10 @@ set(ZMQ_LIB_DIRECTORY "${ZMQ_DIRECTORY}/lib"
     CACHE STRING "ZMQ lib directory")
 
 option(RHIO_LINK_ZMQ
-    "Should RHIO link with zmq?" ON)
+    "Should RhIO link with zmq?" ON)
+
+option(RHIO_STATIC_ZMQ
+    "Should RhIO link statically with ZMQ?" OFF)
 
 include_directories(${ZMQ_INCLUDE_DIRECTORY})
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/contrib")
@@ -65,7 +68,11 @@ set(RHIO_LIBRARIES
 )
 
 if (RHIO_LINK_ZMQ)
-    set (RHIO_LIBRARIES ${RHIO_LIBRARIES} zmq)
+    if (RHIO_STATIC_ZMQ)
+        set (RHIO_LIBRARIES ${RHIO_LIBRARIES} zmq.a)
+    else ()
+        set (RHIO_LIBRARIES ${RHIO_LIBRARIES} zmq)
+    endif ()
 endif ()
 
 #Enable C++11

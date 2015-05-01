@@ -10,6 +10,9 @@ option (COLORS "Enable colors" ON)
 # Enable curses
 option (CURSES "Enable curses" ON)
 
+option(RHIO_STATIC_ZMQ
+    "Should RhIO link statically with ZMQ?" ON)
+
 #Include ZMQ (Network Library)
 set(ZMQ_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../ZeroMQ" CACHE STRING "ZMQ lib directory")
 include_directories(${ZMQ_DIRECTORY}/include)
