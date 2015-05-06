@@ -28,14 +28,10 @@ namespace RhIO
         } else {
             auto target = args.front();
 
-            if (target == "..") {
-                shell->upPath();
-            } else {
-                if (!shell->goToPath(target)) {
-                    std::stringstream ss;
-                    ss << "Unknown node: " << target;
-                    throw std::runtime_error(ss.str());
-                }
+            if (!shell->goToPath(target)) {
+                std::stringstream ss;
+                ss << "Unknown node: " << target;
+                throw std::runtime_error(ss.str());
             }
         }
     }

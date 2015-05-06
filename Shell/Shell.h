@@ -121,9 +121,7 @@ namespace RhIO
             /**
              * Get all the possibilities at a certain point
              */
-            std::vector<std::string> getPossibilities();
-            void getPossibilitiesRec(std::vector<std::string> &possibilities,
-                    Node *node, std::string prefix);
+            std::vector<std::string> getPossibilities(std::string prefix);
 
             /**
              * Adds an alias
