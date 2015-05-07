@@ -30,13 +30,16 @@ namespace RhIO
             errorUsage();
         } else {
             os = getStream(args);
+            auto client = shell->getClient();
             auto nodeStream = shell->getNodeStream(args[0]);
             auto stream = shell->getStream();
 
+            client->enableStreamingStream(nodeStream.getName());
             stream->setStreamCallback(std::bind(&CatCommand::update, this, _1, _2));
             shell->wait();
             stream->unsetStreamCallback();
             clearStream();
+            client->disableStreamingStream(nodeStream.getName());
         }
     }
 
