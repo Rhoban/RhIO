@@ -38,7 +38,7 @@ namespace RhIO
             std::cout << " ";
 
             Terminal::setColor("grey", false);
-            std::cout << std::setw(6) << Node::getType(val);
+            std::cout << std::setw(7) << Node::getType(val);
             Terminal::clear();
 
             std::cout << std::setw(9) << Node::toString(val);
