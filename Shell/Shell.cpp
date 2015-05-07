@@ -98,7 +98,7 @@ namespace RhIO
         } else {
             hostname = "RhIO";
         }
-    
+
         updateCommands();
     }
 
@@ -170,27 +170,34 @@ namespace RhIO
     {
 
         char c;
+
         std::string line("");
+        std::string prev_cmd("");
+        std::string completion_selected("");
+        std::string lineback;
+        std::string cmd_list("");
+        std::string cur_comp_line("");
+        std::string lastcmd("");
+        std::string current_path("");
+
         bool done=false;
         bool esc_mode=false;
-        std::deque<std::string>::iterator hist_it=shell_history.end();
-        int cursorpos=0;
-        std::string prev_cmd("");
         bool completion_mode=false;
         bool history_mode=false;
-        int completion_select=0;
-        std::string completion_selected("");
-        std::deque<std::string> completion_matches;
-        std::vector<std::string> splitted_cmd;
-        std::string cur_comp_line;
-        std::string lastcmd;
         bool lastisspace=false;
+
+
+        std::deque<std::string>::iterator hist_it=shell_history.end();
+
+        std::deque<std::string> completion_matches;
+
+        std::vector<std::string> splitted_cmd;
         std::vector<std::string> paths;
         std::vector<std::string> paths_to_print;
         std::vector<std::string> cmd_to_print;
         int print_len=0;
-        std::string lineback;
-        std::string cmd_list("");
+        int cursorpos=0;
+        int completion_select=0;
 
         while(!done)
         {
@@ -522,6 +529,7 @@ namespace RhIO
                         cur_comp_line="";
                         lastcmd="";
                         lastisspace=false;
+
                         print_len=0;
                         lineback=line;
                         cmd_list="";
@@ -579,14 +587,23 @@ namespace RhIO
                             }
                         }
 
+
+                        //     //just remove the last '/'
+                        // if(cur_comp_line.back()=='/')
+                        //     cur_comp_line.pop_back();
+
+                        //TODO cut at last complete /
+
                             //also look for path
-                        paths=getPossibilities();
+                        // paths=getPossibilities();
+                        paths=getPossibilities(cur_comp_line);
+
                         for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
                         {
                             if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
                             {
                                     //only keep the current hierarchy level (cut at the next '/')
-                                if((*p_it).find("/",cur_comp_line.size())==std::string::npos)// || cur_comp_line.size()==0 || cur_comp_line.back()=='/')
+                                // if((*p_it).find("/",cur_comp_line.size())==std::string::npos)// || cur_comp_line.size()==0 || cur_comp_line.back()=='/')
                                 {
                                     completion_matches.push_back(*p_it);
                                     paths_to_print.push_back(*p_it);
@@ -600,9 +617,15 @@ namespace RhIO
                         if(completion_matches.size()==1) //one solution, we are done
                         {
 
+
                             cur_comp_line=completion_matches[0];
 
                             line+=cur_comp_line;
+                            if(paths_to_print.size()==1) //so it is a path
+                                line+='/';
+                                //TODO lazy update path?
+                                //remind, we have to handle the root / and . and ..
+
                             Terminal::clearLine();
                             displayPrompt();
                             std::cout<<line;
@@ -1032,7 +1055,7 @@ namespace RhIO
 
         return node->getNodeValue(name);
     }
-    
+
     NodeStream Shell::getNodeStream(std::string path)
     {
         auto parts = pathToParts(path);
