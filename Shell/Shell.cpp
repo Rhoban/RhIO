@@ -533,6 +533,7 @@ namespace RhIO
                         print_len=0;
                         lineback=line;
                         cmd_list="";
+                        current_path="";
                             //look at the line and split all the commands separated by a space
                             //work on the last one
 
@@ -592,13 +593,19 @@ namespace RhIO
                         // if(cur_comp_line.back()=='/')
                         //     cur_comp_line.pop_back();
 
-                        //TODO cut at last complete /
-
                             //also look for path
+                        current_path=cur_comp_line;
 
                         // paths=getPossibilities();
                         paths=getPossibilities(cur_comp_line);
+                        if(paths.size()==0)
+                        {
+                                //cut at last complete '/'
+                            while(current_path.size()>0 && current_path.back()!='/')
+                                current_path.pop_back();
 
+                            paths=getPossibilities(current_path);
+                        }
 
                         for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
                         {
@@ -624,9 +631,15 @@ namespace RhIO
 
                             line+=cur_comp_line;
                             if(paths_to_print.size()==1) //so it is a path
+                            {
                                 line+='/';
+                                // line+=current_path;
+                                // line+='/';
                                 //TODO lazy update path?
                                 //remind, we have to handle the root / and . and ..
+                            }
+
+
 
                             Terminal::clearLine();
                             displayPrompt();
