@@ -49,6 +49,11 @@ namespace RhIO
 
         return names;
     }
+            
+    Node *Node::getParent()
+    {
+        return parent ? parent : this;
+    }
 
     Node::Node(ClientReq *client_, std::string path)
         : parent(NULL), name(""), client(client_)

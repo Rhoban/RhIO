@@ -595,8 +595,10 @@ namespace RhIO
                         //TODO cut at last complete /
 
                             //also look for path
+
                         // paths=getPossibilities();
                         paths=getPossibilities(cur_comp_line);
+
 
                         for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
                         {
@@ -1001,10 +1003,6 @@ namespace RhIO
 
     Node *Shell::getNode(std::string spath)
     {
-        if (spath == ".") {
-            spath = "";
-        }
-
         if (spath.size()==0 || spath[0]!='/') {
             auto myPath = getPath();
             if (myPath != "") {
@@ -1017,7 +1015,11 @@ namespace RhIO
 
         Node *node = tree;
         for (auto part : path) {
-            node = node->getChild(part);
+            if (part == "..") {
+                node = node->getParent();
+            } else if (part != ".") {
+                node = node->getChild(part);
+            }
             if (node == NULL) {
                 return NULL;
             }
@@ -1161,39 +1163,31 @@ namespace RhIO
         std::getline(std::cin, line);
     }
 
-    std::vector<std::string> Shell::getPossibilities()
+    std::vector<std::string> Shell::getPossibilities(std::string prefix)
     {
         std::vector<std::string> possibilities;
-        getPossibilitiesRec(possibilities, getNode(), "");
-        getPossibilitiesRec(possibilities, tree, "/");
 
-        return possibilities;
-    }
+        if (auto node = getNode(prefix)) {
+            // Adding children
+            for (NodeValue nodeValue : node->getAll()) {
+                auto name = prefix+nodeValue.value->name;
+                possibilities.push_back(name);
+            }
 
-    void Shell::getPossibilitiesRec(std::vector<std::string> &possibilities, Node *node, std::string prefix)
-    {
-        if (prefix != "" && prefix != "/") {
-            prefix += "/";
-        }
+            // Adding streams
+            for (auto stream : node->getStreams()) {
+                auto name = prefix+stream.name;
+                possibilities.push_back(name);
+            }
 
-        for (NodeValue nodeValue : node->getAll()) {
-            auto name = prefix+nodeValue.value->name;
-            possibilities.push_back(name);
-        }
-
-        for (auto stream : node->getStreams()) {
-            auto name = prefix+stream.name;
-            possibilities.push_back(name);
-        }
-
-        for (auto entry : node->getChildren()) {
-            auto name = prefix+entry;
-            possibilities.push_back(name);
-            auto child = node->getChild(entry, false);
-            if (child) {
-                getPossibilitiesRec(possibilities, child, prefix+entry);
+            // Adding childs
+            for (auto entry : node->getChildren()) {
+                auto name = prefix+entry;
+                possibilities.push_back(name);
             }
         }
+
+        return possibilities;
     }
 
     void Shell::addAlias(std::string from, std::string to)
