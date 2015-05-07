@@ -1159,7 +1159,7 @@ namespace RhIO
             // Adding childs
             for (auto entry : node->getChildren()) {
                 auto name = prefix+entry;
-                possibilities.push_back(name);
+                possibilities.push_back(name+"/");
             }
         }
 
