@@ -649,6 +649,10 @@ namespace RhIO
                             cursorpos=line.size();
                             break;
                         }
+                        else if(completion_matches.size()==0)
+                        {
+                            line+=cur_comp_line;
+                        }
                         else
                             completion_mode=true;
 
