@@ -13,6 +13,7 @@
 #include "commands/TreeCommand.h"
 #include "commands/CatCommand.h"
 #include "commands/RepeatCommand.h"
+#include "commands/DelayCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -56,6 +57,7 @@ int main(int argc, char *argv[])
     shell->registerCommand(new TreeCommand);
     shell->registerCommand(new CatCommand);
     shell->registerCommand(new RepeatCommand);
+    shell->registerCommand(new DelayCommand);
 #ifdef HAS_CURSES
     shell->registerCommand(new TuneCommand);
 #endif

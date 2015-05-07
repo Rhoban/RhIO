@@ -35,6 +35,7 @@ set (SOURCES
     commands/TreeCommand.cpp
     commands/CatCommand.cpp
     commands/RepeatCommand.cpp
+    commands/DelayCommand.cpp
     GnuPlot.cpp
     Shell.cpp
     CSV.cpp
