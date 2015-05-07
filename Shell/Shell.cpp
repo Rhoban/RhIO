@@ -630,14 +630,16 @@ namespace RhIO
                             cur_comp_line=completion_matches[0];
 
                             line+=cur_comp_line;
-                            if(paths_to_print.size()==1) //so it is a path
-                            {
-                                line+='/';
-                                // line+=current_path;
-                                // line+='/';
-                                //TODO lazy update path?
-                                //remind, we have to handle the root / and . and ..
-                            }
+
+
+                            // if(paths_to_print.size()==1) //so it is a path
+                            // {
+                            //     // line+='/';
+                            //     // line+=current_path;
+                            //     // line+='/';
+                            //     //TODO lazy update path?
+                            //     //remind, we have to handle the root / and . and ..
+                            // }
 
 
 
