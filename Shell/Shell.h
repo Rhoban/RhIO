@@ -36,6 +36,7 @@ namespace RhIO
             void run();
             void quit();
             void terminal_set_ioconfig();
+            void terminal_set_config();
 
             /**
              * Read the history file in HOME/.rhio_history
@@ -115,6 +116,7 @@ namespace RhIO
 
             Node *tree;
             struct termios termsave;
+            struct termios termshell;
             std::deque<std::string> shell_history;
             std::fstream history_file;
             std::string history_path;

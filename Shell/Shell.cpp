@@ -34,13 +34,19 @@ namespace RhIO
 
     void Shell::terminal_set_ioconfig() {
         struct termios custom;
-        int fd=fileno(stdin);
+        int fd = fileno(stdin);
         tcgetattr(fd, &termsave);
-        custom=termsave;
-        custom.c_lflag &= ~(ICANON|ECHO);
-        tcsetattr(fd,TCSANOW,&custom);
+        termshell = termsave;
+        termshell.c_lflag &= ~(ICANON|ECHO);
+        tcsetattr(fd, TCSANOW, &termshell);
         // fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)|O_NONBLOCK);
         fcntl(fd, F_SETFL, fcntl(fd, F_GETFL, 0)); //blocking
+    }
+
+    void Shell::terminal_set_config()
+    {
+        int fd = fileno(stdin);
+        tcsetattr(fd, TCSANOW,& termshell);
     }
 
     void Shell::readHistory()
@@ -155,6 +161,7 @@ namespace RhIO
             // std::getline(std::cin, line);
             line=getLine();
             parse(line);
+            terminal_set_config();
         }
 
         quit();
