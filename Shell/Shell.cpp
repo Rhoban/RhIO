@@ -46,7 +46,7 @@ namespace RhIO
     void Shell::terminal_set_config()
     {
         int fd = fileno(stdin);
-        tcsetattr(fd, TCSANOW,& termshell);
+        tcsetattr(fd, TCSANOW, &termshell);
     }
 
     void Shell::readHistory()
@@ -159,7 +159,7 @@ namespace RhIO
             displayPrompt();
             std::string line;
             // std::getline(std::cin, line);
-            line=getLine();
+            line = getLine();
             parse(line);
             terminal_set_config();
         }
@@ -818,7 +818,7 @@ namespace RhIO
                         Terminal::clearLine();
                         displayPrompt();
 
-                        std::cout<<line;
+                        std::cout << line << std::flush;
 
                         if(line.size()-cursorpos>0)
                             Terminal::cursorNLeft(line.size()-cursorpos);
