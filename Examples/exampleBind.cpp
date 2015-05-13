@@ -44,7 +44,13 @@ class Object
                 ->comment("description paramDouble");
 
             //Sub path also works
-            _binder.bindNew("dir/paramInt", _attrInt)
+            //Special Push/Pull policy can be specified.
+            //Default is RhIO::Bind::PushAndPull. 
+            //If RhIO::Bind::PushOnly is set, pull is disable for
+            //this variable (pull() method does not update it).
+            //If RhIO::Bind::PullOnly is set, push is disable for
+            //this variable (push() method does not publish it).
+            _binder.bindNew("dir/paramInt", _attrInt, RhIO::Bind::PushOnly)
                 ->comment("description paramInt");
 
             //A newStream() shortcut similar to
