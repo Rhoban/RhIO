@@ -600,7 +600,7 @@ namespace RhIO
                         paths=getPossibilities(cur_comp_line);
                         if(paths.size()==0)
                         {
-                                //cut at last complete '/'
+                                //cut at last complete path
                             while(current_path.size()>0 && current_path.back()!='/')
                                 current_path.pop_back();
 
@@ -634,14 +634,9 @@ namespace RhIO
 
                             // if(paths_to_print.size()==1) //so it is a path
                             // {
-                            //     // line+='/';
                             //     // line+=current_path;
                             //     // line+='/';
-                            //     //TODO lazy update path?
-                            //     //remind, we have to handle the root / and . and ..
                             // }
-
-
 
                             Terminal::clearLine();
                             displayPrompt();
@@ -656,11 +651,6 @@ namespace RhIO
                         else
                             completion_mode=true;
 
-
-                        // std::cout<<std::endl;
-                        // for(std::deque<std::string>::iterator it=completion_matches.begin(); it!=completion_matches.end();++it)
-                        //     std::cout<<*it<<'\t';
-                        // std::cout<<std::endl;
 
                         std::cout<<std::endl;
                         Terminal::setColor("green", true);
