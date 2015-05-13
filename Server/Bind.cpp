@@ -17,8 +17,9 @@ Bind::Bind(const std::string& prefixChild) :
     createPath(_prefix);
 }
         
-std::unique_ptr<ValueBuilderBool> 
-    Bind::bindNew(const std::string& name, bool& var)
+std::unique_ptr<ValueBuilderBool> Bind::bindNew(
+    const std::string& name, bool& var,
+    Policy policy)
 {
     //Create non existing hierarchy
     createPath(_prefix+name);
@@ -26,12 +27,14 @@ std::unique_ptr<ValueBuilderBool>
     _bindsBool.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
     //Create new value
     return RhIO::Root.newBool(_prefix+name);
 }
-std::unique_ptr<ValueBuilderInt> 
-    Bind::bindNew(const std::string& name, int& var)
+std::unique_ptr<ValueBuilderInt> Bind::bindNew(
+    const std::string& name, int& var,
+    Policy policy)
 {
     //Create non existing hierarchy
     createPath(_prefix+name);
@@ -39,12 +42,14 @@ std::unique_ptr<ValueBuilderInt>
     _bindsInt.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
     //Create new value
     return RhIO::Root.newInt(_prefix+name);
 }
-std::unique_ptr<ValueBuilderInt> 
-    Bind::bindNew(const std::string& name, long& var)
+std::unique_ptr<ValueBuilderInt> Bind::bindNew(
+    const std::string& name, long& var,
+    Policy policy)
 {
     //Create non existing hierarchy
     createPath(_prefix+name);
@@ -52,12 +57,14 @@ std::unique_ptr<ValueBuilderInt>
     _bindsLong.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
     //Create new value
     return RhIO::Root.newInt(_prefix+name);
 }
-std::unique_ptr<ValueBuilderFloat> 
-    Bind::bindNew(const std::string& name, float& var)
+std::unique_ptr<ValueBuilderFloat> Bind::bindNew(
+    const std::string& name, float& var,
+    Policy policy)
 {
     //Create non existing hierarchy
     createPath(_prefix+name);
@@ -65,12 +72,14 @@ std::unique_ptr<ValueBuilderFloat>
     _bindsFloat.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
     //Create new value
     return RhIO::Root.newFloat(_prefix+name);
 }
-std::unique_ptr<ValueBuilderFloat> 
-    Bind::bindNew(const std::string& name, double& var)
+std::unique_ptr<ValueBuilderFloat> Bind::bindNew(
+    const std::string& name, double& var,
+    Policy policy)
 {
     //Create non existing hierarchy
     createPath(_prefix+name);
@@ -78,12 +87,14 @@ std::unique_ptr<ValueBuilderFloat>
     _bindsDouble.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
     //Create new value
     return RhIO::Root.newFloat(_prefix+name);
 }
-std::unique_ptr<ValueBuilderStr> 
-    Bind::bindNew(const std::string& name, std::string& var)
+std::unique_ptr<ValueBuilderStr> Bind::bindNew(
+    const std::string& name, std::string& var,
+    Policy policy)
 {
     //Create non existing hierarchy
     createPath(_prefix+name);
@@ -91,12 +102,14 @@ std::unique_ptr<ValueBuilderStr>
     _bindsStr.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
     //Create new value
     return RhIO::Root.newStr(_prefix+name);
 }
 
-void Bind::bind(const std::string& name, bool& var)
+void Bind::bind(const std::string& name, bool& var,
+    Policy policy)
 {
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeBool) {
@@ -107,9 +120,11 @@ void Bind::bind(const std::string& name, bool& var)
     _bindsBool.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
 }
-void Bind::bind(const std::string& name, int& var)
+void Bind::bind(const std::string& name, int& var,
+    Policy policy)
 {
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeInt) {
@@ -120,9 +135,11 @@ void Bind::bind(const std::string& name, int& var)
     _bindsInt.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
 }
-void Bind::bind(const std::string& name, long& var)
+void Bind::bind(const std::string& name, long& var,
+    Policy policy)
 {
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeInt) {
@@ -133,9 +150,11 @@ void Bind::bind(const std::string& name, long& var)
     _bindsLong.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
 }
-void Bind::bind(const std::string& name, float& var)
+void Bind::bind(const std::string& name, float& var,
+    Policy policy)
 {
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeFloat) {
@@ -146,9 +165,11 @@ void Bind::bind(const std::string& name, float& var)
     _bindsFloat.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
 }
-void Bind::bind(const std::string& name, double& var)
+void Bind::bind(const std::string& name, double& var,
+    Policy policy)
 {
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeFloat) {
@@ -159,9 +180,11 @@ void Bind::bind(const std::string& name, double& var)
     _bindsDouble.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
 }
-void Bind::bind(const std::string& name, std::string& var)
+void Bind::bind(const std::string& name, std::string& var,
+    Policy policy)
 {
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeStr) {
@@ -172,7 +195,8 @@ void Bind::bind(const std::string& name, std::string& var)
     _bindsStr.push_back({
         relativeName(_prefix+name), 
         getChildPtr(_prefix+name), 
-        &var});
+        &var,
+        policy});
 }
 
 const IONode& Bind::node() const
@@ -208,44 +232,68 @@ std::ostream& Bind::out(const std::string& name)
 void Bind::pull()
 {
     for (auto& b : _bindsBool) {
-        *(b.ptr) = b.node->getBool(b.name);
+        if (b.policy == PushAndPull || b.policy == PullOnly) {
+            *(b.ptr) = b.node->getBool(b.name);
+        }
     }
     for (auto& b : _bindsInt) {
-        *(b.ptr) = b.node->getInt(b.name);
+        if (b.policy == PushAndPull || b.policy == PullOnly) {
+            *(b.ptr) = b.node->getInt(b.name);
+        }
     }
     for (auto& b : _bindsLong) {
-        *(b.ptr) = b.node->getInt(b.name);
+        if (b.policy == PushAndPull || b.policy == PullOnly) {
+            *(b.ptr) = b.node->getInt(b.name);
+        }
     }
     for (auto& b : _bindsFloat) {
-        *(b.ptr) = b.node->getFloat(b.name);
+        if (b.policy == PushAndPull || b.policy == PullOnly) {
+            *(b.ptr) = b.node->getFloat(b.name);
+        }
     }
     for (auto& b : _bindsDouble) {
-        *(b.ptr) = b.node->getFloat(b.name);
+        if (b.policy == PushAndPull || b.policy == PullOnly) {
+            *(b.ptr) = b.node->getFloat(b.name);
+        }
     }
     for (auto& b : _bindsStr) {
-        *(b.ptr) = b.node->getStr(b.name);
+        if (b.policy == PushAndPull || b.policy == PullOnly) {
+            *(b.ptr) = b.node->getStr(b.name);
+        }
     }
 }
 
 void Bind::push()
 {
     for (auto& b : _bindsBool) {
-        b.node->setBool(b.name, *(b.ptr));
+        if (b.policy == PushAndPull || b.policy == PushOnly) {
+            b.node->setBool(b.name, *(b.ptr));
+        }
     }
     for (auto& b : _bindsInt) {
-        b.node->setInt(b.name, *(b.ptr));
+        if (b.policy == PushAndPull || b.policy == PushOnly) {
+            b.node->setInt(b.name, *(b.ptr));
+        }
     }
     for (auto& b : _bindsLong) {
-        b.node->setInt(b.name, *(b.ptr));
+        if (b.policy == PushAndPull || b.policy == PushOnly) {
+            b.node->setInt(b.name, *(b.ptr));
+        }
     }
     for (auto& b : _bindsFloat) {
-        b.node->setFloat(b.name, *(b.ptr));
+        if (b.policy == PushAndPull || b.policy == PushOnly) {
+            b.node->setFloat(b.name, *(b.ptr));
+        }
     }
     for (auto& b : _bindsDouble) {
-        b.node->setFloat(b.name, *(b.ptr));
+        if (b.policy == PushAndPull || b.policy == PushOnly) {
+            b.node->setFloat(b.name, *(b.ptr));
+        }
     }
     for (auto& b : _bindsStr) {
-        b.node->setStr(b.name, *(b.ptr));
+        if (b.policy == PushAndPull || b.policy == PushOnly) {
+            b.node->setStr(b.name, *(b.ptr));
+        }
     }
 }
         

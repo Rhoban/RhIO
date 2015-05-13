@@ -20,6 +20,15 @@ class Bind
     public:
 
         /**
+         * Enum for Push/Pull policy
+         */
+        enum Policy {
+            PushAndPull,
+            PushOnly,
+            PullOnly,
+        };
+
+        /**
          * Initialization with child
          * node absolute path to prefix on each call
          * of bind and bindNew
@@ -35,18 +44,24 @@ class Bind
          * Return ValueBuilder for setting values meta
          * information on creation
          */
-        std::unique_ptr<ValueBuilderBool> 
-            bindNew(const std::string& name, bool& var);
-        std::unique_ptr<ValueBuilderInt> 
-            bindNew(const std::string& name, int& var);
-        std::unique_ptr<ValueBuilderInt> 
-            bindNew(const std::string& name, long& var);
-        std::unique_ptr<ValueBuilderFloat> 
-            bindNew(const std::string& name, float& var);
-        std::unique_ptr<ValueBuilderFloat> 
-            bindNew(const std::string& name, double& var);
-        std::unique_ptr<ValueBuilderStr> 
-            bindNew(const std::string& name, std::string& var);
+        std::unique_ptr<ValueBuilderBool> bindNew(
+            const std::string& name, bool& var,
+            Policy policy = PushAndPull);
+        std::unique_ptr<ValueBuilderInt> bindNew(
+            const std::string& name, int& var,
+            Policy policy = PushAndPull);
+        std::unique_ptr<ValueBuilderInt> bindNew(
+            const std::string& name, long& var,
+            Policy PushAndPull = PushAndPull);
+        std::unique_ptr<ValueBuilderFloat> bindNew(
+            const std::string& name, float& var,
+            Policy policy = PushAndPull);
+        std::unique_ptr<ValueBuilderFloat> bindNew(
+            const std::string& name, double& var,
+            Policy policy = PushAndPull);
+        std::unique_ptr<ValueBuilderStr> bindNew(
+            const std::string& name, std::string& var,
+            Policy policy = PushAndPull);
 
         /**
          * Register a variable binding
@@ -57,12 +72,18 @@ class Bind
          * if value name does not exist, throw
          * std::logic_error
          */
-        void bind(const std::string& name, bool& var);
-        void bind(const std::string& name, int& var);
-        void bind(const std::string& name, long& var);
-        void bind(const std::string& name, float& var);
-        void bind(const std::string& name, double& var);
-        void bind(const std::string& name, std::string& var);
+        void bind(const std::string& name, bool& var,
+            Policy policy = PushAndPull);
+        void bind(const std::string& name, int& var,
+            Policy policy = PushAndPull);
+        void bind(const std::string& name, long& var,
+            Policy policy = PushAndPull);
+        void bind(const std::string& name, float& var,
+            Policy policy = PushAndPull);
+        void bind(const std::string& name, double& var,
+            Policy policy = PushAndPull);
+        void bind(const std::string& name, std::string& var,
+            Policy policy = PushAndPull);
 
         /**
          * Register given member method and create a new
@@ -124,6 +145,7 @@ class Bind
             std::string name;
             IONode* node;
             T* ptr;
+            Policy policy;
         };
 
         /**
