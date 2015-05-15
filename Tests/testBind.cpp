@@ -15,9 +15,10 @@ class Test
                 ->persisted(true);
             _bind.bind("valueInt1", _valueInt);
             _bind.bind("test2/valueFloat1", _valueFloat);
-            _bind.bind("valueInt2", _valueInt2);
-            _bind.bindNew("test2/test4/valueFloat2", _valueFloat2)
+            _bind.bind("valueInt2", _valueInt2, RhIO::Bind::PullOnly);
+            _bind.bindNew("test2/test4/valueFloat2", _valueFloat2, RhIO::Bind::PushOnly)
                 ->minimum(-100.0);
+            _valueFloat2 = -2.0;
             _bind.bind("test2/test3/valueStr", _valueStr);
             assert(RhIO::Root.getValueType("test/valueBool") == RhIO::TypeBool);
             assert(RhIO::Root.getValueBool("test/valueBool").comment == "bool value");
@@ -27,7 +28,7 @@ class Test
             assert(RhIO::Root.call("test5/command1", {"2", "3"}) == "5");
             assert(RhIO::Root.call("test5/command1", {"2"}) == "44");
             assert(RhIO::Root.call("test5/command1", {})
-                .find("USAGE: command1 <int> <int|42> --> <int>") != std::string::npos);
+                .find("USAGE: command1 <int> <unsigned int|42> --> <int>") != std::string::npos);
             _bind.bindFunc("command2", "test command2", &Test::command2, *this);
             assert(RhIO::Root.call("test/command2", {}) == "1");
             _bind.bindFunc("command3", "test command3", &Test::command3, *this);
@@ -49,9 +50,13 @@ class Test
             _bind.pull();
             assert(_valueBool == true);
             assert(_valueInt == 2);
+            assert(_valueInt2 == 50);
             assert(_valueFloat == 42.0);
+            assert(_valueFloat2 == -2.0);
             assert(_valueStr == "str1");
             _valueInt = 3;
+            _valueInt2 = 60;
+            _valueFloat2 = -3.0;
             _bind.push();
             _valueFloat = 1.0;
             _bind.out("output") << "test" << std::endl;
@@ -108,13 +113,16 @@ int main()
     RhIO::Root.newStr("test/test2/test3/valueStr");
 
     RhIO::Root.setInt("test/valueInt1", 2);
+    RhIO::Root.setInt("test/valueInt2", 50);
     RhIO::Root.setFloat("test/test2/valueFloat1", 42.0);
     RhIO::Root.setStr("test/test2/test3/valueStr", "str1");
 
     Test test;
     test.tick1();
     assert(RhIO::Root.getInt("test/valueInt1") == 3);
+    assert(RhIO::Root.getInt("test/valueInt2") == 50);
     assert(RhIO::Root.getFloat("test/test2/valueFloat1") == 42.0);
+    assert(RhIO::Root.getFloat("test/test2/test4/valueFloat2") == -3.0);
     RhIO::Root.setStr("test/test2/test3/valueStr", "str2");
     test.tick2();
 
