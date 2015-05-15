@@ -40,6 +40,8 @@ set (SOURCES
     commands/CatCommand.cpp
     commands/RepeatCommand.cpp
     commands/DelayCommand.cpp
+    commands/PadCommand.cpp
+    joystick/Joystick.cpp
     GnuPlot.cpp
     Shell.cpp
     CSV.cpp
