@@ -17,7 +17,7 @@ namespace RhIO
     {
         NodeValue node;
         std::string param;
-        int number;
+        int id;
         int state;
         int type;
         int value;

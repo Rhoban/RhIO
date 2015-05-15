@@ -54,8 +54,12 @@ namespace RhIO
                 while (!shell->hasInput()) {
                     Joystick::JoystickEvent evt;
                     if (js.getEvent(&evt)) {
-                        if (pads.count(evt.number)) {
-                            auto &pad = pads[evt.number];
+                        int id = evt.number;
+                        if (evt.type == JS_EVENT_AXIS) {
+                            id += 100;
+                        }
+                        if (pads.count(id)) {
+                            auto &pad = pads[id];
                             if (pad.type == PAD_AXIS || pad.type == PAD_BUTTON) {
                                 pad.value = evt.value;
                                 if (pad.type == PAD_AXIS) {
@@ -64,6 +68,7 @@ namespace RhIO
                                     pad.fvalue *= delta;
                                     pad.fvalue += (pad.min+pad.max)/2.0;
                                 }
+                                update(pad);
                             } else if (evt.value == 1) {
                                 if (pad.type == PAD_TOGGLE) {
                                     pad.value = !pad.value;
@@ -76,8 +81,8 @@ namespace RhIO
                                 if (pad.type == PAD_DECREMENT) {
                                     pad.fvalue -= pad.step;
                                 }
+                                update(pad);
                             }
-                            update(pad);
                         }
                     }
                 }
@@ -124,7 +129,7 @@ namespace RhIO
                             pad.value = 0;
                             pad.fvalue = 0;
                             pad.step = 1;
-                            pad.number = entry["number"].asInt();
+                            pad.id = entry["number"].asInt();
                             pad.param = entry["param"].asString();
                             pad.node = shell->getNodeValue(pad.param);
                             if (pad.node.value == NULL) {
@@ -135,6 +140,7 @@ namespace RhIO
                             std::string type = entry["type"].asString();
                             if (type == "axis") {
                                 pad.type = PAD_AXIS;
+                                pad.id += 100;
                             } else if (type == "toggle") {
                                 pad.type = PAD_TOGGLE;
                             } else if (type == "increment") {
@@ -152,7 +158,7 @@ namespace RhIO
                             if (entry.isMember("step") && entry["step"].isNumeric()) {
                                 pad.step = entry["step"].asFloat();
                             }
-                            pads[pad.number] = pad;
+                            pads[pad.id] = pad;
                         }
                     }
                 }
