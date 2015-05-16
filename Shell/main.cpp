@@ -66,5 +66,14 @@ int main(int argc, char *argv[])
 
     shell->addAlias("ll", "ls");
 
-    shell->run();
+    if (argc > 2) {
+        std::string args = "";
+        for (int k=2; k<argc; k++) {
+            args += argv[k];
+            args += " ";
+        }
+        shell->run(args);
+    } else {
+        shell->run();
+    }
 }

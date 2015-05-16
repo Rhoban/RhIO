@@ -131,7 +131,7 @@ namespace RhIO
         }
     }
 
-    void Shell::run()
+    void Shell::run(std::string cmd)
     {
 
         const char *homedir;
@@ -157,13 +157,23 @@ namespace RhIO
         sync();
 
         // Reading lines from stdin
-        while (!terminate ) {
-            displayPrompt();
+        while (!terminate) {
             std::string line;
             // std::getline(std::cin, line);
-            line = getLine();
+
+            if (cmd == "") {
+                displayPrompt();
+                line = getLine();
+            } else {
+                Terminal::setColor("white", true);
+                std::cout << "Executing: " << cmd << std::endl;
+                line = cmd;
+            }
             parse(line);
             terminal_set_config();
+            if (cmd != "") {
+                terminate = true;
+            }
         }
 
         quit();
