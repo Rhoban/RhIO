@@ -1,0 +1,51 @@
+#
+bin
+build
+buildscons
+dist
+env.bat
+libs
+resources
+scons-LICENSE
+scons-README
+scons-local-0.96.92
+scons-local-1.2.0
+scons-time.py
+scons.py
+sconsign.py
+todo
+
+# doc/
+doc/jsoncpp-doxygen-warning.log
+doc/doxyfile
+
+# makefiles/vs71/
+makefiles/vs71/jsoncpp.ncb
+makefiles/vs71/jsoncpp.suo
+
+# scons-tools/
+scons-tools/*.pyc
+
+# src/jsontestrunner/
+src/jsontestrunner/VTune
+
+# src/lib_json/
+src/lib_json/VTune
+
+# test/
+test/*.actual
+test/*.actual-rewrite
+test/*.process-output
+test/*.rewrite
+test/*.pyc
+
+# test/data/
+test/data/*.actual
+test/data/*.actual-rewrite
+test/data/*.process-output
+test/data/*.rewrite
+
+# test/jsonchecker/
+test/jsonchecker/*.actual
+test/jsonchecker/*.actual-rewrite
+test/jsonchecker/*.rewrite

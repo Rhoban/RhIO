@@ -52,7 +52,7 @@ class Bind
             Policy policy = PushAndPull);
         std::unique_ptr<ValueBuilderInt> bindNew(
             const std::string& name, long& var,
-            Policy PushAndPull = PushAndPull);
+            Policy policy = PushAndPull);
         std::unique_ptr<ValueBuilderFloat> bindNew(
             const std::string& name, float& var,
             Policy policy = PushAndPull);

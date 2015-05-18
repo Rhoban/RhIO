@@ -14,6 +14,7 @@
 #include "commands/CatCommand.h"
 #include "commands/RepeatCommand.h"
 #include "commands/DelayCommand.h"
+#include "commands/PadCommand.h"
 #ifdef HAS_CURSES
 #include "commands/TuneCommand.h"
 #endif
@@ -58,11 +59,21 @@ int main(int argc, char *argv[])
     shell->registerCommand(new CatCommand);
     shell->registerCommand(new RepeatCommand);
     shell->registerCommand(new DelayCommand);
+    shell->registerCommand(new PadCommand);
 #ifdef HAS_CURSES
     shell->registerCommand(new TuneCommand);
 #endif
 
     shell->addAlias("ll", "ls");
 
-    shell->run();
+    if (argc > 2) {
+        std::string args = "";
+        for (int k=2; k<argc; k++) {
+            args += argv[k];
+            args += " ";
+        }
+        shell->run(args);
+    } else {
+        shell->run();
+    }
 }

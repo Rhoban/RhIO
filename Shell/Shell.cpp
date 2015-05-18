@@ -1,3 +1,5 @@
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdexcept>
 #include <stdio.h>
 #include <ctype.h>
@@ -129,7 +131,7 @@ namespace RhIO
         }
     }
 
-    void Shell::run()
+    void Shell::run(std::string cmd)
     {
 
         const char *homedir;
@@ -155,13 +157,23 @@ namespace RhIO
         sync();
 
         // Reading lines from stdin
-        while (!terminate ) {
-            displayPrompt();
+        while (!terminate) {
             std::string line;
             // std::getline(std::cin, line);
-            line = getLine();
+
+            if (cmd == "") {
+                displayPrompt();
+                line = getLine();
+            } else {
+                Terminal::setColor("white", true);
+                std::cout << "Executing: " << cmd << std::endl;
+                line = cmd;
+            }
             parse(line);
             terminal_set_config();
+            if (cmd != "") {
+                terminate = true;
+            }
         }
 
         quit();
@@ -379,7 +391,7 @@ namespace RhIO
 
 
                         history_mode=true;
-                            //End history mode
+                        //End history mode
                         cmd_to_print.clear();
                         completion_matches.clear();
                         cur_comp_line=line;
@@ -388,7 +400,7 @@ namespace RhIO
                         {
                             if((*hist_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
                             {
-                                    //bof
+                                //bof
 
                                 //     //check if it is a cmd
                                 // for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
@@ -399,13 +411,13 @@ namespace RhIO
                                 //         cmd_to_print.push_back(*hist_it);
                                 //     }
                                 // }
-                                    ////
+                                ////
                                 completion_matches.push_back(*hist_it);
                                 cmd_to_print.push_back(*hist_it);
                             }
                         }
 
-                            //filter out duplicates
+                        //filter out duplicates
                         unique_vect(completion_matches);
                         unique_vect(cmd_to_print); //will be used for the history_mode
 
@@ -442,7 +454,7 @@ namespace RhIO
                         Terminal::clear();
                         std::cout<<std::endl;
 
-                            //longest common substring (there is almost 2 elements)
+                        //longest common substring (there is almost 2 elements)
                         cur_comp_line=Completion::getSubstring(completion_matches);
 
 
@@ -457,10 +469,10 @@ namespace RhIO
                         break;
 
                     case 0x09: //TAB completion
-                            //completion_mode
-                            //completion_select
+                        //completion_mode
+                        //completion_select
 
-                            //TODO cleanup, it becomes quite messy....
+                        //TODO cleanup, it becomes quite messy....
                         history_mode=false;
                         // completion_mode=false; //desactivate that stuff
 
@@ -471,7 +483,7 @@ namespace RhIO
                             int i=0;
                             std::cout<<std::endl;
                             Terminal::setColor("green", true);
-                                // Terminal::setBColor("green", true);
+                            // Terminal::setBColor("green", true);
                             for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
                             {
                                 print_len+=(*it).size();
@@ -526,7 +538,7 @@ namespace RhIO
                             break;
                         }
 
-                            //Else, normal completion, first tab
+                        //Else, normal completion, first tab
 
 
                         completion_matches.clear();
@@ -541,8 +553,8 @@ namespace RhIO
                         lineback=line;
                         cmd_list="";
                         current_path="";
-                            //look at the line and split all the commands separated by a space
-                            //work on the last one
+                        //look at the line and split all the commands separated by a space
+                        //work on the last one
 
                         if(line.size()>0)
                         {
@@ -583,9 +595,9 @@ namespace RhIO
 
                         }
 
-                            // simple completion on commands
+                        // simple completion on commands
 
-                            // look for matching on commands
+                        // look for matching on commands
                         for(std::map<std::string, Command*>::iterator cmd_it=commands.begin(); cmd_it!=commands.end();++cmd_it)
                         {
                             if(cmd_it->first.compare(0,cur_comp_line.size(),cur_comp_line)==0)
@@ -600,14 +612,16 @@ namespace RhIO
                         // if(cur_comp_line.back()=='/')
                         //     cur_comp_line.pop_back();
 
-                            //also look for path
+                        //also look for path
                         current_path=cur_comp_line;
 
                         // paths=getPossibilities();
                         paths=getPossibilities(cur_comp_line);
                         if(paths.size()==0)
                         {
-                                //cut at last complete path
+
+                            //cut at last complete '/'
+
                             while(current_path.size()>0 && current_path.back()!='/')
                                 current_path.pop_back();
 
@@ -618,7 +632,7 @@ namespace RhIO
                         {
                             if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
                             {
-                                    //only keep the current hierarchy level (cut at the next '/')
+                                //only keep the current hierarchy level (cut at the next '/')
                                 // if((*p_it).find("/",cur_comp_line.size())==std::string::npos)// || cur_comp_line.size()==0 || cur_comp_line.back()=='/')
                                 {
                                     completion_matches.push_back(*p_it);
@@ -627,7 +641,7 @@ namespace RhIO
                             }
                         }
 
-                            //filter out the duplicate
+                        //filter out the duplicate
                         unique_vect(paths_to_print);
 
                         if(completion_matches.size()==1) //one solution, we are done
@@ -684,7 +698,7 @@ namespace RhIO
                         Terminal::clear();
                         std::cout<<std::endl;
 
-                            //longest common substring (there is almost 2 elements)
+                        //longest common substring (there is almost 2 elements)
                         cur_comp_line=Completion::getSubstring(completion_matches);
 
 
@@ -700,7 +714,7 @@ namespace RhIO
                         break;
 
 
-                            // if not esc_mode -> fall to default
+                        // if not esc_mode -> fall to default
                     case 0x41: //up
                         completion_mode=false;
                         history_mode=false;
@@ -1259,5 +1273,38 @@ namespace RhIO
         }
 
         setToServer(nodeValue);
+    }
+
+    void Shell::setFromNumber(NodeValue nodeValue, float number)
+    {
+        auto name = nodeValue.getName();
+        auto value = nodeValue.value;
+
+        if (auto val = Node::asBool(value)) {
+            val->value = (fabs(number)>0.01);
+        } else if (auto val = Node::asInt(value)) {
+            val->value = (int)number;
+        } else if (auto val = Node::asFloat(value)) {
+            val->value = number;
+        } else if (auto val = Node::asString(value)) {
+            std::stringstream ss;
+            ss << number;
+            val->value = ss.str();
+        }
+
+        setToServer(nodeValue);
+    }
+
+    bool Shell::hasInput()
+    {
+      struct timeval tv;
+      fd_set fds;
+      tv.tv_sec = 0;
+      tv.tv_usec = 0;
+      FD_ZERO(&fds);
+      FD_SET(STDIN_FILENO, &fds);
+      select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+
+      return (FD_ISSET(0, &fds));
     }
 }

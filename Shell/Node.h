@@ -15,6 +15,7 @@ namespace RhIO
     class NodeValue
     {
         public:
+            NodeValue();
             NodeValue(Node *node_, ValueBase *value_);
 
             /**

@@ -20,6 +20,11 @@ namespace RhIO
         return path + name;
     }
 
+    NodeValue::NodeValue()
+        : value(NULL), node(NULL)
+    {
+    }
+
     NodeValue::NodeValue(Node *node_, ValueBase *value_)
         : value(value_), node(node_)
     {

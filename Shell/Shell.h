@@ -33,7 +33,7 @@ namespace RhIO
             /**
              * Runs the interactive shell, will get lines from stdin
              */
-            void run();
+            void run(std::string cmd="");
             void quit();
             void terminal_set_ioconfig();
             void terminal_set_config();
@@ -133,6 +133,9 @@ namespace RhIO
             void getFromServer(NodeValue value);
             void setToServer(NodeValue value);
             void setFromString(NodeValue value, std::string str);
+            void setFromNumber(NodeValue value, float number);
+
+            bool hasInput();
 
         protected:
             std::map<std::string, std::string> aliases;
