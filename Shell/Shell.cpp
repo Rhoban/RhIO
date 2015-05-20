@@ -90,9 +90,11 @@ namespace RhIO
         std::cout << "# " << std::flush;
     }
 
-    void Shell::sync()
+    void Shell::sync(bool display)
     {
-        std::cout << "Synchronizing..." << std::endl;
+        if (display) {
+            std::cout << "Synchronizing..." << std::endl;
+        }
 
         // Downloading tree
         if (tree != NULL) {
@@ -133,7 +135,7 @@ namespace RhIO
 
     void Shell::run(std::string cmd)
     {
-
+        bool oneShot = (cmd != "");
         const char *homedir;
         if ((homedir = getenv("HOME")) != NULL)
         {
@@ -149,29 +151,28 @@ namespace RhIO
         std::string reqServer = "tcp://"+server+":"+ServerRepPort;
         std::string subServer = "tcp://"+server+":"+ServerPubPort;
         terminate = false;
-        std::cout << "RhIO, connecting to " << server << std::endl;
+        if (!oneShot) {
+            std::cout << "RhIO, connecting to " << server << std::endl;
+        }
         client = new ClientReq(reqServer);
         clientSub = new ClientSub(subServer);
         stream = new StreamManager(this);
 
-        sync();
+        sync(!oneShot);
 
         // Reading lines from stdin
         while (!terminate) {
             std::string line;
-            // std::getline(std::cin, line);
 
-            if (cmd == "") {
+            if (!oneShot) {
                 displayPrompt();
                 line = getLine();
             } else {
-                Terminal::setColor("white", true);
-                std::cout << "Executing: " << cmd << std::endl;
                 line = cmd;
             }
             parse(line);
             terminal_set_config();
-            if (cmd != "") {
+            if (oneShot) {
                 terminate = true;
             }
         }
@@ -187,7 +188,6 @@ namespace RhIO
 
     std::string Shell::getLine()
     {
-
         char c;
 
         std::string line("");
