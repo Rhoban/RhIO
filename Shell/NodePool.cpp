@@ -37,19 +37,19 @@ namespace RhIO
             }
             std::cout << " ";
 
-            Terminal::setColor("grey", false);
+            Terminal::setColor("magenta", false);
             std::cout << std::setw(7) << Node::getType(val);
             Terminal::clear();
 
             std::cout << std::setw(9) << Node::toString(val);
 
             std::cout << " ";
-            Terminal::setColor("grey", false);
+            Terminal::setColor("magenta", false);
             std::cout << std::setw(25) << val->comment;
             Terminal::clear();
 
             if (val->persisted) {
-                Terminal::setColor("grey", false);
+                Terminal::setColor("magenta", false);
                 std::cout << " persisted: ";
                 Terminal::clear();
                 std::cout << Node::persistedToString(val);
