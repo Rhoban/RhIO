@@ -28,7 +28,7 @@ namespace RhIO
 
     bool Joystick::open()
     {
-        char *pad = getenv("JOYSTICk");
+        char *pad = getenv("JOYSTICK");
         if (pad == NULL) {
             pad = JOYSTICK_DEVNAME;
         }
