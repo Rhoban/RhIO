@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
             args += " ";
         }
         shell->run(args);
-    } else {
+    } else {
         shell->run();
     }
 }
