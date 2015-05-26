@@ -28,19 +28,22 @@ namespace RhIO
 
     bool Joystick::open()
     {
-        char *pad = getenv("JOYSTICK");
-        if (pad == NULL) {
+        std::string pad = getenv("JOYSTICK");
+        if (pad == "") {
             pad = JOYSTICK_DEVNAME;
         }
-        fd = ::open(pad, O_RDONLY | O_NONBLOCK); /* read write for force feedback? */
+        fd = ::open(pad.c_str(), O_RDONLY | O_NONBLOCK); /* read write for force feedback? */
 
         return fd > 0;
     }
 
     bool Joystick::getEvent(JoystickEvent *evt)
     {
-        usleep(10000);
         int bytes = read(fd, evt, sizeof(evt));
+
+        if (bytes <= 0) {
+            usleep(10000);
+        }
 
         return (bytes == sizeof(*evt));
     }
