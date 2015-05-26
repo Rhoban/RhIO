@@ -39,6 +39,7 @@ namespace RhIO
 
     bool Joystick::getEvent(JoystickEvent *evt)
     {
+        usleep(10000);
         int bytes = read(fd, evt, sizeof(evt));
 
         return (bytes == sizeof(*evt));
