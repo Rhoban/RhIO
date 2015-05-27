@@ -27,7 +27,7 @@ namespace RhIO
             /**
              * Updates the local node tree
              */
-            void sync();
+            void sync(bool display=true);
             void updateCommands();
 
             /**

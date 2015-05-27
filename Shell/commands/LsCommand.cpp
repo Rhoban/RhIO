@@ -37,7 +37,7 @@ namespace RhIO
             printf("%-23s", command.c_str());
         
             if (auto shellCommand = shell->getCommand(command)) {
-                Terminal::setColor("grey", false);
+                Terminal::setColor("blue", false);
                 std::cout << "desc: ";
                 Terminal::clear();
                 std::cout << shellCommand->getDesc();
@@ -54,7 +54,7 @@ namespace RhIO
             std::cout << std::setw(21) << stream.name;
        
             if (stream.desc != "") {
-                Terminal::setColor("grey", false);
+                Terminal::setColor("magenta", false);
                 std::cout << stream.desc;
                 Terminal::clear();
             }

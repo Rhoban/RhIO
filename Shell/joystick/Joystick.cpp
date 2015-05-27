@@ -1,3 +1,4 @@
+#include <string>
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -27,7 +28,11 @@ namespace RhIO
 
     bool Joystick::open()
     {
-        fd = ::open(JOYSTICK_DEVNAME, O_RDONLY | O_NONBLOCK); /* read write for force feedback? */
+        std::string pad = getenv("JOYSTICK");
+        if (pad == "") {
+            pad = JOYSTICK_DEVNAME;
+        }
+        fd = ::open(pad.c_str(), O_RDONLY | O_NONBLOCK); /* read write for force feedback? */
 
         return fd > 0;
     }
@@ -35,6 +40,10 @@ namespace RhIO
     bool Joystick::getEvent(JoystickEvent *evt)
     {
         int bytes = read(fd, evt, sizeof(evt));
+
+        if (bytes <= 0) {
+            usleep(10000);
+        }
 
         return (bytes == sizeof(*evt));
     }
