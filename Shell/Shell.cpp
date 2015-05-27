@@ -608,15 +608,12 @@ namespace RhIO
                         }
 
 
-                        //     //just remove the last '/'
-                        // if(cur_comp_line.back()=='/')
-                        //     cur_comp_line.pop_back();
-
                         //also look for path
                         current_path=cur_comp_line;
 
-                        // paths=getPossibilities();
-                        paths=getPossibilities(cur_comp_line);
+                            //add a '/' if needed
+                        paths=getPossibilities( (cur_comp_line.back()=='/')?cur_comp_line:cur_comp_line+'/');
+
                         if(paths.size()==0)
                         {
 
@@ -628,8 +625,11 @@ namespace RhIO
                             paths=getPossibilities(current_path);
                         }
 
+
+
                         for(std::vector<std::string>::iterator p_it=paths.begin(); p_it!=paths.end();++p_it)
                         {
+
                             if((*p_it).compare(0,cur_comp_line.size(),cur_comp_line)==0)
                             {
                                 //only keep the current hierarchy level (cut at the next '/')
@@ -637,12 +637,14 @@ namespace RhIO
                                 {
                                     completion_matches.push_back(*p_it);
                                     paths_to_print.push_back(*p_it);
+
                                 }
                             }
                         }
 
                         //filter out the duplicate
                         unique_vect(paths_to_print);
+
 
                         if(completion_matches.size()==1) //one solution, we are done
                         {
@@ -656,7 +658,7 @@ namespace RhIO
                             // if(paths_to_print.size()==1) //so it is a path
                             // {
                             //     // line+=current_path;
-                            //     // line+='/';
+                            //     line+='/';
                             // }
 
                             Terminal::clearLine();
@@ -1196,6 +1198,7 @@ namespace RhIO
     std::vector<std::string> Shell::getPossibilities(std::string prefix)
     {
         std::vector<std::string> possibilities;
+
 
         if (auto node = getNode(prefix)) {
             // Adding children
