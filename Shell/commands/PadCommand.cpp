@@ -55,6 +55,9 @@ namespace RhIO
                     Joystick::JoystickEvent evt;
                     if (js.getEvent(&evt)) {
                         int id = evt.number;
+                        if (evt.type != JS_EVENT_AXIS && evt.type != JS_EVENT_BUTTON) {
+                            continue;
+                        }
                         if (evt.type == JS_EVENT_AXIS) {
                             id += 100;
                         }
