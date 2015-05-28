@@ -65,6 +65,8 @@ int main(int argc, char *argv[])
 #endif
 
     shell->addAlias("ll", "ls");
+    shell->addAlias("rep", "repeat");
+    shell->addAlias("del", "delay");
 
     if (argc > 2) {
         std::string args = "";
