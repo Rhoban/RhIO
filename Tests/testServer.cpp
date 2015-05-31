@@ -29,9 +29,11 @@ int main()
         ->persisted(true)
         ;
 
-    RhIO::Root.newChild("sensors");
-    RhIO::Root.newChild("sensors/GyroY");
-    RhIO::Root.newFloat("sensors/GyroYaw");
+    RhIO::Root.newChild("foo");
+    RhIO::Root.newChild("foo/bar");
+    RhIO::Root.newFloat("foo/bar/x");
+    RhIO::Root.newChild("foo/barz");
+    RhIO::Root.newFloat("foo/barz/x");
 
     RhIO::Root.newStream("test/stream1", "Some stream");
 
