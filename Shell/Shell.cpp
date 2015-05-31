@@ -164,7 +164,7 @@ namespace RhIO
             Terminal::clear();
             return;
         }
-        
+
         terminal_set_ioconfig();
 
         // Reading lines from stdin
@@ -619,9 +619,10 @@ namespace RhIO
                         current_path=cur_comp_line;
 
                             //add a '/' if needed
-                        paths=getPossibilities( (cur_comp_line.back()=='/')?cur_comp_line:cur_comp_line+'/');
+                        // paths=getPossibilities( (cur_comp_line.back()=='/')?cur_comp_line:cur_comp_line+'/');
 
-                        if(paths.size()==0)
+                            //look at the previous level
+                        // if(paths.size()==0)
                         {
 
                             //cut at last complete '/'
