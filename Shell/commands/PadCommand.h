@@ -10,6 +10,7 @@
 #define PAD_TOGGLE      3
 #define PAD_INCREMENT   4
 #define PAD_DECREMENT   5
+#define PAD_COMMAND     6
 
 namespace RhIO
 {
@@ -17,6 +18,7 @@ namespace RhIO
     {
         NodeValue node;
         std::string param;
+        std::string command;
         int id;
         int state;
         int type;

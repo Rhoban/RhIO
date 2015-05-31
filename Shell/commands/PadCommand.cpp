@@ -73,18 +73,22 @@ namespace RhIO
                                 }
                                 update(pad);
                             } else if (evt.value == 1) {
-                                if (pad.type == PAD_TOGGLE) {
-                                    pad.value = !pad.value;
+                                if (pad.type == PAD_COMMAND) {
+                                    shell->parse(pad.command);
+                                } else {
+                                    if (pad.type == PAD_TOGGLE) {
+                                        pad.value = !pad.value;
+                                    }
+                                    shell->getFromServer(pad.node);
+                                    pad.fvalue = Node::toNumber(pad.node.value);
+                                    if (pad.type == PAD_INCREMENT) {
+                                        pad.fvalue += pad.step;
+                                    }
+                                    if (pad.type == PAD_DECREMENT) {
+                                        pad.fvalue -= pad.step;
+                                    }
+                                    update(pad);
                                 }
-                                shell->getFromServer(pad.node);
-                                pad.fvalue = Node::toNumber(pad.node.value);
-                                if (pad.type == PAD_INCREMENT) {
-                                    pad.fvalue += pad.step;
-                                }
-                                if (pad.type == PAD_DECREMENT) {
-                                    pad.fvalue -= pad.step;
-                                }
-                                update(pad);
                             }
                         }
                     }
@@ -127,39 +131,45 @@ namespace RhIO
                 for (unsigned int k=0; k<value.size(); k++) {
                     auto entry = value[k];
                     if (entry.isObject()) {
-                        if (entry.isMember("type") && entry.isMember("number") && entry.isMember("param")) {
+                        if (entry.isMember("number") && ((entry.isMember("type") && entry.isMember("param")) || 
+                                    entry.isMember("command"))) {
                             PadIO pad;
                             pad.value = 0;
                             pad.fvalue = 0;
                             pad.step = 1;
                             pad.id = entry["number"].asInt();
                             pad.param = entry["param"].asString();
-                            pad.node = shell->getNodeValue(pad.param);
-                            if (pad.node.value == NULL) {
-                                std::stringstream ss;
-                                ss << "Can't find node " << pad.param;
-                                throw std::runtime_error(ss.str());
-                            }
-                            std::string type = entry["type"].asString();
-                            if (type == "axis") {
-                                pad.type = PAD_AXIS;
-                                pad.id += 100;
-                            } else if (type == "toggle") {
-                                pad.type = PAD_TOGGLE;
-                            } else if (type == "increment") {
-                                pad.type = PAD_INCREMENT;
-                            } else if (type == "decrement") {
-                                pad.type = PAD_DECREMENT;
-                            } else {
-                                pad.type = PAD_BUTTON;
-                            }
 
-                            if (entry.isMember("range") && entry["range"].isArray() && entry["range"].size()==2) {
-                                pad.min = entry["range"][0].asFloat();
-                                pad.max = entry["range"][1].asFloat();
-                            }
-                            if (entry.isMember("step") && entry["step"].isNumeric()) {
-                                pad.step = entry["step"].asFloat();
+                            if (entry.isMember("command")) {
+                                pad.command = entry["command"].asString();
+                                pad.type = PAD_COMMAND;
+                            } else {
+                                pad.node = shell->getNodeValue(pad.param);
+                                if (pad.node.value == NULL) {
+                                    std::stringstream ss;
+                                    ss << "Can't find node " << pad.param;
+                                    throw std::runtime_error(ss.str());
+                                }
+                                std::string type = entry["type"].asString();
+                                if (type == "axis") {
+                                    pad.type = PAD_AXIS;
+                                    pad.id += 100;
+                                } else if (type == "toggle") {
+                                    pad.type = PAD_TOGGLE;
+                                } else if (type == "increment") {
+                                    pad.type = PAD_INCREMENT;
+                                } else if (type == "decrement") {
+                                    pad.type = PAD_DECREMENT;
+                                } else {
+                                    pad.type = PAD_BUTTON;
+                                }
+                                if (entry.isMember("range") && entry["range"].isArray() && entry["range"].size()==2) {
+                                    pad.min = entry["range"][0].asFloat();
+                                    pad.max = entry["range"][1].asFloat();
+                                }
+                                if (entry.isMember("step") && entry["step"].isNumeric()) {
+                                    pad.step = entry["step"].asFloat();
+                                }
                             }
                             pads[pad.id] = pad;
                         }
