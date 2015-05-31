@@ -24,6 +24,7 @@ namespace RhIO
             };
 
             Joystick();
+            std::string getDeviceName();
             bool open();
             void close();
             bool getEvent(JoystickEvent *evt);

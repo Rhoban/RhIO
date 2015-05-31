@@ -91,7 +91,7 @@ namespace RhIO
                 }
             }
         } else {
-            throw std::runtime_error("Can't open the joypad");
+            throw std::runtime_error(std::string("Can't open the joypad ")+js.getDeviceName());
         }
 
         js.close();
