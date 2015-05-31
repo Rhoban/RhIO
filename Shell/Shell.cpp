@@ -160,7 +160,7 @@ namespace RhIO
             sync(!oneShot);
         } catch (...) {
             Terminal::setColor("red", true);
-            std::cout << "Error when connecting (is the host alive?)" << std::endl;
+            std::cout << "Error when connecting (is the host \"" << server << "\" alive?)" << std::endl;
             Terminal::clear();
             return;
         }
