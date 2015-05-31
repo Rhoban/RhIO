@@ -146,19 +146,26 @@ namespace RhIO
         // std::cout<<"PATH: "<<history_path<<std::endl;
         history_file.open(history_path, std::fstream::out | std::fstream::app);
 
-        terminal_set_ioconfig();
-
         std::string reqServer = "tcp://"+server+":"+ServerRepPort;
         std::string subServer = "tcp://"+server+":"+ServerPubPort;
         terminate = false;
         if (!oneShot) {
             std::cout << "RhIO, connecting to " << server << std::endl;
         }
-        client = new ClientReq(reqServer);
-        clientSub = new ClientSub(subServer);
-        stream = new StreamManager(this);
 
-        sync(!oneShot);
+        try {
+            client = new ClientReq(reqServer);
+            clientSub = new ClientSub(subServer);
+            stream = new StreamManager(this);
+            sync(!oneShot);
+        } catch (...) {
+            Terminal::setColor("red", true);
+            std::cout << "Error when connecting (is the host alive?)" << std::endl;
+            Terminal::clear();
+            return;
+        }
+        
+        terminal_set_ioconfig();
 
         // Reading lines from stdin
         while (!terminate) {

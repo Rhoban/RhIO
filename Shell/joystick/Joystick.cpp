@@ -28,9 +28,12 @@ namespace RhIO
 
     bool Joystick::open()
     {
-        std::string pad = getenv("JOYSTICK");
-        if (pad == "") {
+        char *e = getenv("JOYSTICK");
+        std::string pad;
+        if (e == NULL) {
             pad = JOYSTICK_DEVNAME;
+        } else {
+            pad = std::string(e);
         }
         fd = ::open(pad.c_str(), O_RDONLY | O_NONBLOCK); /* read write for force feedback? */
 
