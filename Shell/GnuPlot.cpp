@@ -74,7 +74,7 @@ namespace RhIO
         if (replot) {
             commands = "replot ";
         } else {
-            commands = "set term wxt noraise; plot ";
+            commands = "set term qt noraise; plot ";
         }
 
         bool isFirst = true;
