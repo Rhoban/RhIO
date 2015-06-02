@@ -677,6 +677,7 @@ void ValueNode::loadValues(const std::string& path)
             //Bool type
             if (_valuesBool.count(name) == 0) {
                 _valuesBool[name] = ValueBool();
+                _valuesBool[name].name = name;
                 ValueBuilderBool(_valuesBool[name], false);
             }
             if (field == "value") {
@@ -691,6 +692,7 @@ void ValueNode::loadValues(const std::string& path)
             //Int type
             if (_valuesInt.count(name) == 0) {
                 _valuesInt[name] = ValueInt();
+                _valuesInt[name].name = name;
                 ValueBuilderInt(_valuesInt[name], false);
             }
             if (field == "value") {
@@ -705,6 +707,7 @@ void ValueNode::loadValues(const std::string& path)
             //Float type
             if (_valuesFloat.count(name) == 0) {
                 _valuesFloat[name] = ValueFloat();
+                _valuesFloat[name].name = name;
                 ValueBuilderFloat(_valuesFloat[name], false);
             }
             if (field == "value") {
@@ -719,6 +722,7 @@ void ValueNode::loadValues(const std::string& path)
             //Str type
             if (_valuesStr.count(name) == 0) {
                 _valuesStr[name] = ValueStr();
+                _valuesStr[name].name = name;
                 ValueBuilderStr(_valuesStr[name], false);
             }
             if (field == "value") {

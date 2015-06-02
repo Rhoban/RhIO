@@ -37,6 +37,16 @@ int main()
     assert(RhIO::Root.getInt("test/paramInt") == 42);
     assert(RhIO::Root.getFloat("test/paramFloat") == 3.14);
     assert(RhIO::Root.getStr("test2/test3/paramStr") == "off");
+    
+    assert(RhIO::Root.getValueBool("paramBool").name == "paramBool");
+    assert(RhIO::Root.getValueInt("test/paramInt").name == "paramInt");
+    assert(RhIO::Root.getValueFloat("test/paramFloat").name == "paramFloat");
+    assert(RhIO::Root.getValueStr("test2/test3/paramStr").name == "paramStr");
+    
+    assert(RhIO::Root.getValueBool("paramBool").persisted == false);
+    assert(RhIO::Root.getValueInt("test/paramInt").persisted == false);
+    assert(RhIO::Root.getValueFloat("test/paramFloat").persisted == false);
+    assert(RhIO::Root.getValueStr("test2/test3/paramStr").persisted == false);
 
     assert(RhIO::Root.getValueBool("paramBool").comment == "bool parameter");
     assert(RhIO::Root.getValueInt("test/paramInt").comment == "");
