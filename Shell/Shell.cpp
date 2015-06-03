@@ -35,7 +35,7 @@ namespace RhIO
     }
 
     void Shell::terminal_set_ioconfig() {
-        struct termios custom;
+
         int fd = fileno(stdin);
         tcgetattr(fd, &termsave);
         termshell = termsave;
@@ -223,7 +223,7 @@ namespace RhIO
         std::vector<std::string> cmd_to_print;
         int print_len=0;
         int cursorpos=0;
-        int completion_select=0;
+        unsigned int completion_select=0;
 
         while(!done)
         {
@@ -282,7 +282,7 @@ namespace RhIO
                         displayPrompt();
                         std::cout<<line;
 
-                        if(cursorpos<line.size() )
+                        if(cursorpos<(int)line.size() )
                         {
                             // Terminal::cursorNLeft(cursorpos);
                             // Terminal::cursorNRight(line.size());
@@ -362,7 +362,7 @@ namespace RhIO
 
                             completion_selected="";
                             print_len=0;
-                            int i=0;
+                            unsigned int i=0;
                             std::cout<<std::endl;
                             Terminal::setColor("white", true);
                             for(std::vector<std::string>::iterator it=cmd_to_print.begin(); it!=cmd_to_print.end();++it)
@@ -487,7 +487,7 @@ namespace RhIO
                         {
                             completion_selected="";
                             print_len=0;
-                            int i=0;
+                            unsigned int i=0;
                             std::cout<<std::endl;
                             Terminal::setColor("green", true);
                             // Terminal::setBColor("green", true);
@@ -776,7 +776,7 @@ namespace RhIO
                         if(esc_mode && c==0x43)
                         {
 
-                            if(cursorpos<line.size())
+                            if(cursorpos<(int)line.size())
                             {
                                 Terminal::cursorRight();
                                 cursorpos++;
@@ -849,7 +849,7 @@ namespace RhIO
     void Shell::parse(std::string line)
     {
         // Try to interpret command as a set
-        for (int i=0; i<line.size(); i++) {
+        for (unsigned int i=0; i<line.size(); i++) {
             if (line[i] == '=') {
                 std::string lvalue = line.substr(0, i);
                 std::string rvalue = line.substr(i+1);
@@ -870,7 +870,7 @@ namespace RhIO
         std::list<std::string> parts;
         std::string part;
 
-        for (int i=0; i<line.size(); i++) {
+        for (unsigned int i=0; i<line.size(); i++) {
             if (std::isspace(line[i])) {
                 if (part != "") {
                     parts.push_back(part);
@@ -940,7 +940,7 @@ namespace RhIO
 
     void Shell::set(std::string lvalue, std::string rvalue)
     {
-        auto node = getCurrentNode();
+
         auto nodeValue = getNodeValue(lvalue);
         auto value = nodeValue.value;
 
@@ -1166,7 +1166,7 @@ namespace RhIO
             return poolForNode(getCurrentNode());
         } else {
             NodePool pool;
-            for (int k=start; k<names.size(); k++) {
+            for (unsigned int k=start; k<names.size(); k++) {
                 auto val = getNodeValue(names[k]);
                 if (val.value == NULL) {
                     auto node = getNode(names[k]);
