@@ -78,4 +78,5 @@ int main(int argc, char *argv[])
     } else {
         shell->run();
     }
+    shell->quit();
 }

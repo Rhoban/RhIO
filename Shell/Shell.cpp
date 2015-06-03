@@ -152,6 +152,8 @@ namespace RhIO
         if (!oneShot) {
             std::cout << "RhIO, connecting to " << server << std::endl;
         }
+        
+        terminal_set_ioconfig();
 
         try {
             client = new ClientReq(reqServer);
@@ -164,8 +166,6 @@ namespace RhIO
             Terminal::clear();
             return;
         }
-
-        terminal_set_ioconfig();
 
         // Reading lines from stdin
         while (!terminate) {
