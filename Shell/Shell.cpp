@@ -30,8 +30,18 @@ namespace RhIO
 
     Shell::~Shell()
     {
-        if (history_file.is_open())
+        if (history_file.is_open()) {
             history_file.close();
+        }
+
+        for (auto entry : commands) {
+            delete entry.second;
+        }
+
+        delete tree;
+        delete client;
+        delete clientSub;
+        delete stream;
     }
 
     void Shell::terminal_set_ioconfig() {

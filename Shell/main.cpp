@@ -79,4 +79,5 @@ int main(int argc, char *argv[])
         shell->run();
     }
     shell->quit();
+    delete shell;
 }
