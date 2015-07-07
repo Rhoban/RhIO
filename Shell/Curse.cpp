@@ -250,7 +250,7 @@ namespace RhIO
                 auto value = nodeValue.value;
 
                 if (form != NULL) {
-                    if (c == 10 || c == 27) {
+                    if (c == 10 || c == '!') {
                         if (c == 10) {
                             form_driver(form, REQ_VALIDATION);
                             char *buf = field_buffer(field[0], 0);
@@ -326,7 +326,7 @@ namespace RhIO
                             shell->setToServer(nodeValue);
                         }
                     }
-                    if (c == 'q' || c == '\n' || c == 27) {
+                    if (c == 'q' || c == '\n') {
                         break;
                     }
                 }
