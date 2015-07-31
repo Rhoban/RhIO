@@ -6,10 +6,7 @@ namespace RhIO {
 Bind::Bind(const std::string& prefixChild) :
     _prefix(prefixChild)
 {
-    if (
-        _prefix != "" && 
-        _prefix[_prefix.length()] != '/'
-    ) {
+    if (_prefix[_prefix.length()] != '/') {
         _prefix = _prefix + '/';
     }
     
@@ -299,7 +296,7 @@ void Bind::push()
         
 void Bind::createPath(const std::string& path)
 {
-    if (path == "") return;
+    if (path == "" || path == "/") return;
 
     //Extract absolute path
     std::string tmp = path;
@@ -308,7 +305,7 @@ void Bind::createPath(const std::string& path)
         tmp = tmp.substr(0, pos);
     }
 
-    //Create ono existing math
+    //Create no existing path
     if (!RhIO::Root.childExist(tmp)) {
         RhIO::Root.newChild(tmp);
     }
