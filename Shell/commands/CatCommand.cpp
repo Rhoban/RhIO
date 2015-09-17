@@ -45,7 +45,7 @@ namespace RhIO
 
     void CatCommand::update(std::string name, std::string message)
     {
-        *os << "[" << name << "] " << message << std::endl;
+        *os << "[" << name << "] " << message;
         os->flush();
     }
 }

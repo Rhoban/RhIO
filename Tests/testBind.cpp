@@ -8,7 +8,8 @@ class Test
 
         Test() :
             _bind("test"),
-            _bind2("test5")
+            _bind2("test5"),
+            _bind3()
         {
             _bind.bindNew("valueBool", _valueBool)
                 ->comment("bool value")
@@ -42,6 +43,8 @@ class Test
             
             _bind.bindFunc("command5", "test command5", &Test::command5, *this);
             assert(RhIO::Root.call("test/command5", {}) == "");
+            
+            _bind3.bindNew("root3", _valueFloat3);
         }
 
         inline void tick1()
@@ -99,9 +102,11 @@ class Test
         int _valueInt2;
         double _valueFloat;
         float _valueFloat2;
+        float _valueFloat3;
         std::string _valueStr;
         RhIO::Bind _bind;
         RhIO::Bind _bind2;
+        RhIO::Bind _bind3;
 };
 
 int main()
@@ -125,6 +130,8 @@ int main()
     assert(RhIO::Root.getFloat("test/test2/test4/valueFloat2") == -3.0);
     RhIO::Root.setStr("test/test2/test3/valueStr", "str2");
     test.tick2();
+    
+    assert(RhIO::Root.childExist("root3") == false);
 
     return 0;
 }
