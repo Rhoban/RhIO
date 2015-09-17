@@ -97,7 +97,11 @@ namespace RhIO
                     commands += ", ";
                 }
                 isFirst = false;
-                commands += "'-' u 1:2 w l";
+                if (mode2D && signals.size() == 2) {
+                    commands += "'-' u 1:2:3 palette w l";
+                } else {
+                    commands += "'-' u 1:2 w l";
+                }
 #ifdef PLOT_ACCESSIBILITY_MODE
                 commands += " lw 8";
 #endif
@@ -107,7 +111,11 @@ namespace RhIO
             std::ostringstream oss;
             for (size_t k=0; k<timeRef.size(); k++) {
                 if (mode2D) {
-                    oss << signals[0]->values[k] << " " << signal->values[k] << std::endl;
+                    oss << signals[0]->values[k] << " " << signal->values[k];
+                    if (signals.size() == 2) {
+                        oss << " " << (timeRef[k]/1000.0);
+                    };
+                    oss << std::endl;
                 } else {
                     oss << (timeRef[k]/1000.0) << " " << signal->values[k] << std::endl;
                 }
