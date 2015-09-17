@@ -1,3 +1,4 @@
+// #define PLOT_ACCESSIBILITY_MODE
 #include "GnuPlot.h"
 
 float histories[] = {15.0, 30.0, 60.0};
@@ -11,7 +12,7 @@ namespace RhIO
     }
 
     GnuPlot::GnuPlot()
-        : plotFd(-1), replot(false), history(0)
+        : plotFd(-1), replot(false), history(0), timeRefOffset(-1)
     {
     }
 
@@ -24,7 +25,10 @@ namespace RhIO
 
     void GnuPlot::setX(int x)
     {
-        timeRef.push_back(x);
+        if (timeRefOffset < 0) {
+            timeRefOffset = x;
+        }
+        timeRef.push_back(x-timeRefOffset);
     }
 
     void GnuPlot::push(std::string name, double value)
@@ -74,7 +78,14 @@ namespace RhIO
         if (replot) {
             commands = "replot ";
         } else {
-            commands = "set term qt noraise; plot ";
+            commands = "";
+#ifdef PLOT_ACCESSIBILITY_MODE
+            commands += "set xtics font \",30\";";
+            commands += "set ytics font \",30\";";
+            commands += "set key font \",30\";";
+            commands += "set lmargin 15;";
+#endif
+            commands += "set term qt noraise; plot ";
         }
 
         bool isFirst = true;
@@ -84,13 +95,16 @@ namespace RhIO
                     commands += ", ";
                 }
                 isFirst = false;
-                commands += "'-' u 1:2 w l ";
+                commands += "'-' u 1:2 w l";
+#ifdef PLOT_ACCESSIBILITY_MODE
+                commands += " lw 8";
+#endif
                 commands += " title '" + signal->name + "' ";
             }
 
             std::ostringstream oss;
             for (size_t k=0; k<timeRef.size(); k++) {
-                oss << timeRef[k] << " " << signal->values[k] << std::endl;
+                oss << (timeRef[k]/1000.0) << " " << signal->values[k] << std::endl;
             }
             data += oss.str();
             data += "e\n";

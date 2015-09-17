@@ -79,6 +79,11 @@ namespace RhIO
             int plotFd;
 
             /**
+             * Time reference offset
+             */
+            int timeRefOffset;
+
+            /**
              * Time reference
              */
             std::deque<int> timeRef;
