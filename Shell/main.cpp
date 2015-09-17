@@ -7,6 +7,7 @@
 #include "commands/LogCommand.h"
 #include "commands/SyncCommand.h"
 #include "commands/PlotCommand.h"
+#include "commands/Plot2DCommand.h"
 #include "commands/DiffCommand.h"
 #include "commands/LoadCommand.h"
 #include "commands/SaveCommand.h"
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
     shell->registerCommand(new LogCommand);
     shell->registerCommand(new SyncCommand);
     shell->registerCommand(new PlotCommand);
+    shell->registerCommand(new Plot2DCommand);
     shell->registerCommand(new DiffCommand);
     shell->registerCommand(new LoadCommand);
     shell->registerCommand(new SaveCommand);

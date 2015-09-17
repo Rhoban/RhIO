@@ -33,6 +33,7 @@ set (SOURCES
     commands/SyncCommand.cpp
     commands/RemoteCommand.cpp
     commands/PlotCommand.cpp
+    commands/Plot2DCommand.cpp
     commands/DiffCommand.cpp
     commands/SaveCommand.cpp
     commands/LoadCommand.cpp

@@ -33,7 +33,7 @@ namespace RhIO
     class GnuPlot
     {
         public:
-            GnuPlot();
+            GnuPlot(bool mode2D=false);
             ~GnuPlot();
 
             /**
@@ -109,5 +109,7 @@ namespace RhIO
              * Generate and return Gnuplot commands and data
              */
             std::string generatePlotting();
+
+            bool mode2D;
     };
 }

@@ -1,7 +1,7 @@
 // #define PLOT_ACCESSIBILITY_MODE
 #include "GnuPlot.h"
 
-float histories[] = {15.0, 30.0, 60.0};
+float histories[] = {15.0, 30.0, 60.0, 3.0};
 #define HISTORIES (sizeof(histories)/sizeof(float))
 
 namespace RhIO
@@ -11,8 +11,8 @@ namespace RhIO
     {
     }
 
-    GnuPlot::GnuPlot()
-        : plotFd(-1), replot(false), history(0), timeRefOffset(-1)
+    GnuPlot::GnuPlot(bool mode2D_)
+        : plotFd(-1), replot(false), history(0), timeRefOffset(-1), mode2D(mode2D_)
     {
     }
 
@@ -89,7 +89,9 @@ namespace RhIO
         }
 
         bool isFirst = true;
-        for (auto signal : signals) {
+        int start = mode2D ? 1 : 0;
+        for (unsigned int n=start; n<signals.size(); n++) {
+            auto &signal = signals[n];
             if (!replot) {
                 if (!isFirst) {
                     commands += ", ";
@@ -104,7 +106,11 @@ namespace RhIO
 
             std::ostringstream oss;
             for (size_t k=0; k<timeRef.size(); k++) {
-                oss << (timeRef[k]/1000.0) << " " << signal->values[k] << std::endl;
+                if (mode2D) {
+                    oss << signals[0]->values[k] << " " << signal->values[k] << std::endl;
+                } else {
+                    oss << (timeRef[k]/1000.0) << " " << signal->values[k] << std::endl;
+                }
             }
             data += oss.str();
             data += "e\n";
