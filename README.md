@@ -13,6 +13,8 @@ your nodes and parameters, and even trigger methods that are in your code.
 
 ## How does it works ?
 
+TODO
+
 ## Building
 
 To build RhIO, you'll need cmake and a C++11 compliant compiler (gcc 4.8 or
@@ -49,3 +51,12 @@ You can now run the skeleton project (in Skeleton/build):
 And the rhio shell (in Shell/build):
 
     ./rhio
+
+## Documentation
+
+You can have a look at the following documentation:
+
+* [Getting started](/Docs/get_started.md)
+* [RhIO API](/Docs/api.md)
+* [Using binding](/Docs/binding.md)
+* [Shell commands and features](/Docs/shell.md)
