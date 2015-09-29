@@ -56,7 +56,7 @@ And the rhio shell (in Shell/build):
 
 You can have a look at the following documentation:
 
-* [Getting started](/Docs/get_started.md)
-* [RhIO API](/Docs/api.md)
+* [Getting started](/Docs/getting_started.md)
+* [RhIO API: parameters, commands, streams...](/Docs/api.md)
 * [Using binding](/Docs/binding.md)
 * [Shell commands and features](/Docs/shell.md)
