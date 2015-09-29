@@ -1,13 +1,14 @@
+# Rhoban Input/Output Library
 
-# Shell
+![RhIO](rhio.gif)
 
-## Typing
+RhIO is a lightweight library that can be linked against your application
+in order to interract with your program on-the-fly, through its integrated server.
 
-* History [Done]
-* History file [Done] should be in HOME/.rhio_history
-* Autocompletion [Done] with navigation if tab is repeated
-* SUPPR? [Done]
-* "BEGIN" & "END"? [Done] -> Ctrl-a & Ctrl-e
-* Autocompletion: the "nothing found" case [Done]
-* Autocomplete words that are not at the end?
-* Completion on history [Done] -> Ctrl-r with navigation if ctrl-r is repeated
+Main feature are parameters that can be exposed in order to be changed, monitored
+or persisted to configuration files. 
+
+We also provide a shell client that will provide a bash-like interface to walk
+your nodes and parameters, and even trigger methods that are in your code.
+
+
