@@ -50,7 +50,7 @@ another node path.
 The ``cd`` command will change your current working directory. This directory will be 
 indicated in the command prompt:
 
-!(set)[prompt.png]
+![set](prompt.png)
 
 The ̀``test/`` prefix indicate that we are in the test directory
 
@@ -59,11 +59,11 @@ The ̀``test/`` prefix indicate that we are in the test directory
 If you type the name of a parameter, it will be readed, you can also directly set a new
 value to this parameter using ``=``:
 
-!(set)[set.png]
+![set](set.png)
 
 One can also define values with an absolute name, or a relative one:
 
-!(set)[relative_absolute.png]
+![set](relative_absolute.png)
 
 ### ``watch``
 
