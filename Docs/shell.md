@@ -67,7 +67,8 @@ value to this parameter using ``=``:
     amplitude=15
 
 One can also define values with an absolute name, or a relative one:
-   
+
    RhIO:/test# ../test/amplitude=26
    RhIO:/test# /test/amplitude=42
+
 
