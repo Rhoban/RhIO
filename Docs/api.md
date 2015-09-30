@@ -78,7 +78,7 @@ node.newInt("test"); // Will declare /hello/world/test
 
 ## <a name="persistence"></a> Persistence
 
-Any node can be persisted and/or loaded to filesystem using `̀`load`` and ``save`` methods.
+Any node can be persisted and/or loaded to filesystem using ``load`` and ``save`` methods.
 Note that only the persisted parameters (i.e those with the ``persisted(true)`` metadata)
 will be concerned by these operations.
 
