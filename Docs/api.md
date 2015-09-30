@@ -12,6 +12,71 @@ You'll first have to include the ``RhIO.hpp`` file:
 Then, you can access the root node of RhIO using ``RhIO::Root`̀`. There is several 
 examples in the `Examples/` directory of this repository.
 
-## Parameters
+## <a name="parameters"></a> Parameters
 
+RhIO can deal with ints, floats/doubles, strings and bools parameters.
+
+### Declaring parameters
+
+You can define values using ``newInt``, ``newFloat``, ``newString`` or
+``newBool``. Additional metadata can be passed using method chaining, just like this:
+
+```cpp
+RhIO::Root.newInt("paramInt")
+    ->comment("My first RhIO int");
+```
+The available methods are:
+
+* `comment(string)`: a comment text describing the parameter
+* `minimum(value)` and `maximum(value)`: minimum and maximum boundaries for the value
+  of this parameter
+* `defaultValue(value)`: the default value of the parameter
+* `persisted(bool)`: wether to persist or not this parameter (see [below](#persistence))
+
+The parameter name can be a hierarchical path:
+
+```cpp
+RhIO::Root.newInt("/path/to/paramInt");
+```
+
+Note that these methods can't be called twice with the same parameter name, since it is
+used to **declare** the parameter.
+
+### Setting parameters
+
+Parameters can be set using ``setInt``, ``setFloat``, ``setString`` or ``setBool``:
+
+```cpp
+RhIO::Root.setInt("/path/to/paramInt", 42);
+```
+
+The third parameter of these methods is the timestamp that will be used (will default to 
+the current timestamp):
+
+```cpp
+RhIO::Root.setInt("/path/to/paramInt", 42, std::chrono::steady_clock::now());
+```
+
+### Getting parameters
+
+Parameters can be get using ``getInt``, ``getFloat``, ``getString`` or ``getBool``:
+
+```cpp
+std::cout << "a=" << RhIO::Root.getInt("/path/to/paramInt") << std::endl;
+```
+
+### Nodes
+
+For convenience, you may want to get access to nodes other than root. This can be done
+using ``getChild`` method:
+
+```cpp
+RhIO::Root.newChild("/hello/world");
+auto node = RhIO::Root.getChild("/hello/world");
+node.newInt("test"); // Will declare /hello/world/test
+```
+
+## <a name="persistence"></a> Persistence
+
+## <a name="commands"></a> Commands
 

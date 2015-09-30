@@ -18,8 +18,8 @@ your nodes and parameters, and even trigger methods that are in your code.
     * [Building](/Docs/getting_started.md#building)
 * [The API](/Docs/api.md)
     * [Parameters](/Docs/api.md#parameters)
-    * [Commands](/Docs/api.md#parameters)
     * [Persistence](/Docs/api.md#persistence)
+    * [Commands](/Docs/api.md#commands)
 * [Using binding](/Docs/binding.md)
 * [Shell commands and features](/Docs/shell.md)
 
