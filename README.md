@@ -16,12 +16,12 @@ your nodes and parameters, and even trigger methods that are in your code.
 * [Getting started](/Docs/getting_started.md)
     * [Download](/Docs/getting_started.md#download)
     * [Building](/Docs/getting_started.md#building)
-* [The API](/Docs/api.md)
+* [The API (server-side)](/Docs/api.md)
     * [Parameters](/Docs/api.md#parameters)
     * [Persistence](/Docs/api.md#persistence)
     * [Commands](/Docs/api.md#commands)
-* [Using binding](/Docs/binding.md)
-* [Shell commands and features](/Docs/shell.md)
+* [Using binding (server-side)](/Docs/binding.md)
+* [Shell commands and features (client-side)](/Docs/shell.md)
 * [How does it works?](/Docs/how_does_it_works.md)
 
 ## License
