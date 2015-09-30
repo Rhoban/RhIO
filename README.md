@@ -22,6 +22,7 @@ your nodes and parameters, and even trigger methods that are in your code.
     * [Commands](/Docs/api.md#commands)
 * [Using binding](/Docs/binding.md)
 * [Shell commands and features](/Docs/shell.md)
+* [How does it works?](/Docs/how_does_it_works.md)
 
 ## License
 
