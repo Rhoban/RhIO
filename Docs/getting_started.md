@@ -1,6 +1,6 @@
 # Getting started
 
-## Getting RhIO
+## <a name="download"></a>Download
 
 You can get RhIO using git
 
@@ -11,7 +11,7 @@ Or download the master version:
 * [RhIO master (zip)](https://github.com/Rhoban/RhIO/archive/master.zip)
 * [RhIO master (tar.gz)](https://github.com/Rhoban/RhIO/archive/master.tar.gz)
 
-## Building
+## <a name="building"></a>Building
 
 To build RhIO, you'll need cmake and a C++11 compliant compiler (gcc 4.8 or
 above for instance).
