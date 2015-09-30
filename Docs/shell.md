@@ -37,10 +37,12 @@ all the possible commands to type.
 The green commands are the remote ones defined by the user in its code. All the others
 are natives commands that will be available in any situation.
 
-### ``ls``
+### ``ls`` (alias ``ll``)
 
 Just like the well-known ``ls`` command, it will list the nodes that are currently
 available and their descriptions.
+
+![ls](imgs/ls.png)
 
 Note that you can give ``ls`` an argument (and, for instance type ``ls /``) to list 
 another node path.
@@ -120,3 +122,66 @@ Running ``load`` will make the ``1`` value back from the configuration file.
 
 However, setting amplitude to ``2`` and running save will write in to the configuration file,
 this is why the last diff is clean.
+
+### ``plot`` and ``plot2d``
+
+**Note: you need to have the gnuplot program to get this working.**
+
+The ``plot`` command will monitor one or multiple values and plot the real-time change of
+them.
+
+![plot](imgs/plot.png)
+
+The values are plotted with a time window restricted to a few seconds. When the plot is running,
+you can still type in the rhio shell:
+
+* ``q`` to quit the plot
+* ``h`` to change the time window history used in the plot
+* ``p`` to "pause/unpause the plot", this will allow you to browse the data without loosing them 
+  because of the time window duration
+
+You can also use ``plot2d`` to plot one or multiple variables in function of another (the first
+argument will be the x-axis one).
+
+![plot](imgs/plot.png)
+
+If you only plot one parameter, the timestamp will be used as a palette to color the line.
+
+### ``tune``
+
+**Note: you need the ncurse library for this feature.**
+
+The ``tune`` command allow you to both adjust and monitor several parameters at the same time.
+
+![tune](imgs/tune.png)
+
+You can move the selection using left and right arrow, and change the values using up/down keys. 
+For booleans, a checkbox will replace the gauges.
+The boundaries of the sliders are the metadatas used in the parameters definitions.
+
+You can use all keys from ``0`` to ``9`` to give a parameter a direct value, or press the ``v``
+key and then type your value, then enter to type the value manually.
+
+The granularity of the moves (with up and down arrows) is 1/100 by default, but can be changed
+by pressing the ``g`` key.
+
+### ``tree``
+
+This will list all the available nodes recursively.
+
+![tree](imgs/tree.png)
+
+Be careful, if you have a lot of nodes, this could take a lot of time to display! 
+
+### ``repeat`` (alias ``rep``)
+
+The ``repeat`` command will execute the given command continuously (until you press a key)
+and display its output on your screen.
+
+If you type ``repeat ls`` (or ``rep ls``), the result will be quite similar to `̀`watch``.
+
+### ``delay`` (alias ``del``)
+
+Delay will wait a given time and then execute a given action. ``delay 2 ls`` (or ``del 2 ls``)
+will wait 2 second and then run the ls command.
+
