@@ -89,7 +89,7 @@ the value modification and the others columns are monitored parameters.
 
 You can also provide an output file to this command, using the unix-like ``>`` notation:
 
-!(log)[imgs/log.png]
+![log](imgs/log.png)
 
 The file will be written on the machine that runs RhIO.
 
