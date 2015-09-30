@@ -50,7 +50,7 @@ another node path.
 The ``cd`` command will change your current working directory. This directory will be 
 indicated in the command prompt:
 
-![set](prompt.png)
+![set](imgs/prompt.png)
 
 The ̀``test/`` prefix indicate that we are in the test directory
 
@@ -59,11 +59,11 @@ The ̀``test/`` prefix indicate that we are in the test directory
 If you type the name of a parameter, it will be readed, you can also directly set a new
 value to this parameter using ``=``:
 
-![set](set.png)
+![set](imgs/set.png)
 
 One can also define values with an absolute name, or a relative one:
 
-![set](relative_absolute.png)
+![set](imgs/relative_absolute.png)
 
 ### ``watch``
 
@@ -87,7 +87,7 @@ the value modification and the others columns are monitored parameters.
 
 You can also provide an output file to this command, using the unix-like ``>`` notation:
 
-!(log)[log.png]
+!(log)[imgs/log.png]
 
 The file will be written on the machine that runs RhIO.
 
@@ -108,7 +108,7 @@ the ``save`` command will make it persist the values.
 
 You can check for changes with ``diff`` command. Here is an example:
 
-![load/save/diff example](persist.png)
+![load/save/diff example](imgs/persist.png)
 
 A first ``diff`` states that everything is clean (thus, the values used currently are the
 same as in the persisted files).

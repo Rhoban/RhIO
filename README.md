@@ -1,6 +1,6 @@
 # Rhoban Input/Output Library
 
-![RhIO](rhio.gif)
+![RhIO](Docs/imgs/rhio.gif)
 
 RhIO is a lightweight library that can be linked against your application
 in order to interract with your program on-the-fly, through its integrated server.
