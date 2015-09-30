@@ -78,5 +78,22 @@ node.newInt("test"); // Will declare /hello/world/test
 
 ## <a name="persistence"></a> Persistence
 
+Any node can be persisted and/or loaded to filesystem using `̀`load`` and ``save`` methods.
+Note that only the persisted parameters (i.e those with the ``persisted(true)`` metadata)
+will be concerned by these operations.
+
+If you want to save all your parameters to the `rhio/` directory (for instance when your
+program quit):
+
+```c++
+RhIO::Root.save("rhio");
+```
+
+In the same way, you can load it (for instance, on the start-up of your program):
+
+```c++
+RhIO::Root.load("rhio");
+```
+
 ## <a name="commands"></a> Commands
 
