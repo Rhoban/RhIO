@@ -1,6 +1,6 @@
 # Binding
 
-## Basics
+## Parameters
 
 Binding is a convenient way to use the [RhIO API](api.md) with a
 simplified workflow.
@@ -44,4 +44,15 @@ binder.bindNew("t", t, RhIO::Bind::PushOnly);
 
 // The t parameter will be imported from RhIO, but never exported
 binder.bindNew("amplitude", amplitude, RhIO::Bind::PullOnly);
+```
+
+## Commands
+
+Commands can be also bound using RhIO binding, but only works with class methods.
+To do it, use the ``bindFunc`` method:
+
+```c++
+// In your class (for instance in your constructor)
+binder.bindFunc("command", "command description", 
+            &MyObject::myCommand, *this)
 ```
