@@ -4,7 +4,7 @@
 
 RhIO uses internally two ZMQ servers: one REP/REQ and one PUB/SUB. Basically, the
 REQ/REP is used to answer commands and the PUB/SUB is used to subscribe to parameter
-changes (think for instance of the ``watch`` or ``plot`` command in the [shell](shell.md).
+changes (think for instance of the ``watch`` or ``plot`` command in the [shell](shell.md)).
 
 You can notify RhIO that you want a parameter to be streamed to its PUB/SUB server
 using a command in the REQ/REP one. In the same way, you can tell it that you no
