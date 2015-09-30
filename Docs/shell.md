@@ -71,4 +71,58 @@ One can also define values with an absolute name, or a relative one:
    RhIO:/test# ../test/amplitude=26
    RhIO:/test# /test/amplitude=42
 
+### ``watch``
 
+The ``watch`` command works just like ``ls``, but it will repeat the listing, refreshing
+the output constantly.
+
+This can be used to monitor values. If you provide no argument, the current directory will 
+be watched. Else, all the given arguments (nodes or parameters) will be monitored.
+
+### ``clear`` (CTRL+L)
+
+The ``clear`` command will clear the screen. CTRL+L is a shortcut for that.
+
+### ``log``
+
+If you want to save the evolution of one or multiple parameters through time, you can use
+the ``log`` command.
+
+This will output CSV formatted values, which the first column will be the timestamp of
+the value modification and the others columns are monitored parameters.
+
+You can also provide an output file to this command, using the unix-like ``>`` notation:
+
+    log s > /tmp/output.csv
+
+The file will be written on the machine that runs RhIO.
+
+### ``sync``
+
+When working with RhIO, you will likely change your program, compile it and run it again.
+This is not a problem with RhIO, because the client will reconnect automatically to the
+server in most cases.
+
+However, the nodes may have been changed. For performances reasons, the shell keep a
+local cache representation of the known remote architecture. The ``sync`` command will
+clear this cache and force the RhIO shell to re-synchronize itself with the remote server.
+
+### Persistence: ``load``, ``save`` and ``diff``
+
+The ``load`` command will trigger the load of the current node by the server. Symetrically,
+the ``save`` command will make it persist the values.
+
+You can check for changes with ``diff`` command. Here is an example:
+
+![load/save/diff example](persist.png)
+
+A first ``diff`` states that everything is clean (thus, the values used currently are the
+same as in the persisted files).
+
+Then, changing the amplitude from ``1`` to ``2`` will make diff state that there is non
+persisted unclean values.
+
+Running ``load`` will make the ``1`` value back from the configuration file.
+
+However, setting amplitude to ``2`` and running save will write in to the configuration file,
+this is why the last diff is clean.
