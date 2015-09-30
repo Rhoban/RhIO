@@ -5,7 +5,7 @@ you don't have to do it manually (it uses compiler constructors).
 
 You'll first have to include the ``RhIO.hpp`` file:
 
-`̀``c++
+`̀``cpp
 #include <RhIO.hpp>
 ```
 
