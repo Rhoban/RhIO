@@ -68,13 +68,15 @@ std::cout << "a=" << RhIO::Root.getInt("/path/to/paramInt") << std::endl;
 ### Nodes
 
 For convenience, you may want to get access to nodes other than root. This can be done
-using ``getChild`` method:
+using ``newChild``, for node creation and ``getChild`` method, to access the node:
 
 ```cpp
 RhIO::Root.newChild("/hello/world");
 auto node = RhIO::Root.getChild("/hello/world");
 node.newInt("test"); // Will declare /hello/world/test
 ```
+
+One can also test the existence of a node using ``nodeExist`` method.
 
 ## <a name="persistence"></a> Persistence
 
@@ -96,4 +98,18 @@ RhIO::Root.load("rhio");
 ```
 
 ## <a name="commands"></a> Commands
+
+Commands are custom application-side methods that can be called with arguments passed by
+the user.
+
+Here is an example of "echo" command:
+
+```c++
+RhIO::Root.newCommand("echo", 
+    "An example echo command", 
+    [](const std::vector<std::string>& args) -> std::string
+    {
+        return "ECHO: " + args[0];
+    });
+```
 
