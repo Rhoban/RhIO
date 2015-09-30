@@ -16,7 +16,10 @@ your nodes and parameters, and even trigger methods that are in your code.
 * [Getting started](/Docs/getting_started.md)
     * [Download](/Docs/getting_started.md#download)
     * [Building](/Docs/getting_started.md#building)
-* [RhIO API: parameters, commands, streams...](/Docs/api.md)
+* [The API](/Docs/api.md)
+    * [Parameters](/Docs/api.md#parameters)
+    * [Commands](/Docs/api.md#parameters)
+    * [Persistence](/Docs/api.md#persistence)
 * [Using binding](/Docs/binding.md)
 * [Shell commands and features](/Docs/shell.md)
 
