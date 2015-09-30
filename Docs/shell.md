@@ -143,7 +143,7 @@ you can still type in the rhio shell:
 You can also use ``plot2d`` to plot one or multiple variables in function of another (the first
 argument will be the x-axis one).
 
-![plot](imgs/plot.png)
+![plot](imgs/plot2d.png)
 
 If you only plot one parameter, the timestamp will be used as a palette to color the line.
 
