@@ -39,7 +39,7 @@ are natives commands that will be available in any situation.
 
 ### ``ls``
 
-Just like the well-known `̀`ls`` command, it will list the nodes that are currently
+Just like the well-known ``ls`` command, it will list the nodes that are currently
 available and their descriptions.
 
 Note that you can give ``ls`` an argument (and, for instance type ``ls /``) to list 
@@ -50,7 +50,7 @@ another node path.
 The ``cd`` command will change your current working directory. This directory will be 
 indicated in the command prompt:
 
-    RhIO:/test#
+!(set)[prompt.png]
 
 The ̀``test/`` prefix indicate that we are in the test directory
 
@@ -59,17 +59,11 @@ The ̀``test/`` prefix indicate that we are in the test directory
 If you type the name of a parameter, it will be readed, you can also directly set a new
 value to this parameter using ``=``:
 
-    RhIO:/test# cd /test
-    RhIO:/test# amplitude
-    amplitude=12
-    RhIO:/test# amplitude=15
-    RhIO:/test# amplitude
-    amplitude=15
+!(set)[set.png]
 
 One can also define values with an absolute name, or a relative one:
 
-   RhIO:/test# ../test/amplitude=26
-   RhIO:/test# /test/amplitude=42
+!(set)[relative_absolute.png]
 
 ### ``watch``
 
@@ -93,7 +87,7 @@ the value modification and the others columns are monitored parameters.
 
 You can also provide an output file to this command, using the unix-like ``>`` notation:
 
-    log s > /tmp/output.csv
+!(log)[log.png]
 
 The file will be written on the machine that runs RhIO.
 
