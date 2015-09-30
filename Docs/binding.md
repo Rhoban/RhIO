@@ -56,3 +56,15 @@ To do it, use the ``bindFunc`` method:
 binder.bindFunc("command", "command description", 
             &MyObject::myCommand, *this)
 ```
+
+Note that the type of the command will automatically define the arguments constraint,
+so the following code:
+
+```c++
+int MyObject::myCommand(int a)
+{
+    return a + 1;
+}
+```
+
+Will be a valid command.
