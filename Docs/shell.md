@@ -185,3 +185,7 @@ If you type ``repeat ls`` (or ``rep ls``), the result will be quite similar to `
 Delay will wait a given time and then execute a given action. ``delay 2 ls`` (or ``del 2 ls``)
 will wait 2 second and then run the ls command.
 
+### ``pad``
+
+You can use a joypad with RhIO to directly change parameters. The documentation can be found
+on a [separate page](joypad.md).

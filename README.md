@@ -20,8 +20,10 @@ your nodes and parameters, and even trigger methods that are in your code.
     * [Parameters](/Docs/api.md#parameters)
     * [Persistence](/Docs/api.md#persistence)
     * [Commands](/Docs/api.md#commands)
+    * [Streams](/Docs/api.md#streams)
 * [Using binding (server-side)](/Docs/binding.md)
 * [Shell commands and features (client-side)](/Docs/shell.md)
+* [Using a joypad with the shell](/Docs/joypad.md)
 * [How does it works?](/Docs/how_does_it_works.md)
 
 ## License

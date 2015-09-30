@@ -113,3 +113,7 @@ RhIO::Root.newCommand("echo",
     });
 ```
 
+## <a name="streams"></a> Streams
+
+TO BE DOCUMENTED
+
