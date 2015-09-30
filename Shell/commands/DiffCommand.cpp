@@ -31,6 +31,7 @@ namespace RhIO
 
     int DiffCommand::showDiff(Node *node)
     {
+        shell->sync();
         int diff = 0;
         std::cout << std::left;
 
