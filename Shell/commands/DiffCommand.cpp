@@ -20,6 +20,7 @@ namespace RhIO
 
     void DiffCommand::process(std::vector<std::string> args)
     {
+        shell->sync();
         auto node = getNode(args);
 
         if (!showDiff(node)) {
@@ -31,7 +32,6 @@ namespace RhIO
 
     int DiffCommand::showDiff(Node *node)
     {
-        shell->sync();
         int diff = 0;
         std::cout << std::left;
 
