@@ -13,6 +13,7 @@ your nodes and parameters, and even trigger methods that are in your code.
 
 ## Documentation
 
+* [Example Video](https://youtu.be/MOizgXYENLc)
 * [Getting started](/Docs/getting_started.md)
     * [Download](/Docs/getting_started.md#download)
     * [Building](/Docs/getting_started.md#building)
@@ -30,3 +31,8 @@ your nodes and parameters, and even trigger methods that are in your code.
 
 RhIO is under MIT License, please read the LICENSE file for further details.
 Do not hesitate to fork this repository and customize it!
+
+## Overall Architecture
+
+![RhIO](Docs/imgs/architecture.png)
+
