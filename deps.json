@@ -1,12 +1,12 @@
 {
     "name": "rhoban/rhio",
     "build": [
-        "mkdir build",
+        "mkdir -p build",
         "cd build",
         "cmake -DCMAKE_BUILD_TYPE=Release ..",
         "make",
         "cd ../Shell/",
-        "mkdir build",
+        "mkdir -p build",
         "cd build",
         "cmake -DCMAKE_BUILD_TYPE=Release ..",
         "make"
