@@ -4,9 +4,6 @@ project (RhioClient)
 # RhIO source directory
 set (RHIO_DIR "${CMAKE_SOURCE_DIR}/../")
 
-# Json-CPP
-set (JSONCPP_DIR "${CMAKE_SOURCE_DIR}/jsoncpp")
-
 # Enable colors ?
 option (COLORS "Enable colors" ON)
 
@@ -19,7 +16,6 @@ option(RHIO_STATIC_ZMQ
 #Include ZMQ (Network Library)
 set(ZMQ_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../ZeroMQ" CACHE STRING "ZMQ lib directory")
 include_directories(${ZMQ_DIRECTORY}/include)
-include_directories(${JSONCPP_DIR}/include)
 link_directories(${ZMQ_DIRECTORY}/lib)
 
 set (SOURCES
@@ -57,7 +53,6 @@ set (SOURCES
 
 # Adding rhio subdirectory
 add_subdirectory (${RHIO_DIR} rhiolib)
-add_subdirectory (${JSONCPP_DIR} jsoncpp)
 include_directories ("${CMAKE_SOURCE_DIR}")
 include_directories ("${RHIO_DIR}/Client")
 include_directories ("${RHIO_DIR}/Common")
@@ -67,7 +62,7 @@ include_directories ("${RHIO_DIR}/contrib")
 
 set (EXTRA_LIBS
     RhIOClient
-    json
+    jsoncpp
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

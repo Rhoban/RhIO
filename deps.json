@@ -1,0 +1,19 @@
+{
+    "name": "rhoban/rhio",
+    "build": [
+        "mkdir build",
+        "cd build",
+        "cmake -DCMAKE_BUILD_TYPE=Release ..",
+        "make",
+        "cd ../Shell/",
+        "mkdir build",
+        "cd build",
+        "cmake -DCMAKE_BUILD_TYPE=Release ..",
+        "make",
+    ],
+    "binaries": "Shell/build",
+    "libraries": "build",
+    "deps": [
+        "rhobandeps/zmqpp", "rhobandeps/jsoncpp"
+    ]
+}
