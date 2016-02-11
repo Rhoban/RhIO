@@ -13,6 +13,7 @@
     ],
     "binaries": "Shell/build",
     "libraries": "build",
+    "includes": "include",
     "deps": [
         "rhobandeps/zmqpp", "rhobandeps/jsoncpp"
     ]

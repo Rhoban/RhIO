@@ -51,8 +51,6 @@ set (SOURCES
     main.cpp
     )
 
-# Adding rhio subdirectory
-add_subdirectory (${RHIO_DIR} rhiolib)
 include_directories ("${CMAKE_SOURCE_DIR}")
 include_directories ("${RHIO_DIR}/Client")
 include_directories ("${RHIO_DIR}/Common")
