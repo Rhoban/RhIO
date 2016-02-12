@@ -111,6 +111,9 @@ int main()
     assert(isSet == false);
     RhIO::Root.setInt("test/test3/paramInt", 5);
     assert(isSet == true);
+    isSet = false;
+    RhIO::Root.setInt("test/test3/paramInt", 5, true);
+    assert(isSet == false);
     
     isSet = false;
     RhIO::Root.setFloat("test/paramFloat", 2.0);

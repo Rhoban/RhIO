@@ -58,19 +58,25 @@ class ValueNode : public BaseNode<ValueNode>
          * from this Node
          * Optional time_point can be given if the value
          * was update before now
+         * On callback is called of 
+         * noCallblack is true
          * Throw logic_error exception if asked values name
          * does not exist
          */
         void setBool(const std::string& name, bool val,
+            bool noCallblack = false,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
         void setInt(const std::string& name, int64_t val,
+            bool noCallblack = false,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
         void setFloat(const std::string& name, double val,
+            bool noCallblack = false,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
         void setStr(const std::string& name, const std::string& val,
+            bool noCallblack = false,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
 
@@ -89,6 +95,8 @@ class ValueNode : public BaseNode<ValueNode>
          * Set a callback function that will be called
          * when the value is updated. The given function
          * will have the new value as argument.
+         * CALLBACK FUNCTION MUST NOT CALL ANY 
+         * OTHER RHIO FUNCTION (DEADLOCK).
          */
         void setCallbackBool(const std::string& name, 
             std::function<void(bool)> func);

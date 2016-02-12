@@ -100,13 +100,14 @@ const std::string& ValueNode::getStr(const std::string& name) const
 }
 
 void ValueNode::setBool(const std::string& name, bool val,
+    bool noCallblack,
     std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setBool(tmpName, val, timestamp);
+        child->setBool(tmpName, val, noCallblack, timestamp);
         return;
     }
 
@@ -131,7 +132,9 @@ void ValueNode::setBool(const std::string& name, bool val,
         _valuesBool[name].value = val;
         _valuesBool[name].timestamp = timestamp;
         //Call callback
-        _valuesBool[name].callback(val);
+        if (!noCallblack) {
+            _valuesBool[name].callback(val);
+        }
         //Publish value
         if (_valuesBool.at(name).streamWatchers > 0) {
             ServerStream->publishBool(BaseNode::pwd + separator + name, val,
@@ -141,13 +144,14 @@ void ValueNode::setBool(const std::string& name, bool val,
     }
 }
 void ValueNode::setInt(const std::string& name, int64_t val,
+    bool noCallblack,
     std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setInt(tmpName, val, timestamp);
+        child->setInt(tmpName, val, noCallblack, timestamp);
         return;
     }
 
@@ -172,7 +176,9 @@ void ValueNode::setInt(const std::string& name, int64_t val,
         _valuesInt[name].value = val;
         _valuesInt[name].timestamp = timestamp;
         //Call callback
-        _valuesInt[name].callback(val);
+        if (!noCallblack) {
+            _valuesInt[name].callback(val);
+        }
         //Publish value
         if (_valuesInt.at(name).streamWatchers > 0) {
             ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
@@ -182,13 +188,14 @@ void ValueNode::setInt(const std::string& name, int64_t val,
     }
 }
 void ValueNode::setFloat(const std::string& name, double val,
+    bool noCallblack,
     std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setFloat(tmpName, val, timestamp);
+        child->setFloat(tmpName, val, noCallblack, timestamp);
         return;
     }
 
@@ -213,7 +220,9 @@ void ValueNode::setFloat(const std::string& name, double val,
         _valuesFloat[name].value = val;
         _valuesFloat[name].timestamp = timestamp;
         //Call callback
-        _valuesFloat[name].callback(val);
+        if (!noCallblack) {
+            _valuesFloat[name].callback(val);
+        }
         //Publish value
         if (_valuesFloat.at(name).streamWatchers > 0) {
             ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
@@ -223,13 +232,14 @@ void ValueNode::setFloat(const std::string& name, double val,
     }
 }
 void ValueNode::setStr(const std::string& name, const std::string& val,
+    bool noCallblack,
     std::chrono::steady_clock::time_point timestamp)
 {
     //Forward to subtree
     std::string tmpName;
     ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->setStr(tmpName, val, timestamp);
+        child->setStr(tmpName, val, noCallblack, timestamp);
         return;
     }
 
@@ -254,7 +264,9 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
             _valuesStr[name].value = _valuesStr.at(name).max;
         }
         //Call callback
-        _valuesStr[name].callback(_valuesStr[name].value);
+        if (!noCallblack) {
+            _valuesStr[name].callback(_valuesStr[name].value);
+        }
         //Publish value
         if (_valuesStr.at(name).streamWatchers > 0) {
             ServerStream->publishStr(BaseNode::pwd + separator + name, val,
