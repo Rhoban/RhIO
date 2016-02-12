@@ -86,12 +86,26 @@ class ValueNode : public BaseNode<ValueNode>
         std::unique_ptr<ValueBuilderStr> newStr(const std::string& name);
 
         /**
+         * Set a callback function that will be called
+         * when the value is updated. The given function
+         * will have the new value as argument.
+         */
+        void setCallbackBool(const std::string& name, 
+            std::function<void(bool)> func);
+        void setCallbackInt(const std::string& name, 
+            std::function<void(int64_t)> func);
+        void setCallbackFloat(const std::string& name, 
+            std::function<void(double)> func);
+        void setCallbackStr(const std::string& name, 
+            std::function<void(std::string)> func);
+
+        /**
          * Values structure getters for each type
          * associated with given relative name 
          * from this Node
          * Throw logic_error exception if asked values name
          * does not exist
-         * READ VALUE IS NOT HTREAD SAFE (use only for meta information)
+         * READ VALUE IS NOT THREAD SAFE (use only for meta information)
          */
         const ValueBool& getValueBool(const std::string& name) const;
         const ValueInt& getValueInt(const std::string& name) const;

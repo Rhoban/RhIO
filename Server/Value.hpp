@@ -2,6 +2,7 @@
 #define RHIO_VALUE_HPP
 
 #include <string>
+#include <functional>
 #include <chrono>
 
 namespace RhIO {
@@ -81,6 +82,12 @@ struct Value : public ValueBase
      * (used to compute values diff)
      */
     T valuePersisted;
+
+    /**
+     * Callback called on value update.
+     * Take the new value as argument.
+     */
+    std::function<void(T)> callback;
 };
 
 /**
@@ -129,6 +136,7 @@ struct ValueBuilder final
                 _value.valuePersisted = T();
                 _value.persisted = false;
                 _value.streamWatchers = 0;
+                _value.callback = [](T t){(void)t;};
             }
         }
 

@@ -130,6 +130,8 @@ void ValueNode::setBool(const std::string& name, bool val,
         //Update value
         _valuesBool[name].value = val;
         _valuesBool[name].timestamp = timestamp;
+        //Call callback
+        _valuesBool[name].callback(val);
         //Publish value
         if (_valuesBool.at(name).streamWatchers > 0) {
             ServerStream->publishBool(BaseNode::pwd + separator + name, val,
@@ -169,6 +171,8 @@ void ValueNode::setInt(const std::string& name, int64_t val,
         //Update value
         _valuesInt[name].value = val;
         _valuesInt[name].timestamp = timestamp;
+        //Call callback
+        _valuesInt[name].callback(val);
         //Publish value
         if (_valuesInt.at(name).streamWatchers > 0) {
             ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
@@ -208,6 +212,8 @@ void ValueNode::setFloat(const std::string& name, double val,
         //Update value
         _valuesFloat[name].value = val;
         _valuesFloat[name].timestamp = timestamp;
+        //Call callback
+        _valuesFloat[name].callback(val);
         //Publish value
         if (_valuesFloat.at(name).streamWatchers > 0) {
             ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
@@ -247,6 +253,8 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
         ) {
             _valuesStr[name].value = _valuesStr.at(name).max;
         }
+        //Call callback
+        _valuesStr[name].callback(_valuesStr[name].value);
         //Publish value
         if (_valuesStr.at(name).streamWatchers > 0) {
             ServerStream->publishStr(BaseNode::pwd + separator + name, val,
@@ -362,6 +370,71 @@ std::unique_ptr<ValueBuilderStr> ValueNode::newStr(const std::string& name)
         _valuesStr[name].name = name;
         return std::unique_ptr<ValueBuilderStr>(
             new ValueBuilderStr(_valuesStr[name], false));
+    }
+}
+        
+void ValueNode::setCallbackBool(const std::string& name,
+    std::function<void(bool)> func)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) return child->setCallbackBool(tmpName, func);
+
+    //Assign new callback
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesBool.count(name) == 0) {
+        throw std::logic_error("RhIO unknown value Bool name: " + name);
+    } else {
+        _valuesBool.at(name).callback = func;
+    }
+}
+void ValueNode::setCallbackInt(const std::string& name,
+    std::function<void(int64_t)> func)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) return child->setCallbackInt(tmpName, func);
+
+    //Assign new callback
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesInt.count(name) == 0) {
+        throw std::logic_error("RhIO unknown value Int name: " + name);
+    } else {
+        _valuesInt.at(name).callback = func;
+    }
+}
+void ValueNode::setCallbackFloat(const std::string& name,
+    std::function<void(double)> func)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) return child->setCallbackFloat(tmpName, func);
+
+    //Assign new callback
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesFloat.count(name) == 0) {
+        throw std::logic_error("RhIO unknown value Float name: " + name);
+    } else {
+        _valuesFloat.at(name).callback = func;
+    }
+}
+void ValueNode::setCallbackStr(const std::string& name,
+    std::function<void(std::string)> func)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) return child->setCallbackStr(tmpName, func);
+
+    //Assign new callback
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesStr.count(name) == 0) {
+        throw std::logic_error("RhIO unknown value Str name: " + name);
+    } else {
+        _valuesStr.at(name).callback = func;
     }
 }
 

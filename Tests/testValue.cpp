@@ -91,6 +91,37 @@ int main()
     std::cout << "Printing tree:" << std::endl;
     printTree(RhIO::Root); 
 
+    bool isSet;
+    isSet = false;
+    RhIO::Root.setBool("test/paramBool", true);
+    assert(isSet == false);
+    RhIO::Root.setCallbackBool("test/paramBool", [&isSet](bool val) {
+        if (val) isSet = true;
+    });
+    assert(isSet == false);
+    RhIO::Root.setBool("test/paramBool", true);
+    assert(isSet == true);
+    
+    isSet = false;
+    RhIO::Root.setInt("test/test3/paramInt", 2);
+    assert(isSet == false);
+    RhIO::Root.setCallbackInt("test/test3/paramInt", [&isSet](int val) {
+        if (val == 5) isSet = true;
+    });
+    assert(isSet == false);
+    RhIO::Root.setInt("test/test3/paramInt", 5);
+    assert(isSet == true);
+    
+    isSet = false;
+    RhIO::Root.setFloat("test/paramFloat", 2.0);
+    assert(isSet == false);
+    RhIO::Root.setCallbackFloat("test/paramFloat", [&isSet](double val) {
+        if (val == 5.0) isSet = true;
+    });
+    assert(isSet == false);
+    RhIO::Root.setFloat("test/paramFloat", 5.0);
+    assert(isSet == true);
+
     return 0;
 }
 

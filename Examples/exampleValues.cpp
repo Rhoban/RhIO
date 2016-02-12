@@ -79,6 +79,14 @@ int main()
     //Same restricted on a node
     RhIO::Root.child("path").load("/tmp/testRhIOExample/path");
 
+    //A callback can be set to be
+    //trigger on value update
+    RhIO::Root.setCallbackInt("path/paramInt", 
+        [](int val){
+            std::cout << "Callback on set: " << val << std::endl;
+        });
+    RhIO::Root.setInt("path/paramInt", 5);
+
     return 0;
 }
 
