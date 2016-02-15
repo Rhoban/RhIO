@@ -83,6 +83,7 @@ namespace RhIO
             commands += "set xtics font \",30\";";
             commands += "set ytics font \",30\";";
             commands += "set key font \",30\";";
+            commands += "set key spacing 5;";
             commands += "set lmargin 15;";
 #endif
             commands += "set term qt noraise; plot ";
@@ -98,13 +99,14 @@ namespace RhIO
                 }
                 isFirst = false;
                 if (mode2D && signals.size() == 2) {
-                    commands += "'-' u 1:2:3 palette w l";
+                    commands += "'-' u 1:2:3 palette ";
                 } else {
-                    commands += "'-' u 1:2 w l";
+                    commands += "'-' u 1:2 ";
                 }
 #ifdef PLOT_ACCESSIBILITY_MODE
-                commands += " lw 8";
+                commands += " lw 5";
 #endif
+                commands += " w l";
                 commands += " title '" + signal->name + "' ";
             }
 

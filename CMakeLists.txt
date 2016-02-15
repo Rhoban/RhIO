@@ -18,28 +18,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Server)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Common)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Client)
 
-#Include ZMQ (Network Library)
-set(ZMQ_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ZeroMQ" 
-    CACHE STRING "ZMQ lib directory")
-
-set(ZMQ_INCLUDE_DIRECTORY "${ZMQ_DIRECTORY}/include" 
-    CACHE STRING "ZMQ lib directory")
-
-set(ZMQ_LIB_DIRECTORY "${ZMQ_DIRECTORY}/lib" 
-    CACHE STRING "ZMQ lib directory")
-
-option(RHIO_LINK_ZMQ
-    "Should RhIO link with zmq?" ON)
-
-option(RHIO_STATIC_ZMQ
-    "Should RhIO link statically with ZMQ?" OFF)
-
-include_directories(${ZMQ_INCLUDE_DIRECTORY})
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/contrib")
-
-if (RHIO_LINK_ZMQ)
-    link_directories(${ZMQ_LIB_DIRECTORY})
-endif()
 
 #Sources files
 set(SOURCES_FILES_SERVER
@@ -65,15 +44,8 @@ set(SOURCES_FILES_CLIENT
 #Needed Libraries
 set(RHIO_LIBRARIES
     pthread
+    zmq
 )
-
-if (RHIO_LINK_ZMQ)
-    if (RHIO_STATIC_ZMQ)
-        set (RHIO_LIBRARIES ${RHIO_LIBRARIES} zmq.a)
-    else ()
-        set (RHIO_LIBRARIES ${RHIO_LIBRARIES} zmq)
-    endif ()
-endif ()
 
 #Enable C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
