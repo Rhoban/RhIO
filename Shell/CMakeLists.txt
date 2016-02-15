@@ -60,7 +60,7 @@ include_directories ("${RHIO_DIR}/contrib")
 
 set (EXTRA_LIBS
     RhIOClient
-    jsoncpp pthread
+    jsoncpp pthread zmq
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
