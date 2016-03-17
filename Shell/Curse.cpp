@@ -20,7 +20,7 @@ using namespace std::placeholders;
 /**
  * Available granluarities
  */
-static float granularities[] = {100, 1000, 10000};
+static float granularities[] = {5, 10, 100, 1000, 10000};
 #define GRANULARITIES   (sizeof(granularities)/sizeof(float))
 
 /**
@@ -53,7 +53,7 @@ namespace RhIO
 
     void Curse::init()
     {
-        granularity = 0;
+        granularity = 2;
         initscr();
         clear();
         noecho();
