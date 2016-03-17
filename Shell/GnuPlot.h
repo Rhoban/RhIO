@@ -33,7 +33,7 @@ namespace RhIO
     class GnuPlot
     {
         public:
-            GnuPlot(bool mode2D=false);
+            GnuPlot(int mode = 1);
             ~GnuPlot();
 
             /**
@@ -111,5 +111,6 @@ namespace RhIO
             std::string generatePlotting();
 
             bool mode2D;
+            bool mode3D;
     };
 }
