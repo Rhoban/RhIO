@@ -8,7 +8,7 @@ namespace RhIO
         : fullName(fullName_), desc(desc_), origin(""), name("")
     {
         auto found = fullName.find_last_of("/");
-        if (found > 0) {
+        if (found != std::string::npos) {
             origin = fullName.substr(0, found);
             name = fullName.substr(found+1);
         } else {
