@@ -11,8 +11,10 @@ namespace RhIO
     {
     }
 
-    GnuPlot::GnuPlot(bool mode2D_)
-        : plotFd(-1), replot(false), history(0), timeRefOffset(-1), mode2D(mode2D_)
+    GnuPlot::GnuPlot(int mode)
+        : plotFd(-1), replot(false), history(0), timeRefOffset(-1), 
+        mode2D((mode == 2)),
+        mode3D((mode == 3))
     {
     }
 
@@ -86,11 +88,18 @@ namespace RhIO
             commands += "set key spacing 5;";
             commands += "set lmargin 15;";
 #endif
-            commands += "set term qt noraise; plot ";
+            if (mode3D) {
+                commands += "set term qt noraise; splot ";
+            } else {
+                commands += "set term qt noraise; plot ";
+            }
         }
 
         bool isFirst = true;
-        int start = mode2D ? 1 : 0;
+        int start = (mode2D) ? 1 : 0;
+        if (mode3D) {
+            start = 2;
+        }
         for (unsigned int n=start; n<signals.size(); n++) {
             auto &signal = signals[n];
             if (!replot) {
@@ -98,7 +107,11 @@ namespace RhIO
                     commands += ", ";
                 }
                 isFirst = false;
-                if (mode2D && signals.size() == 2) {
+                if (mode3D && signals.size() == 3) {
+                    commands += "'-' u 1:2:3:4 palette ";
+                } else if (mode3D) {
+                    commands += "'-' u 1:2:3 ";
+                } else if (mode2D && signals.size() == 2) {
                     commands += "'-' u 1:2:3 palette ";
                 } else {
                     commands += "'-' u 1:2 ";
@@ -112,7 +125,16 @@ namespace RhIO
 
             std::ostringstream oss;
             for (size_t k=0; k<timeRef.size(); k++) {
-                if (mode2D) {
+                if (mode3D) {
+                    oss 
+                        << signals[0]->values[k] << " " 
+                        << signals[1]->values[k] << " " 
+                        << signal->values[k];
+                    if (signals.size() == 3) {
+                        oss << " " << (timeRef[k]/1000.0);
+                    };
+                    oss << std::endl;
+                } else if (mode2D) {
                     oss << signals[0]->values[k] << " " << signal->values[k];
                     if (signals.size() == 2) {
                         oss << " " << (timeRef[k]/1000.0);

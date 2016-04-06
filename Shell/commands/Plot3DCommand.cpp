@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Shell.h"
-#include "Plot2DCommand.h"
+#include "Plot3DCommand.h"
 #include "Node.h"
 #include "NodePool.h"
 #include "StreamManager.h"
@@ -10,24 +10,24 @@ using namespace std::placeholders;
 
 namespace RhIO
 {
-    std::string Plot2DCommand::getName()
+    std::string Plot3DCommand::getName()
     {
-        return "plot2d";
+        return "plot3d";
     }
 
-    std::string Plot2DCommand::getDesc()
+    std::string Plot3DCommand::getDesc()
     {
-        return "Plot 2D parameters";
+        return "Plot 3D parameters";
     }
 
-    std::string Plot2DCommand::getUsage()
+    std::string Plot3DCommand::getUsage()
     {
-        return "x-var y1 [y2 [y3...]]";
+        return "x-var y1 y2 [y3 [y4...]]";
     }
 
-    void Plot2DCommand::process(std::vector<std::string> args)
+    void Plot3DCommand::process(std::vector<std::string> args)
     {
-        if (args.size() < 2) {
+        if (args.size() < 3) {
             errorUsage();
         }
 
@@ -42,8 +42,8 @@ namespace RhIO
         Terminal::clear();
 
         paused = false;
-        GnuPlot plot(2);
-        pool.setCallback(std::bind(&Plot2DCommand::update, this, &plot, _1));
+        GnuPlot plot(3);
+        pool.setCallback(std::bind(&Plot3DCommand::update, this, &plot, _1));
 
         auto stream = shell->getStream();
         stream->addPool(shell, &pool);
@@ -71,7 +71,7 @@ namespace RhIO
         plot.closeWindow();
     }
 
-    void Plot2DCommand::update(GnuPlot *plot, NodePool *pool)
+    void Plot3DCommand::update(GnuPlot *plot, NodePool *pool)
     {
         if (!paused) {
             plot->setX(pool->timestamp);

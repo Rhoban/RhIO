@@ -30,6 +30,7 @@ set (SOURCES
     commands/RemoteCommand.cpp
     commands/PlotCommand.cpp
     commands/Plot2DCommand.cpp
+    commands/Plot3DCommand.cpp
     commands/DiffCommand.cpp
     commands/SaveCommand.cpp
     commands/LoadCommand.cpp
@@ -60,7 +61,7 @@ include_directories ("${RHIO_DIR}/contrib")
 
 set (EXTRA_LIBS
     RhIOClient
-    jsoncpp
+    jsoncpp pthread zmq
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
