@@ -95,6 +95,12 @@ void ServerRep::handleRequest()
             case MsgDisableStreamingStream:
                   disableStreamingStream(req);
                   return;
+            case MsgEnableStreamingFrame:
+                  enableStreamingFrame(req);
+                  return;
+            case MsgDisableStreamingFrame:
+                  disableStreamingFrame(req);
+                  return;
             case MsgAskSave:
                   save(req);
                   return;
@@ -118,6 +124,12 @@ void ServerRep::handleRequest()
                   return;
             case MsgAskDescriptionStream:
                   descriptionStream(req);
+                  return;
+            case MsgAskFrames:
+                  listFrames(req);
+                  return;
+            case MsgAskMetaFrame:
+                  valMetaFrame(req);
                   return;
             default:
                 //Unknown message type
@@ -619,6 +631,37 @@ void ServerRep::disableStreamingStream(DataBuffer& buffer)
     //Send reply
     _socket.send(reply);
 }
+
+void ServerRep::enableStreamingFrame(DataBuffer& buffer)
+{
+    //Get asked frame name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.enableStreamingFrame(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::disableStreamingFrame(DataBuffer& buffer)
+{
+    //Get asked frame name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.disableStreamingFrame(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
     
 void ServerRep::save(DataBuffer& buffer)
 {
@@ -859,6 +902,62 @@ void ServerRep::descriptionStream(DataBuffer& buffer)
     rep.writeType(MsgDescriptionStream);
     rep.writeStr(comment);
 
+    //Send reply
+    _socket.send(reply);
+}
+        
+void ServerRep::listFrames(DataBuffer& buffer)
+{
+    //Get asked node name
+    std::string name = buffer.readStr();
+    RhIO::IONode* node = getNode(name);
+    if (node == nullptr) return;
+
+    //Compute message size
+    size_t size = sizeof(MsgType);
+    size += sizeof(int64_t);
+    std::vector<std::string> list = node->listFrames();
+    for (size_t i=0;i<list.size();i++) {
+        size += sizeof(int64_t) + list[i].length();
+    }
+
+    //Allocate message data
+    zmq::message_t reply(size);
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgListNames);
+    rep.writeInt(list.size());
+    for (size_t i=0;i<list.size();i++) {
+        rep.writeStr(list[i]);
+    }
+
+    //Send reply
+    _socket.send(reply);
+}
+
+void ServerRep::valMetaFrame(DataBuffer& buffer)
+{
+    //Get asked stream name
+    std::string name = buffer.readStr();
+    //Check stream name
+    if (!RhIO::Root.frameExist(name)) {
+        error("Unknown frame name: " + name);
+        return;
+    }
+
+    Frame frame = RhIO::Root.getFrame(name);
+
+    //Allocate message data
+    zmq::message_t reply(
+        sizeof(MsgType) + sizeof(int64_t) + frame.comment.length()
+        + 4*sizeof(int64_t));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgValMetaFrame);
+    rep.writeStr(frame.comment);
+    rep.writeInt(frame.width);
+    rep.writeInt(frame.height);
+    rep.writeInt((uint64_t)frame.format);
+    rep.writeInt(frame.countWatchers);
+    
     //Send reply
     _socket.send(reply);
 }

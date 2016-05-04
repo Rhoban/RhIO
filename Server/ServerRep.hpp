@@ -106,6 +106,13 @@ class ServerRep
         void disableStreamingStream(DataBuffer& buffer);
 
         /**
+         * Implement MsgEnableStreamingFrame and MsgDisableStreamingFrame
+         * (MsgStreamingOK)
+         */
+        void enableStreamingFrame(DataBuffer& buffer);
+        void disableStreamingFrame(DataBuffer& buffer);
+
+        /**
          * Implement MsgAskSave ans MsgAskLoad (MsgPersistOK)
          */
         void save(DataBuffer& buffer);
@@ -141,6 +148,17 @@ class ServerRep
          * (MsgDescriptionStream)
          */
         void descriptionStream(DataBuffer& buffer);
+
+        /**
+         * Implement MsgAskFrames (MsgListNames)
+         */
+        void listFrames(DataBuffer& buffer);
+        
+        /**
+         * Implement MsgAskMetaFrame
+         * (MsgValMetaFrame)
+         */
+        void valMetaFrame(DataBuffer& buffer);
 
         /**
          * Implement MsgError with given error message

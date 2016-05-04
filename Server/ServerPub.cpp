@@ -13,16 +13,19 @@ ServerPub::ServerPub(const std::string& endpoint) :
     _queue1Float(),
     _queue1Str(),
     _queue1Stream(),
+    _queue1Frame(),
     _queue2Bool(),
     _queue2Int(),
     _queue2Float(),
     _queue2Str(),
     _queue2Stream(),
+    _queue2Frame(),
     _mutexQueueBool(),
     _mutexQueueInt(),
     _mutexQueueFloat(),
     _mutexQueueStr(),
-    _mutexQueueStream()
+    _mutexQueueStream(),
+    _mutexQueueFrame()
 {
     _socket.bind(endpoint.c_str());
 }
@@ -78,6 +81,43 @@ void ServerPub::publishStream(const std::string& name,
         _queue2Stream.push_back({name, val, timestamp});
     }
 }
+
+void ServerPub::publishFrame(const std::string& name,
+    unsigned char* data, size_t size,
+    int64_t timestamp)
+{
+    //Directly allocate message data
+    std::lock_guard<std::mutex> lock(_mutexQueueFrame);
+    if (_isWritingTo1) {
+        _queue1Frame.push_back(zmq::message_t(
+            sizeof(MsgType) 
+            + sizeof(int64_t) 
+            + name.length()
+            + sizeof(int64_t) 
+            + sizeof(int64_t)
+            + size
+        ));
+        DataBuffer pub(_queue1Frame.back().data(), _queue1Frame.back().size());
+        pub.writeType(MsgStreamFrame);
+        pub.writeStr(name);
+        pub.writeInt(timestamp);
+        pub.writeData(data, size);
+    } else {
+        _queue2Frame.push_back(zmq::message_t(
+            sizeof(MsgType) 
+            + sizeof(int64_t) 
+            + name.length()
+            + sizeof(int64_t) 
+            + sizeof(int64_t)
+            + size
+        ));
+        DataBuffer pub(_queue2Frame.back().data(), _queue2Frame.back().size());
+        pub.writeType(MsgStreamFrame);
+        pub.writeStr(name);
+        pub.writeInt(timestamp);
+        pub.writeData(data, size);
+    }
+}        
         
 void ServerPub::sendToClient()
 {
@@ -96,6 +136,8 @@ void ServerPub::sendToClient()
         (_isWritingTo1) ? _queue2Str : _queue1Str;
     std::list<PubValStr>& queueStream = 
         (_isWritingTo1) ? _queue2Stream : _queue1Stream;
+    std::list<zmq::message_t>& queueFrame = 
+        (_isWritingTo1) ? _queue2Frame : _queue1Frame;
 
     //Sending values Bool
     while (!queueBool.empty()) {
@@ -194,6 +236,14 @@ void ServerPub::sendToClient()
         //Pop value
         queueStream.pop_front();
     }
+    //Sending values Frame
+    while (!queueFrame.empty()) {
+        //Send packet
+        _socket.send(queueFrame.front());
+
+        //Pop value
+        queueFrame.pop_front();
+    }
 }
         
 void ServerPub::swapBuffer()
@@ -204,6 +254,7 @@ void ServerPub::swapBuffer()
     std::lock_guard<std::mutex> lockFloat(_mutexQueueFloat);
     std::lock_guard<std::mutex> lockStr(_mutexQueueStr);
     std::lock_guard<std::mutex> lockStream(_mutexQueueStream);
+    std::lock_guard<std::mutex> lockFrame(_mutexQueueFrame);
     //Swap buffer
     _isWritingTo1 = !_isWritingTo1;
 }

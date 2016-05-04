@@ -101,6 +101,20 @@ int main()
     assert(client.listStreams("test").size() == 1);
     assert(client.listStreams("test")[0] == "stream1");
     assert(client.streamDescription("test/stream1") == "stream1");
+    
+    assert(client.listFrames("/").size() == 0);
+    assert(client.listFrames("test").size() == 1);
+    assert(client.listFrames("test")[0] == "frame1");
+    assert(client.metaValueFrame("test/frame1").comment == "frame1");
+    assert(client.metaValueFrame("test/frame1").width == 300);
+    assert(client.metaValueFrame("test/frame1").height == 200);
+    assert(client.metaValueFrame("test/frame1").format 
+        == RhIO::FrameFormat::RGB);
+    assert(client.metaValueFrame("test/frame1").countWatchers == 0);
+    client.enableStreamingFrame("test/frame1");
+    assert(client.metaValueFrame("test/frame1").countWatchers == 1);
+    client.disableStreamingFrame("test/frame1");
+    assert(client.metaValueFrame("test/frame1").countWatchers == 0);
 
     assert(client.metaValueBool(
         "test/paramBool").streamWatchers == 0);

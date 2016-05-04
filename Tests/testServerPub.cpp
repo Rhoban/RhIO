@@ -19,6 +19,9 @@ int main()
     RhIO::Root.child("test/test3").newStr("paramStr");
 
     RhIO::Root.newStream("test/stream1", "stream1");
+    
+    RhIO::Root.newFrame("test/frame1", "frame1",
+        300, 200, RhIO::FrameFormat::RGB);
 
     std::cout << "Waiting" << std::endl;
     for (size_t k=0;k<50;k++) {
@@ -46,6 +49,20 @@ int main()
         if (k == 40) {
             RhIO::Root.disableStreamingValue("test/paramBool");
             RhIO::Root.disableStreamingValue("test/test3/paramStr");
+        }
+        if (k == 42) {
+            RhIO::Root.enableStreamingFrame("test/frame1");
+        }
+        if (k == 47) {
+            RhIO::Root.disableStreamingFrame("test/frame1");
+        }
+        if (RhIO::Root.frameIsStreaming("test/frame1")) {
+            unsigned char* data = new unsigned char[3*300*200];
+            for (size_t i=0;i<3*300*200;i++) {
+                data[i] = 0;
+            }
+            RhIO::Root.framePush("/test/frame1", data, 3*300*200);
+            delete[] data;
         }
     }
 

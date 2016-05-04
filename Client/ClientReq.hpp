@@ -8,6 +8,7 @@
 #include "Protocol.hpp"
 #include "Value.hpp"
 #include "Stream.hpp"
+#include "Frame.hpp"
 
 namespace RhIO {
 
@@ -113,7 +114,7 @@ class ClientReq
         void disableStreamingValue(const std::string& name);
 
         /**
-         * Return the list of available stream on 
+         * Return the list of available streams on 
          * a given absolute node name
          */
         std::vector<std::string> listStreams
@@ -127,12 +128,33 @@ class ClientReq
         std::string streamDescription(const std::string& name);
         
         /**
+         * Return the list of available frames on 
+         * a given absolute node name
+         */
+        std::vector<std::string> listFrames
+            (const std::string& name);
+
+        /**
+         * Retrieve frame meta information 
+         * with given absolute name.
+         */
+        Frame metaValueFrame(const std::string& name);
+
+        /**
          * Enable and disable streaming for given
          * absolute stream name
          * (Increment and decrement stream watchers number)
          */
         void enableStreamingStream(const std::string& name);
         void disableStreamingStream(const std::string& name);
+
+        /**
+         * Enable and disable streaming for given
+         * absolute frame name
+         * (Increment and decrement stream watchers number)
+         */
+        void enableStreamingFrame(const std::string& name);
+        void disableStreamingFrame(const std::string& name);
 
         /**
          * Save and Load into given absolute node name

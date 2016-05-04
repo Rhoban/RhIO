@@ -55,6 +55,16 @@ int main()
         assert(name == "test/stream1");
         assert(val == "test stream1\n");
     });
+    client.setHandlerFrame(
+        [](const std::string name, int64_t timestamp, 
+            unsigned char* data, size_t size) 
+    {
+        std::cout << "Receiving Frame:" << std::endl;
+        std::cout << name << " " 
+            << timestamp << " " << size << std::endl;
+        assert(name == "test/frame1");
+        assert(size == 3*300*200);
+    });
     
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(

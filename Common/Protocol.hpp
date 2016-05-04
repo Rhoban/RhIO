@@ -89,6 +89,16 @@ enum MsgType : uint8_t {
     MsgEnableStreamingStream,
     MsgDisableStreamingStream,
     /**
+     * Client
+     * Ask for streaming enable and disable 
+     * on given absolute frame name.
+     * (Streaming watcher is incremented/decremented)
+     * Args:
+     * String: absolute frame name
+     */
+    MsgEnableStreamingFrame,
+    MsgDisableStreamingFrame,
+    /**
      * Client.
      * Ask for Server persist dump and load for all
      * subtree below given node into given server
@@ -151,6 +161,22 @@ enum MsgType : uint8_t {
      * String: absolute stream name
      */
     MsgAskDescriptionStream,
+    /**
+     * Client.
+     * List all registered frames relative
+     * name at given node absolute name
+     * Args:
+     * String: absolute node name
+     */
+    MsgAskFrames,
+    /**
+     * Client.
+     * Ask given absolute frame name
+     * meta information
+     * Args:
+     * String: absolute frame name
+     */
+    MsgAskMetaFrame,
     /**
      * Server.
      * An error has occured.
@@ -226,7 +252,7 @@ enum MsgType : uint8_t {
     /**
      * Server.
      * Return streamed values for type 
-     * Bool, Int, Float, Str
+     * Bool, Int, Float, Str, Stream or Frame
      * Args:
      * String: value absolute name
      * Int: timestamp
@@ -237,12 +263,18 @@ enum MsgType : uint8_t {
      * Float: value
      * or
      * Str: value
+     * or
+     * Str: value
+     * or 
+     * Int: size
+     * Data: image raw data
      */
     MsgStreamBool,
     MsgStreamInt,
     MsgStreamFloat,
     MsgStreamStr,
     MsgStreamStream,
+    MsgStreamFrame,
     /**
      * Server.
      * Return acknowledge when persist 
@@ -271,6 +303,18 @@ enum MsgType : uint8_t {
      * stream
      */
     MsgDescriptionStream,
+    /**
+     * Server.
+     * Return meta information 
+     * for asked frame
+     * Args:
+     * String: frame comment
+     * Int: frame width
+     * Int: frame height
+     * Int: frame type
+     * Int: number of watcher for streaming
+     */
+    MsgValMetaFrame,
     /**
      * Server.
      * Acknowledge previous streaming

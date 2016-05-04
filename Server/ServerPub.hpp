@@ -48,6 +48,16 @@ class ServerPub
             const std::string& val, int64_t timestamp);
 
         /**
+         * Append to publish buffer frame
+         * given absolute name, timestamp,
+         * frame data and size.
+         * The data is immediatly copied.
+         */
+        void publishFrame(const std::string& name,
+            unsigned char* data, size_t size,
+            int64_t timestamp);
+
+        /**
          * Switch values buffer and publish to Client
          * all registered values in former writing buffer.
          */
@@ -101,6 +111,7 @@ class ServerPub
         std::list<PubValFloat> _queue1Float;
         std::list<PubValStr> _queue1Str;
         std::list<PubValStr> _queue1Stream;
+        std::list<zmq::message_t> _queue1Frame;
 
         /**
          * Second double buffer values to
@@ -111,6 +122,7 @@ class ServerPub
         std::list<PubValFloat> _queue2Float;
         std::list<PubValStr> _queue2Str;
         std::list<PubValStr> _queue2Stream;
+        std::list<zmq::message_t> _queue2Frame;
 
         /**
          * Mutex protecting external values container
@@ -121,6 +133,7 @@ class ServerPub
         std::mutex _mutexQueueFloat;
         std::mutex _mutexQueueStr;
         std::mutex _mutexQueueStream;
+        std::mutex _mutexQueueFrame;
 
         /**
          * Swap double buffer for publishing values

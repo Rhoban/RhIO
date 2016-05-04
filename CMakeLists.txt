@@ -31,6 +31,7 @@ set(SOURCES_FILES_SERVER
     Server/ServerRep.cpp
     Server/Stream.cpp
     Server/StreamNode.cpp
+    Server/FrameNode.cpp
     Server/ValueNode.cpp
 )
 set(SOURCES_FILES_COMMON
@@ -99,6 +100,9 @@ if (BUILD_RHIO_TESTS)
     
     add_executable(testBind Tests/testBind.cpp)
     target_link_libraries(testBind RhIO)
+    
+    add_executable(testImgs Tests/testImgs.cpp)
+    target_link_libraries(testImgs RhIO)
 endif (BUILD_RHIO_TESTS)
 
 #Build Examples

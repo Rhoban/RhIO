@@ -432,6 +432,39 @@ std::string ClientReq::streamDescription(const std::string& name)
     return rep.readStr();
 }
 
+std::vector<std::string> ClientReq::listFrames
+    (const std::string& name)
+{
+    return listNames(MsgAskFrames, name);
+}
+        
+Frame ClientReq::metaValueFrame(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgAskMetaFrame);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    DataBuffer rep = waitReply(reply, MsgValMetaFrame);
+    //Parse reply
+    Frame frame;
+    frame.name = name;
+    frame.comment = rep.readStr();
+    frame.width = rep.readInt();
+    frame.height = rep.readInt();
+    frame.format = (FrameFormat)rep.readInt();
+    frame.countWatchers = rep.readInt();
+
+    return frame;
+}
+        
 void ClientReq::enableStreamingStream(const std::string& name)
 {
     //Allocate message data
@@ -465,6 +498,39 @@ void ClientReq::disableStreamingStream(const std::string& name)
     waitReply(reply, MsgStreamingOK);
 }
         
+void ClientReq::enableStreamingFrame(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgEnableStreamingFrame);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
+}
+void ClientReq::disableStreamingFrame(const std::string& name)
+{
+    //Allocate message data
+    zmq::message_t request(
+        sizeof(MsgType) + sizeof(int64_t) + name.length());
+    DataBuffer req(request.data(), request.size());
+    //Build data message
+    req.writeType(MsgDisableStreamingFrame);
+    req.writeStr(name);
+    //Send it
+    _socket.send(request);
+
+    //Wait for server answer
+    zmq::message_t reply;
+    waitReply(reply, MsgStreamingOK);
+}
+
 void ClientReq::save(const std::string& name, 
     const std::string& serverPath)
 {

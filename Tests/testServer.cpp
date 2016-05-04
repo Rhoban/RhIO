@@ -36,6 +36,9 @@ int main()
     RhIO::Root.newFloat("foo/barz/x");
 
     RhIO::Root.newStream("test/stream1", "Some stream");
+    
+    RhIO::Root.newFrame("test/frame1", "Some frame", 
+        300, 200, RhIO::FrameFormat::RGB);
 
     RhIO::Root.newCommand("test/command1",
         "command1",
@@ -64,7 +67,7 @@ int main()
         t += 0.01*f;
 
         RhIO::Root.setFloat("test/sin", sin(t*2*M_PI));
-        out << "Debug, t=" << t << ", sin(t) = " << sin(t*2*M_PI) << std::flush;
+        out << "Debug, t=" << t << ", sin(t) = " << sin(t*2*M_PI) << std::endl << std::flush;
 
         angle = sin(t)*1.0;
         bind.push();

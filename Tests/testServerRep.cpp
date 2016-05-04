@@ -32,6 +32,9 @@ int main()
         });
 
     RhIO::Root.newStream("test/stream1", "stream1");
+    
+    RhIO::Root.newFrame("test/frame1", "frame1", 
+        300, 200, RhIO::FrameFormat::RGB);
 
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(

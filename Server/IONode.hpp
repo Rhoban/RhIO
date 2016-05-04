@@ -8,6 +8,7 @@
 #include "ValueNode.hpp"
 #include "CommandNode.hpp"
 #include "StreamNode.hpp"
+#include "FrameNode.hpp"
 
 namespace RhIO {
 
@@ -24,7 +25,8 @@ constexpr char separator = '/';
  * with children Nodes
  */
 class IONode final : public ValueNode, 
-    public CommandNode, public StreamNode
+    public CommandNode, public StreamNode, 
+    public FrameNode
 {
     public:
 

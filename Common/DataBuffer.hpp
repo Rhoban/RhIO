@@ -34,6 +34,7 @@ class DataBuffer
         void writeInt(int64_t val);
         void writeFloat(double val);
         void writeStr(const std::string& val);
+        void writeData(const unsigned char* data, size_t size);
 
         /**
          * Read each type into data buffer
@@ -44,6 +45,7 @@ class DataBuffer
         int64_t readInt();
         double readFloat();
         std::string readStr();
+        unsigned char* readData(size_t& size);
 
         /**
          * Return internal data pointer

@@ -72,6 +72,17 @@ void DataBuffer::writeStr(const std::string& val)
     memcpy(_data + _offset, val.c_str(), val.length());
     _offset += val.length();
 }
+void DataBuffer::writeData(const unsigned char* data, size_t size)
+{
+    writeInt(size);
+    
+    if (_offset + size > _size) {
+        throw std::logic_error("RhIO buffer size overflow");
+    }
+    
+    memcpy(_data + _offset, data, size);
+    _offset += size;
+}
         
 uint8_t DataBuffer::readType()
 {
@@ -129,6 +140,19 @@ std::string DataBuffer::readStr()
     _offset += len;
 
     return str;
+}
+unsigned char* DataBuffer::readData(size_t& size)
+{
+    size = readInt();
+    
+    if (_offset + size > _size) {
+        throw std::logic_error("RhIO buffer size overflow");
+    }
+    
+    unsigned char* data = _data + _offset;
+    _offset += size;
+
+    return data;
 }
         
 void* DataBuffer::data()
