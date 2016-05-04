@@ -94,6 +94,7 @@ namespace RhIO
             ValueBase *getValue(std::string path);
             NodeValue getNodeValue(std::string path);
             NodeStream getNodeStream(std::string path);
+            NodeFrame getNodeFrame(std::string path);
 
             /**
              * Current directory

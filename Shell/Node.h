@@ -53,6 +53,14 @@ namespace RhIO
     class NodeStream : public NodeItem
     {
     };
+    
+    class NodeFrame : public NodeItem
+    {
+        public:
+            size_t width;
+            size_t height;
+            FrameFormat format;
+    };
 
     class Node
     {
@@ -73,6 +81,7 @@ namespace RhIO
             NodeValue getNodeValue(std::string name);
             std::vector<NodeCommand> getCommands();
             std::vector<NodeStream> getStreams();
+            std::vector<NodeFrame> getFrames();
             std::vector<std::string> getChildren();
 
             /**
@@ -131,6 +140,7 @@ namespace RhIO
             std::map<std::string, Node*> children;
             std::vector<NodeCommand> commands;
             std::vector<NodeStream> streams;
+            std::vector<NodeFrame> frames;
             
             /**
              * Parent node, NULL if root

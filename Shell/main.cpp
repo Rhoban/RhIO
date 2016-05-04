@@ -14,6 +14,7 @@
 #include "commands/SaveCommand.h"
 #include "commands/TreeCommand.h"
 #include "commands/CatCommand.h"
+#include "commands/ViewCommand.h"
 #include "commands/RepeatCommand.h"
 #include "commands/DelayCommand.h"
 #include "commands/PadCommand.h"
@@ -61,6 +62,7 @@ int main(int argc, char *argv[])
     shell->registerCommand(new SaveCommand);
     shell->registerCommand(new TreeCommand);
     shell->registerCommand(new CatCommand);
+    shell->registerCommand(new ViewCommand);
     shell->registerCommand(new RepeatCommand);
     shell->registerCommand(new DelayCommand);
     shell->registerCommand(new PadCommand);

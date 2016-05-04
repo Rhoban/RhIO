@@ -170,6 +170,11 @@ namespace RhIO
             clientSub = new ClientSub(subServer);
             stream = new StreamManager(this);
             sync(!oneShot);
+        } catch (const std::exception& e) {
+            Terminal::setColor("red", true);
+            std::cout << "RhIO Exception: " << e.what() << std::endl;
+            Terminal::clear();
+            return;
         } catch (...) {
             Terminal::setColor("red", true);
             std::cout << "Error when connecting (is the host \"" << server << "\" alive?)" << std::endl;
@@ -1143,6 +1148,42 @@ namespace RhIO
         ss << path << " is not a stream" << std::endl;
         throw std::runtime_error(ss.str());
     }
+    
+    NodeFrame Shell::getNodeFrame(std::string path)
+    {
+        auto parts = pathToParts(path);
+
+        if (parts.size() != 0) {
+            // Child name
+            auto name = parts[parts.size()-1];
+            parts.pop_back();
+
+            // Creating value path
+            std::string prefix = "";
+            for (auto part : parts) {
+                if (prefix != "") prefix += "/";
+                prefix += part;
+            }
+            if (path[0] == '/') {
+                prefix = "/" + prefix;
+            }
+
+            // Getting node
+            auto node = getNode(prefix);
+            if (node != NULL) {
+                // Getting frame
+                for (auto frame : node->getFrames()) {
+                    if (frame.name == name) {
+                        return frame;
+                    }
+                }
+            }
+        }
+
+        std::stringstream ss;
+        ss << path << " is not a frame" << std::endl;
+        throw std::runtime_error(ss.str());
+    }
 
     StreamManager *Shell::getStream()
     {
@@ -1228,6 +1269,12 @@ namespace RhIO
             // Adding streams
             for (auto stream : node->getStreams()) {
                 auto name = prefix+stream.name;
+                possibilities.push_back(name);
+            }
+            
+            // Adding frames
+            for (auto frame : node->getFrames()) {
+                auto name = prefix+frame.name;
                 possibilities.push_back(name);
             }
 

@@ -17,16 +17,27 @@ namespace RhIO
         sub->setHandlerFloat(std::bind(&StreamManager::floatHandler, this, _1, _2, _3));
         sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
         sub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
+        sub->setHandlerFrame(std::bind(&StreamManager::frameHandler, this, _1, _2, _3, _4));
     }
     
     void StreamManager::setStreamCallback(StreamUpdateHandler handler_)
     {
-        handler = handler_;
+        handlerStream = handler_;
     }
 
     void StreamManager::unsetStreamCallback()
     {
-        handler = StreamUpdateHandler();
+        handlerStream = StreamUpdateHandler();
+    }
+    
+    void StreamManager::setFrameCallback(FrameUpdateHandler handler_)
+    {
+        handlerFrame = handler_;
+    }
+
+    void StreamManager::unsetFrameCallback()
+    {
+        handlerFrame = FrameUpdateHandler();
     }
 
     StreamManager::~StreamManager()
@@ -106,8 +117,17 @@ namespace RhIO
     void StreamManager::streamHandler(const std::string &name, long timestamp, const std::string &str)
     {
         (void) timestamp;
-        if (handler) {
-            handler(name, str);
+        if (handlerStream) {
+            handlerStream(name, str);
+        }
+    }
+    
+    void StreamManager::frameHandler(const std::string &name, long timestamp, 
+        unsigned char* data, size_t size)
+    {
+        (void) timestamp;
+        if (handlerFrame) {
+            handlerFrame(name, data, size);
         }
     }
     

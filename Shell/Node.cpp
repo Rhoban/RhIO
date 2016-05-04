@@ -44,6 +44,11 @@ namespace RhIO
     {
         return streams;
     }
+    
+    std::vector<NodeFrame> Node::getFrames()
+    {
+        return frames;
+    }
 
     std::vector<std::string> Node::getChildren()
     {
@@ -101,6 +106,20 @@ namespace RhIO
             stream.desc = client->streamDescription(slashed+name);
             streams.push_back(stream);
         }
+        
+        // Frames
+        for (auto name : client->listFrames(path)) {
+            auto meta = client->metaValueFrame(slashed+name);
+            NodeFrame frame;
+            frame.node = this;
+            frame.name = name;
+            frame.desc = meta.comment;
+            frame.width = meta.width;
+            frame.height = meta.height;
+            frame.format = meta.format;
+            frames.push_back(frame);
+        }
+
 
         // Getting childrens
         for (auto name : client->listChildren(path)) {
