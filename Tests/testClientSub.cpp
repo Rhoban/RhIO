@@ -59,6 +59,7 @@ int main()
         [](const std::string name, int64_t timestamp, 
             unsigned char* data, size_t size) 
     {
+        (void)data;
         std::cout << "Receiving Frame:" << std::endl;
         std::cout << name << " " 
             << timestamp << " " << size << std::endl;

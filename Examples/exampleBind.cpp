@@ -58,6 +58,12 @@ class Object
             //directly on binder sub node.
             _binder.newStream("stream1", "description stream1");
 
+            //A newFrame() shortcut similar to
+            //RhIO::Root.newFrame() create a new frame
+            //directly on binder sub node.
+            _binder.newFrame("frame1", "description frame1", 
+                300, 200, RhIO::FrameFormat::RGB);
+
             //BindFunc() is the shortcut for RhIO::Root.newCommand()
             //with generic type inference. The class member method
             //member1 is externally explose to be remotely call

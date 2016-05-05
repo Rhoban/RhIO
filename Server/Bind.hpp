@@ -119,6 +119,18 @@ class Bind
         void newStream(const std::string& name, 
             const std::string& comment);
         std::ostream& out(const std::string& name);
+        
+        /**
+         * Alias to FrameNode::newFrame
+         * and FrameNode::framePush
+         * using internal prefix child
+         */
+        void newFrame(const std::string& name, 
+            const std::string& comment,
+            size_t width, size_t height, FrameFormat format);
+        bool frameIsStreaming(const std::string& name) const;
+        void framePush(const std::string& name, 
+            unsigned char* data, size_t size);
 
         /**
          * Import RhIO global values to

@@ -50,7 +50,7 @@ namespace RhIO
         // Listing streams
         for (auto stream : node->getStreams()) {
             std::cout << std::left;
-            Terminal::setColor("green", true);
+            Terminal::setColor("darkblue", true);
             std::cout << std::setw(21) << stream.name;
        
             if (stream.desc != "") {
@@ -65,7 +65,7 @@ namespace RhIO
         // Listing frames
         for (auto frame : node->getFrames()) {
             std::cout << std::left;
-            Terminal::setColor("darkblue", true);
+            Terminal::setColor("green", true);
             std::cout << std::setw(21) << frame.name;
             
             std::string format = "";

@@ -116,4 +116,10 @@ RhIO::Root.newCommand("echo",
 ## <a name="streams"></a> Streams
 
 TO BE DOCUMENTED
+(See Examples)
+
+## <a name="frames"></a> Frames
+
+TO BE DOCUMENTED
+(See Examples)
 

@@ -22,6 +22,7 @@ your nodes and parameters, and even trigger methods that are in your code.
     * [Persistence](/Docs/api.md#persistence)
     * [Commands](/Docs/api.md#commands)
     * [Streams](/Docs/api.md#streams)
+    * [Frames](/Docs/api.md#frames)
 * [Using binding (server-side)](/Docs/binding.md)
 * [Shell commands and features (client-side)](/Docs/shell.md)
 * [Using a joypad with the shell](/Docs/joypad.md)

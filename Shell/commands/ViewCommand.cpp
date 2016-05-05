@@ -38,6 +38,7 @@ namespace RhIO
                 _viewers.push_back({
                     nodeFrame.getName(),
                     FrameStreamViewer(nodeFrame.getName(), 
+                        nodeFrame.format,
                         nodeFrame.width, nodeFrame.height)
                 });
                 _viewers[i].second.start();

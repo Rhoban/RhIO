@@ -3,8 +3,10 @@
 namespace RhIO {
 
 FrameStreamViewer::FrameStreamViewer(const std::string& name,
+    FrameFormat format,
     size_t width, size_t height) :
     _name(name),
+    _format(format),
     _width(width),
     _height(height),
     _pipeFd(-1),
@@ -79,13 +81,23 @@ void FrameStreamViewer::createPlayerInstance()
         //Calling the Player
         std::string videoSize = std::to_string(_width) 
             + "x" + std::to_string(_height);
+        std::string format = "";
+        if (_format == FrameFormat::RGB) {
+            format = "rgb24";
+        }
+        if (_format == FrameFormat::BGR) {
+            format = "bgr24";
+        }
+        if (_format == FrameFormat::YUV) {
+            format = "yuv444p";
+        }
         execlp("ffplay", "ffplay", 
             "-v", "quiet", 
             "-f", "rawvideo", 
             "-infbuf",
             "-framedrop",
             "-window_title", _name.c_str(),
-            "-pixel_format", "rgb24", 
+            "-pixel_format", format.c_str(), 
             "-video_size", videoSize.c_str(), 
             "-framerate", "100", 
             "-",

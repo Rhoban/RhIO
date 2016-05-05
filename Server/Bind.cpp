@@ -226,6 +226,25 @@ std::ostream& Bind::out(const std::string& name)
     return node().out(name);
 }
 
+void Bind::newFrame(const std::string& name, 
+    const std::string& comment,
+    size_t width, size_t height, FrameFormat format)
+{
+    //Create non existing hierarchy
+    createPath(_prefix+name);
+    
+    node().newFrame(name, comment, width, height, format);
+}
+bool Bind::frameIsStreaming(const std::string& name) const
+{
+    return node().frameIsStreaming(name);
+}
+void Bind::framePush(const std::string& name, 
+    unsigned char* data, size_t size)
+{
+    node().framePush(name, data, size);
+}
+
 void Bind::pull()
 {
     for (auto& b : _bindsBool) {

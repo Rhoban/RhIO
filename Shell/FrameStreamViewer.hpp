@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include "Frame.hpp"
 
 namespace RhIO {
 
@@ -24,6 +25,7 @@ class FrameStreamViewer
          * Initialization with image size
          */
         FrameStreamViewer(const std::string& name, 
+            FrameFormat format,
             size_t width, size_t height);
 
         /**
@@ -46,6 +48,11 @@ class FrameStreamViewer
          * Windows name
          */
         std::string _name;
+
+        /**
+         * Image format
+         */
+        FrameFormat _format;
 
         /**
          * Image stream format
