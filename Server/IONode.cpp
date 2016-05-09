@@ -72,76 +72,6 @@ IONode::IONode(const std::string& name, IONode* parent) :
     BaseNode<FrameNode>::pwd = _pwd;
 }
         
-IONode::IONode(const IONode& node) :
-    ValueNode(std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3)),
-    CommandNode(std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3)),
-    StreamNode(std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3)),
-    FrameNode(std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3)),
-    _name(node._name),
-    _pwd(node._pwd),
-    _parent(node._parent),
-    _children(node._children),
-    _mutex()
-{
-    BaseNode<ValueNode>::pwd = _pwd;
-    BaseNode<CommandNode>::pwd = _pwd;
-    BaseNode<StreamNode>::pwd = _pwd;
-    BaseNode<FrameNode>::pwd = _pwd;
-}
-IONode& IONode::operator=(const IONode& node)
-{
-    ValueNode::operator=(node);
-    CommandNode::operator=(node);
-    StreamNode::operator=(node);
-    FrameNode::operator=(node);
-    _name = node._name;
-    _pwd = node._pwd;
-    _parent = node._parent;
-    _children = node._children;
-    BaseNode<ValueNode>::forwardFunc = std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3);
-    BaseNode<CommandNode>::forwardFunc = std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3);
-    BaseNode<StreamNode>::forwardFunc = std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3);
-    BaseNode<FrameNode>::forwardFunc = std::bind(
-        &IONode::forwardChildren, 
-        this, std::placeholders::_1, 
-        std::placeholders::_2, 
-        std::placeholders::_3);
-    BaseNode<ValueNode>::pwd = _pwd;
-    BaseNode<CommandNode>::pwd = _pwd;
-    BaseNode<StreamNode>::pwd = _pwd;
-    BaseNode<FrameNode>::pwd = _pwd;
-
-    return *this;
-}
-        
 const std::string& IONode::name() const
 {
     return _name;
@@ -354,6 +284,76 @@ void IONode::load(const std::string& path)
             c.second->load(path + c.first);
         }
     }
+}
+
+IONode::IONode(const IONode& node) :
+    ValueNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
+    CommandNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
+    StreamNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
+    FrameNode(std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3)),
+    _name(node._name),
+    _pwd(node._pwd),
+    _parent(node._parent),
+    _children(node._children),
+    _mutex()
+{
+    BaseNode<ValueNode>::pwd = _pwd;
+    BaseNode<CommandNode>::pwd = _pwd;
+    BaseNode<StreamNode>::pwd = _pwd;
+    BaseNode<FrameNode>::pwd = _pwd;
+}
+IONode& IONode::operator=(const IONode& node)
+{
+    ValueNode::operator=(node);
+    CommandNode::operator=(node);
+    StreamNode::operator=(node);
+    FrameNode::operator=(node);
+    _name = node._name;
+    _pwd = node._pwd;
+    _parent = node._parent;
+    _children = node._children;
+    BaseNode<ValueNode>::forwardFunc = std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3);
+    BaseNode<CommandNode>::forwardFunc = std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3);
+    BaseNode<StreamNode>::forwardFunc = std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3);
+    BaseNode<FrameNode>::forwardFunc = std::bind(
+        &IONode::forwardChildren, 
+        this, std::placeholders::_1, 
+        std::placeholders::_2, 
+        std::placeholders::_3);
+    BaseNode<ValueNode>::pwd = _pwd;
+    BaseNode<CommandNode>::pwd = _pwd;
+    BaseNode<StreamNode>::pwd = _pwd;
+    BaseNode<FrameNode>::pwd = _pwd;
+
+    return *this;
 }
         
 IONode* IONode::forwardChildren(

@@ -15,7 +15,8 @@ int main()
     
     RhIO::Root.newFrame("test/frame1", "Some frame stream", 
         width, height, RhIO::FrameFormat::RGB);
-    RhIO::Root.newFrame("test/frame2", "Some frame stream", 
+    RhIO::IONode& node = RhIO::Root.child("test"); 
+    node.newFrame("frame2", "Some frame stream", 
         width, height, RhIO::FrameFormat::RGB);
 
     RhIO::Root.newInt("test/color")->defaultValue(0)->minimum(0)->maximum(255);

@@ -41,13 +41,6 @@ class IONode final : public ValueNode,
         IONode(const std::string& name, IONode* parent);
 
         /**
-         * Copy and assignment operator
-         * (Update BaseNode forwardFunc)
-         */
-        IONode(const IONode& node);
-        IONode& operator=(const IONode& node);
-
-        /**
          * Return Node name
          */
         const std::string& name() const;
@@ -108,7 +101,7 @@ class IONode final : public ValueNode,
         void load(const std::string& path);
     
     private:
-
+        
         /**
          * Node name
          */
@@ -137,6 +130,14 @@ class IONode final : public ValueNode,
          * modification
          */
         mutable std::mutex _mutex;
+        
+        /**
+         * Copy and assignment operator
+         * should not called by user.
+         * (Update BaseNode forwardFunc)
+         */
+        IONode(const IONode& node);
+        IONode& operator=(const IONode& node);
 
         /**
          * If given name is referring to this Node, nullptr

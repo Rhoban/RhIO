@@ -35,6 +35,8 @@ int main()
     
     RhIO::Root.newFrame("test/frame1", "frame1", 
         300, 200, RhIO::FrameFormat::RGB);
+    RhIO::Root.child("test").newFrame("frame2", "frame2",
+        800, 600, RhIO::FrameFormat::BGR);
 
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(
