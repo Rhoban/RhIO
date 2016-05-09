@@ -25,8 +25,7 @@ class FrameStreamViewer
          * Initialization with image size
          */
         FrameStreamViewer(const std::string& name, 
-            FrameFormat format,
-            size_t width, size_t height);
+            FrameFormat format);
 
         /**
          * Start and stop player instance.
@@ -39,8 +38,11 @@ class FrameStreamViewer
         /**
          * Display the given image with the Player.
          * Raw image data and its size are given.
+         * Image width and height size are given.
          */
-        void pushFrame(unsigned char* data, size_t size);
+        void pushFrame(
+            size_t width, size_t height, 
+            unsigned char* data, size_t size);
 
     private:
 

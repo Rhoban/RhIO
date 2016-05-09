@@ -3,12 +3,11 @@
 namespace RhIO {
 
 FrameStreamViewer::FrameStreamViewer(const std::string& name,
-    FrameFormat format,
-    size_t width, size_t height) :
+    FrameFormat format) :
     _name(name),
     _format(format),
-    _width(width),
-    _height(height),
+    _width(-1),
+    _height(-1),
     _pipeFd(-1),
     _playerPID(-1)
 {
@@ -16,9 +15,13 @@ FrameStreamViewer::FrameStreamViewer(const std::string& name,
 
 void FrameStreamViewer::start()
 {
+    if (_width == -1 || _height == -1) {
+        throw std::logic_error(
+            "FrameStreamViewer size uninitialize");
+    }
     if (_pipeFd != -1) {
         throw std::logic_error(
-            "StreamViewer already started");
+            "FrameStreamViewer already started");
     }
     createPlayerInstance();
 }
@@ -31,11 +34,15 @@ void FrameStreamViewer::stop()
     }
 }
 
-void FrameStreamViewer::pushFrame(unsigned char* data, size_t size)
+void FrameStreamViewer::pushFrame(
+    size_t width, size_t height,
+    unsigned char* data, size_t size)
 {
-    if (_pipeFd == -1) {
-        throw std::logic_error(
-            "StreamViewer not started");
+    if (_width != width || _height != height) {
+        _width = width;
+        _height = height;
+        stop();
+        start();
     }
     write(_pipeFd, data, size);
 }

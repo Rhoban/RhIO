@@ -38,14 +38,12 @@ namespace RhIO
                 _viewers.push_back({
                     nodeFrame.getName(),
                     FrameStreamViewer(nodeFrame.getName(), 
-                        nodeFrame.format,
-                        nodeFrame.width, nodeFrame.height)
+                        nodeFrame.format)
                 });
-                _viewers[i].second.start();
                 client->enableStreamingFrame(nodeFrame.getName());
             }
             
-            stream->setFrameCallback(std::bind(&ViewCommand::update, this, _1, _2, _3));
+            stream->setFrameCallback(std::bind(&ViewCommand::update, this, _1, _2, _3, _4, _5));
             shell->wait();
             stream->unsetFrameCallback();
             clearStream();
@@ -58,11 +56,12 @@ namespace RhIO
         }
     }
 
-    void ViewCommand::update(std::string name, unsigned char* data, size_t size)
+    void ViewCommand::update(std::string name, size_t width, size_t height, 
+        unsigned char* data, size_t size)
     {
         for (size_t i=0;i<_viewers.size();i++) {
             if (name == _viewers[i].first) {
-                _viewers[i].second.pushFrame(data, size);
+                _viewers[i].second.pushFrame(width, height, data, size);
             }
         }
     }

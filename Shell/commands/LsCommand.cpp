@@ -83,8 +83,7 @@ namespace RhIO
             
             std::cout << std::left;
             Terminal::setColor("magenta", false);
-            std::string size = format + ":" + std::to_string(frame.width) + "x" + std::to_string(frame.height);
-            std::cout << std::setw(21) << size;
+            std::cout << std::setw(21) << format;
        
             std::cout << std::endl;
             Terminal::clear();

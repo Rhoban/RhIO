@@ -114,8 +114,6 @@ namespace RhIO
             frame.node = this;
             frame.name = name;
             frame.desc = meta.comment;
-            frame.width = meta.width;
-            frame.height = meta.height;
             frame.format = meta.format;
             frames.push_back(frame);
         }

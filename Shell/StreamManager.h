@@ -26,7 +26,8 @@ namespace RhIO
             /**
              * Handle to update the frame
              */
-            typedef std::function<void (std::string name, unsigned char* data, size_t size)> FrameUpdateHandler;
+            typedef std::function<void (std::string name, 
+                size_t width, size_t height, unsigned char* data, size_t size)> FrameUpdateHandler;
             void setFrameCallback(FrameUpdateHandler handler);
             void unsetFrameCallback();
 
@@ -39,7 +40,7 @@ namespace RhIO
             void stringHandler(const std::string &name, long timestamp, const std::string &val);
             void streamHandler(const std::string &name, long timestamp, const std::string &str);
             void frameHandler(const std::string &name, long timestamp, 
-                unsigned char* data, size_t size);
+                size_t width, size_t height, unsigned char* data, size_t size);
             
             /**
              * Add a node pool to monitor

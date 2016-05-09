@@ -57,8 +57,6 @@ namespace RhIO
     class NodeFrame : public NodeItem
     {
         public:
-            size_t width;
-            size_t height;
             FrameFormat format;
     };
 
