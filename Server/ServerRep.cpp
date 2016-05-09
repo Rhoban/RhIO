@@ -949,12 +949,10 @@ void ServerRep::valMetaFrame(DataBuffer& buffer)
     //Allocate message data
     zmq::message_t reply(
         sizeof(MsgType) + sizeof(int64_t) + frame.comment.length()
-        + 4*sizeof(int64_t));
+        + 2*sizeof(int64_t));
     DataBuffer rep(reply.data(), reply.size());
     rep.writeType(MsgValMetaFrame);
     rep.writeStr(frame.comment);
-    rep.writeInt(frame.width);
-    rep.writeInt(frame.height);
     rep.writeInt((uint64_t)frame.format);
     rep.writeInt(frame.countWatchers);
     

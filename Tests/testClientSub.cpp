@@ -57,13 +57,16 @@ int main()
     });
     client.setHandlerFrame(
         [](const std::string name, int64_t timestamp, 
+            size_t width, size_t height,
             unsigned char* data, size_t size) 
     {
         (void)data;
         std::cout << "Receiving Frame:" << std::endl;
-        std::cout << name << " " 
-            << timestamp << " " << size << std::endl;
+        std::cout << name << " " << timestamp << " " 
+            << width << "x" << height << " size=" << size << std::endl;
         assert(name == "test/frame1");
+        assert(width == 300);
+        assert(height == 200);
         assert(size == 3*300*200);
     });
     

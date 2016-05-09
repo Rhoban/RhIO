@@ -59,6 +59,7 @@ const Frame& FrameNode::getFrame(
 }
 
 void FrameNode::framePush(const std::string& name, 
+    size_t width, size_t height,
     unsigned char* data, size_t size, 
     std::chrono::steady_clock::time_point timestamp)
 {
@@ -66,18 +67,19 @@ void FrameNode::framePush(const std::string& name,
     std::string tmpName;
     FrameNode* child = BaseNode::forwardFunc(name, tmpName, false);
     if (child != nullptr) {
-        child->framePush(tmpName, data, size);
+        child->framePush(tmpName, width, height, data, size);
         return;
     }
     
     std::lock_guard<std::mutex> lock(_mutex);
     if (_frames.count(name) > 0) {
-        if (size != 3*_frames.at(name).width*_frames.at(name).height) {
+        if (size != 3*width*height) {
             throw std::logic_error(
                 "RhIO frame size seems wrong: " + name);
         }
         if (_frames.at(name).countWatchers > 0) {
             ServerStream->publishFrame(BaseNode::pwd + separator + name, 
+                width, height, 
                 data, size,
                 std::chrono::duration_cast<std::chrono::milliseconds>
                 (timestamp.time_since_epoch()).count());
@@ -130,14 +132,13 @@ void FrameNode::disableStreamingFrame(const std::string& name)
 
 void FrameNode::newFrame(const std::string& name,
     const std::string& comment, 
-    size_t width, size_t height, 
     FrameFormat format)
 {
     //Forward to subtree
     std::string tmpName;
     FrameNode* child = BaseNode::forwardFunc(name, tmpName, true);
     if (child != nullptr) {
-        child->newFrame(tmpName, comment, width, height, format);
+        child->newFrame(tmpName, comment, format);
         return;
     }
     
@@ -146,8 +147,6 @@ void FrameNode::newFrame(const std::string& name,
         _frames[name] = Frame();
         _frames.at(name).name = name;
         _frames.at(name).comment = comment;
-        _frames.at(name).width = width;
-        _frames.at(name).height = height;
         _frames.at(name).format = format;
         _frames.at(name).countWatchers = 0;
     } else {

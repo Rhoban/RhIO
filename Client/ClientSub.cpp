@@ -142,11 +142,13 @@ void ClientSub::subscriberThread(const std::string& endpoint)
             //Stream Frame value
             std::string name = sub.readStr();
             int64_t timestamp = sub.readInt();
+            int64_t width = sub.readInt();
+            int64_t height = sub.readInt();
             size_t size;
             unsigned char* data = sub.readData(size);
             std::lock_guard<std::mutex> lock(_mutex);
             if (_handlerFrame) {
-                _handlerFrame(name, timestamp, data, size);
+                _handlerFrame(name, timestamp, width, height, data, size);
             }
             continue;
         } else {

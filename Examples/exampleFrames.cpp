@@ -17,11 +17,10 @@ int main()
 
     //Frame have to be created before use. First argument is
     //frame relative new name. The other arguments are the
-    //frame textual description, its width and height size
+    //frame textual description,
     //and its pixel format (RGB, BGR or YUV).
     RhIO::Root.newFrame("path/in/tree/frame1", 
-        "description of frame1", 
-        width, height, format);
+        "description of frame1", format);
 
     //All frames in a node can be listed by
     //a vector of frame names.
@@ -37,13 +36,15 @@ int main()
         //The frame data is immedialy copied from given
         //memory pointer and given size.
         //(the given size should be 3*wifth*height).
-        RhIO::Root.framePush("path/in/tree/frame1", frame, size);
+        RhIO::Root.framePush("path/in/tree/frame1", 
+            width, height, frame, size);
     }
 
-    //Meta frame informatin can be retrieve 
+    //Meta frame information can be retrieve 
     //using following method.
-    std::cout << "Frame size: " 
-        << RhIO::Root.getFrame("path/in/tree/frame1").width << "x" 
-        << RhIO::Root.getFrame("path/in/tree/frame1").height << std::endl;
+    std::cout << "Frame description: " 
+        << RhIO::Root.getFrame("path/in/tree/frame1").comment << std::endl;
+    std::cout << "Frame format: " 
+        << (int)RhIO::Root.getFrame("path/in/tree/frame1").format << std::endl;
 }
 

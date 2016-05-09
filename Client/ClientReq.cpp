@@ -457,8 +457,6 @@ Frame ClientReq::metaValueFrame(const std::string& name)
     Frame frame;
     frame.name = name;
     frame.comment = rep.readStr();
-    frame.width = rep.readInt();
-    frame.height = rep.readInt();
     frame.format = (FrameFormat)rep.readInt();
     frame.countWatchers = rep.readInt();
 

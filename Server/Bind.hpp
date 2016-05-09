@@ -127,9 +127,10 @@ class Bind
          */
         void newFrame(const std::string& name, 
             const std::string& comment,
-            size_t width, size_t height, FrameFormat format);
+            FrameFormat format);
         bool frameIsStreaming(const std::string& name) const;
         void framePush(const std::string& name, 
+            size_t width, size_t height,
             unsigned char* data, size_t size);
 
         /**

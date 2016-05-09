@@ -62,7 +62,7 @@ class Object
             //RhIO::Root.newFrame() create a new frame
             //directly on binder sub node.
             _binder.newFrame("frame1", "description frame1", 
-                300, 200, RhIO::FrameFormat::RGB);
+                RhIO::FrameFormat::RGB);
 
             //BindFunc() is the shortcut for RhIO::Root.newCommand()
             //with generic type inference. The class member method

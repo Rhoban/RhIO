@@ -83,6 +83,7 @@ void ServerPub::publishStream(const std::string& name,
 }
 
 void ServerPub::publishFrame(const std::string& name,
+    size_t width, size_t height,
     unsigned char* data, size_t size,
     int64_t timestamp)
 {
@@ -93,32 +94,34 @@ void ServerPub::publishFrame(const std::string& name,
             sizeof(MsgType) 
             + sizeof(int64_t) 
             + name.length()
-            + sizeof(int64_t) 
-            + sizeof(int64_t)
+            + 4*sizeof(int64_t) 
             + size
         ));
         DataBuffer pub(_queue1Frame.back().data(), _queue1Frame.back().size());
         pub.writeType(MsgStreamFrame);
         pub.writeStr(name);
         pub.writeInt(timestamp);
+        pub.writeInt((uint64_t)width);
+        pub.writeInt((uint64_t)height);
         pub.writeData(data, size);
     } else {
         _queue2Frame.push_back(zmq::message_t(
             sizeof(MsgType) 
             + sizeof(int64_t) 
             + name.length()
-            + sizeof(int64_t) 
-            + sizeof(int64_t)
+            + 4*sizeof(int64_t) 
             + size
         ));
         DataBuffer pub(_queue2Frame.back().data(), _queue2Frame.back().size());
         pub.writeType(MsgStreamFrame);
         pub.writeStr(name);
         pub.writeInt(timestamp);
+        pub.writeInt((uint64_t)width);
+        pub.writeInt((uint64_t)height);
         pub.writeData(data, size);
     }
 }        
-        
+    
 void ServerPub::sendToClient()
 {
     //Swap double buffer

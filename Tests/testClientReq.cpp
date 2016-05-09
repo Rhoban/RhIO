@@ -107,13 +107,9 @@ int main()
     assert(client.listFrames("test")[0] == "frame1");
     assert(client.listFrames("test")[1] == "frame2");
     assert(client.metaValueFrame("test/frame1").comment == "frame1");
-    assert(client.metaValueFrame("test/frame1").width == 300);
-    assert(client.metaValueFrame("test/frame1").height == 200);
     assert(client.metaValueFrame("test/frame1").format 
         == RhIO::FrameFormat::RGB);
     assert(client.metaValueFrame("test/frame2").comment == "frame2");
-    assert(client.metaValueFrame("test/frame2").width == 800);
-    assert(client.metaValueFrame("test/frame2").height == 600);
     assert(client.metaValueFrame("test/frame2").format 
         == RhIO::FrameFormat::BGR);
     assert(client.metaValueFrame("test/frame1").countWatchers == 0);

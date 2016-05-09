@@ -31,12 +31,6 @@ struct Frame
     std::string comment;
 
     /**
-     * Frame dimension
-     */
-    size_t width;
-    size_t height;
-
-    /**
      * Frame format
      */
     FrameFormat format;

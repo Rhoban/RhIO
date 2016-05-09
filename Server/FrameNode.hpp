@@ -53,9 +53,11 @@ class FrameNode: public BaseNode<FrameNode>
         /**
          * Send to watchers the raw frame with 
          * given name with given data of given size.
+         * Frame width and height size are also given.
          * The given data is immediatly copied.
          */
         void framePush(const std::string& name, 
+            size_t width, size_t height,
             unsigned char* data, size_t size,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
@@ -69,11 +71,10 @@ class FrameNode: public BaseNode<FrameNode>
         
         /**
          * Register a new frame with given name,
-         * textual description, size and format
+         * textual description and format
          */
         void newFrame(const std::string& name,
             const std::string& comment, 
-            size_t width, size_t height, 
             FrameFormat format);
 
         /**

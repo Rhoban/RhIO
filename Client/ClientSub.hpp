@@ -32,7 +32,8 @@ class ClientSub
             (const std::string& name, int64_t timestamp, const std::string& val)> 
             StreamStrHandler;
         typedef std::function<void
-            (const std::string& name, int64_t timestamp, unsigned char* data, size_t size)> 
+            (const std::string& name, int64_t timestamp, 
+            size_t width, size_t height, unsigned char* data, size_t size)> 
             StreamFrameHandler;
         
         /**

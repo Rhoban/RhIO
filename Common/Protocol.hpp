@@ -267,6 +267,8 @@ enum MsgType : uint8_t {
      * Str: value
      * or 
      * Int: size
+     * Int: image width
+     * Int: image height
      * Data: image raw data
      */
     MsgStreamBool,
@@ -309,8 +311,6 @@ enum MsgType : uint8_t {
      * for asked frame
      * Args:
      * String: frame comment
-     * Int: frame width
-     * Int: frame height
      * Int: frame type
      * Int: number of watcher for streaming
      */

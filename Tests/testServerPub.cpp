@@ -21,7 +21,7 @@ int main()
     RhIO::Root.newStream("test/stream1", "stream1");
     
     RhIO::Root.newFrame("test/frame1", "frame1",
-        300, 200, RhIO::FrameFormat::RGB);
+        RhIO::FrameFormat::RGB);
 
     std::cout << "Waiting" << std::endl;
     for (size_t k=0;k<50;k++) {
@@ -61,7 +61,8 @@ int main()
             for (size_t i=0;i<3*300*200;i++) {
                 data[i] = 0;
             }
-            RhIO::Root.framePush("/test/frame1", data, 3*300*200);
+            RhIO::Root.framePush("/test/frame1", 
+                300, 200, data, 3*300*200);
             delete[] data;
         }
     }

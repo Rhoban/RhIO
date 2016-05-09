@@ -38,7 +38,7 @@ int main()
     RhIO::Root.newStream("test/stream1", "Some stream");
     
     RhIO::Root.newFrame("test/frame1", "Some frame", 
-        300, 200, RhIO::FrameFormat::RGB);
+        RhIO::FrameFormat::RGB);
 
     RhIO::Root.newCommand("test/command1",
         "command1",
