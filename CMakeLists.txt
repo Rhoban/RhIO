@@ -48,10 +48,10 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #Enable compiler Warning
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
-#Build Server and Client as static library
-add_library(RhIO STATIC ${SOURCES_FILES_SERVER} ${SOURCES_FILES_COMMON})
+#Build Server and Client as shared library
+add_library(RhIO SHARED ${SOURCES_FILES_SERVER} ${SOURCES_FILES_COMMON})
 target_link_libraries(RhIO ${RHIO_LIBRARIES})
-add_library(RhIOClient STATIC ${SOURCES_FILES_CLIENT} ${SOURCES_FILES_COMMON})
+add_library(RhIOClient SHARED ${SOURCES_FILES_CLIENT} ${SOURCES_FILES_COMMON})
 target_link_libraries(RhIOClient ${RHIO_LIBRARIES})
 
 #Build Tests
