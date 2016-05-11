@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include <iostream>
 #include <list>
-#include "ServerRep.hpp"
-#include "Protocol.hpp"
+#include "Server/ServerRep.hpp"
+#include "Common/Protocol.hpp"
 #include "RhIO.hpp"
 
 namespace RhIO {

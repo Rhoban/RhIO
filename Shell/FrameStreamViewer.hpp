@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "Frame.hpp"
+#include <RhIOClient.hpp>
 
 namespace RhIO {
 

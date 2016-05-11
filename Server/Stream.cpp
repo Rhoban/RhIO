@@ -1,6 +1,6 @@
-#include "Stream.hpp"
+#include "Server/Stream.hpp"
 #include "RhIO.hpp"
-#include "ServerPub.hpp"
+#include "Server/ServerPub.hpp"
 
 namespace RhIO {
         

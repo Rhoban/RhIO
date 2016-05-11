@@ -2,8 +2,7 @@
 
 #include <map>
 #include <vector>
-#include <ClientReq.hpp>
-#include <Value.hpp>
+#include <RhIOClient.hpp>
 
 namespace RhIO
 {

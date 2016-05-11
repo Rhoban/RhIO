@@ -13,12 +13,7 @@ option(BUILD_RHIO_TESTS "Build RhIO Tests" OFF)
 option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
 
 #Include sources directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Server)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Common)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Client)
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/contrib")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #Sources files
 set(SOURCES_FILES_SERVER

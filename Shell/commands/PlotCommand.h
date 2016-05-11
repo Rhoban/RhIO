@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include "Command.h"
-#include <Value.hpp>
+#include <RhIOClient.hpp>
 
 namespace RhIO
 {

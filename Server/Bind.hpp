@@ -4,8 +4,8 @@
 #include <vector>
 #include <string>
 #include "RhIO.hpp"
-#include "Value.hpp"
-#include "ValueNode.hpp"
+#include "Server/Value.hpp"
+#include "Server/ValueNode.hpp"
 
 namespace RhIO {
 

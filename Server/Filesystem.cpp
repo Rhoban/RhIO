@@ -2,8 +2,8 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include "Filesystem.hpp"
-#include "IONode.hpp"
+#include "Server/Filesystem.hpp"
+#include "Server/IONode.hpp"
 
 namespace RhIO {
 

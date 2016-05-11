@@ -9,8 +9,8 @@
 #include <chrono>
 #include <mutex>
 
-#include "Value.hpp"
-#include "BaseNode.hpp"
+#include "Server/Value.hpp"
+#include "Server/BaseNode.hpp"
 
 namespace RhIO {
 

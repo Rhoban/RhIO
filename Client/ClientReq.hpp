@@ -4,11 +4,11 @@
 #include <vector>
 #include <string>
 #include <zmq.hpp>
-#include "DataBuffer.hpp"
-#include "Protocol.hpp"
-#include "Value.hpp"
-#include "Stream.hpp"
-#include "Frame.hpp"
+#include "Common/DataBuffer.hpp"
+#include "Common/Protocol.hpp"
+#include "Server/Value.hpp"
+#include "Server/Stream.hpp"
+#include "Server/Frame.hpp"
 
 namespace RhIO {
 

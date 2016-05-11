@@ -1,6 +1,6 @@
-#include "ServerPub.hpp"
-#include "Protocol.hpp"
-#include "DataBuffer.hpp"
+#include "Server/ServerPub.hpp"
+#include "Common/Protocol.hpp"
+#include "Common/DataBuffer.hpp"
 
 namespace RhIO {
 

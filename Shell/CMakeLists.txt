@@ -46,11 +46,7 @@ set (SOURCES
 )
 
 include_directories ("${CMAKE_SOURCE_DIR}")
-include_directories ("${RHIO_DIR}/Client")
-include_directories ("${RHIO_DIR}/Common")
-include_directories ("${RHIO_DIR}/Server")
-include_directories ("${RHIO_DIR}/include")
-include_directories ("${RHIO_DIR}/contrib")
+include_directories ("${RHIO_DIR}")
 link_directories ("${RHIO_DIR}/build")
 
 set (EXTRA_LIBS

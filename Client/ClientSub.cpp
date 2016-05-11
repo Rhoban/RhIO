@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include <chrono>
-#include "ClientSub.hpp"
-#include "Protocol.hpp"
-#include "DataBuffer.hpp"
+#include "Client/ClientSub.hpp"
+#include "Common/Protocol.hpp"
+#include "Common/DataBuffer.hpp"
 
 namespace RhIO {
         
