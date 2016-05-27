@@ -41,6 +41,11 @@ class IONode final : public ValueNode,
         IONode(const std::string& name, IONode* parent);
 
         /**
+         * Destructor
+         */
+        ~IONode();
+
+        /**
          * Return Node name
          */
         const std::string& name() const;

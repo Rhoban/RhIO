@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "RhIO.hpp"
-#include "ClientReq.hpp"
+#include "RhIOClient.hpp"
 
 int main() 
 {

@@ -46,6 +46,13 @@ class BaseNode
         {
         }
 
+        /**
+         * Virtual destructor
+         */
+        virtual ~BaseNode()
+        {
+        }
+
     protected:
 
         /**

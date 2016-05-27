@@ -23,7 +23,16 @@ ServerPub* ServerStream = nullptr;
  * of initialized Server
  * (for main thread waiting)
  */
-std::atomic<int> initServerCount;
+static std::atomic<int> initServerCount;
+
+/**
+ * Server Pub and Rep thread instance
+ * and quit state
+ */
+static std::thread* serverThreadRep = nullptr;
+static std::thread* serverThreadPub = nullptr;
+static bool serverThreadRepOver = false;
+static bool serverThreadPubOver = false;
 
 /**
  * Reply Server main loop handling
@@ -36,7 +45,7 @@ static void runServerRep()
     //for initialization ready
     initServerCount++;
 
-    while (true) {
+    while (!serverThreadRepOver) {
         server.handleRequest();
     }
 }
@@ -54,7 +63,7 @@ static void runServerPub()
     //for initialization ready
     initServerCount++;
 
-    while (true) {
+    while (!serverThreadPubOver) {
         server.sendToClient();
         //Streaming value at 50Hz
         std::this_thread::sleep_for(
@@ -73,16 +82,30 @@ static void __attribute__ ((constructor)) initThreadServer()
     //Init atomic counter
     initServerCount = 0;
     //Start Server threads
-    std::thread* serverThreadRep = new std::thread(runServerRep);
-    (void)serverThreadRep;
-    std::thread* serverThreadPub = new std::thread(runServerPub);
-    (void)serverThreadPub;
+    serverThreadRepOver = false;
+    serverThreadPubOver = false;
+    serverThreadRep = new std::thread(runServerRep);
+    serverThreadPub = new std::thread(runServerPub);
 
     //Wait until both Server are initialized
     while (initServerCount != 2) {
         std::this_thread::sleep_for(
             std::chrono::milliseconds(10));
     }
+}
+
+/**
+ * Ask and wait Server thread ending
+ */
+static void __attribute__ ((destructor)) stopThreadServer()
+{
+    //Wait the end of server thread
+    serverThreadRepOver = true;
+    serverThreadPubOver = true;
+    serverThreadPub->join();
+    serverThreadRep->join();
+    delete serverThreadPub;
+    delete serverThreadRep;
 }
 
 }

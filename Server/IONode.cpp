@@ -72,6 +72,13 @@ IONode::IONode(const std::string& name, IONode* parent) :
     BaseNode<FrameNode>::pwd = _pwd;
 }
         
+IONode::~IONode()
+{
+    for (const auto& it : _children) {
+        delete it.second;
+    }
+}
+        
 const std::string& IONode::name() const
 {
     return _name;

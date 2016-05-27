@@ -27,7 +27,7 @@ class ValueNode : public BaseNode<ValueNode>
          * Inherit BaseNode constructor
          */
         using BaseNode<ValueNode>::BaseNode;
-
+        
         /**
          * Custom assignement operator
          * (because std::mutex is non copyable)

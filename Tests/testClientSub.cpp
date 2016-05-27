@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 #include "RhIO.hpp"
-#include "ClientSub.hpp"
+#include "RhIOClient.hpp"
 
 int main() 
 {

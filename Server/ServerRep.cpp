@@ -12,13 +12,22 @@ ServerRep::ServerRep(const std::string& endpoint) :
     _socket(_context, ZMQ_REP)
 {
     _socket.bind(endpoint.c_str());
+    //Set recv timeout in ms for not
+    //waiting infinitely
+    int timeout = 500;
+    _socket.setsockopt(ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
 }
         
 void ServerRep::handleRequest()
 {
     //Wait for client request
     zmq::message_t request;
-    _socket.recv(&request);
+    bool success = _socket.recv(&request);
+
+    //Return if the socket read timeout
+    if (!success) {
+        return;
+    }
 
     //Forward all possible exception to client
     try {
