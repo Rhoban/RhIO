@@ -165,7 +165,7 @@ namespace RhIO
                  * Filed name
                  */
                 char buffer[SLIDER_WIDTH+2];
-                sprintf(buffer, " %-10s", value->name.c_str());
+                snprintf(buffer, SLIDER_WIDTH+1, " %-10s", value->name.c_str());
                 draw(names, SLIDER_WIDTH*(pos-offset), buffer);
                  
                 /**
