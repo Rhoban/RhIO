@@ -15,6 +15,9 @@
 #include "commands/TreeCommand.h"
 #include "commands/CatCommand.h"
 #include "commands/ViewCommand.h"
+#ifdef HAS_LOGIMG
+#include "commands/LogImgCommand.h"
+#endif
 #include "commands/RepeatCommand.h"
 #include "commands/DelayCommand.h"
 #include "commands/PadCommand.h"
@@ -63,6 +66,9 @@ int main(int argc, char *argv[])
     shell->registerCommand(new TreeCommand);
     shell->registerCommand(new CatCommand);
     shell->registerCommand(new ViewCommand);
+#ifdef HAS_LOGIMG
+    shell->registerCommand(new LogImgCommand);
+#endif
     shell->registerCommand(new RepeatCommand);
     shell->registerCommand(new DelayCommand);
     shell->registerCommand(new PadCommand);

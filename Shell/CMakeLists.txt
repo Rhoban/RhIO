@@ -8,7 +8,10 @@ set (RHIO_DIR "${CMAKE_SOURCE_DIR}/../")
 option (COLORS "Enable colors" ON)
 
 # Enable curses
-option (CURSES "Enable curses" ON)
+option (CURSES "Enable curses (libncurses5-dev)" ON)
+
+# Enable log img
+option (LOGIMG "Enable log img (libgd-dev required)" OFF)
 
 set (SOURCES
     commands/Command.cpp
@@ -61,6 +64,19 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-reorder")
 
 if (COLORS)
     add_definitions(-DHAS_COLORS)
+endif ()
+
+# Logging img
+if (LOGIMG)
+    add_definitions(-DHAS_LOGIMG)
+    set (SOURCES
+        ${SOURCES}
+        commands/LogImgCommand.cpp
+        )
+    set (EXTRA_LIBS
+        ${EXTRA_LIBS}
+        gd
+    )
 endif ()
 
 # Adding curses sources and library
