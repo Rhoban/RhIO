@@ -58,7 +58,7 @@ namespace RhIO
         protected:
             int frequency;
             bool alive;
-            std::thread worker;
+            std::thread *worker;
             std::mutex mutex;
             std::set<NodePool*> pools;
             StreamUpdateHandler handlerStream;

@@ -8,7 +8,7 @@ using namespace std::placeholders;
 namespace RhIO
 {
     StreamManager::StreamManager(Shell *shell)
-        : alive(true), worker(&StreamManager::update, this), frequency(DEFAULT_FREQ)
+        : alive(true), frequency(DEFAULT_FREQ)
     {
         auto sub = shell->getClientSub();
 
@@ -18,6 +18,8 @@ namespace RhIO
         sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
         sub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
         sub->setHandlerFrame(std::bind(&StreamManager::frameHandler, this, _1, _2, _3, _4, _5, _6));
+
+        worker = new std::thread(&StreamManager::update, this);
     }
     
     void StreamManager::setStreamCallback(StreamUpdateHandler handler_)
@@ -43,7 +45,8 @@ namespace RhIO
     StreamManager::~StreamManager()
     {
         alive = false;
-        worker.join();
+        worker->join();
+        delete worker;
     }
 
     void StreamManager::boolHandler(const std::string &name, long timestamp, bool val)
