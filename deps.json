@@ -13,7 +13,10 @@
     ],
     "binaries": "Shell/build",
     "libraries": "build",
-    "links": ["build/libRhIO.so", "build/libRhIOClient.so"],
+    "links": {
+        "server": "build/libRhIO.so",
+        "client": "build/libRhIOClient.so"
+    },
     "includes": ".",
     "deps": [
         "rhobandeps/zmqpp", "rhobandeps/jsoncpp"
