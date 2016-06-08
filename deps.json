@@ -12,10 +12,10 @@
         "make"
     ],
     "binaries": "Shell/build",
-    "libraries": "build",
     "links": ["build/libRhIO.so", "build/libRhIOClient.so"],
     "includes": ".",
     "deps": [
-        "rhobandeps/zmqpp", "rhobandeps/jsoncpp"
+        "rhobandeps/libzmq", 
+        "rhobandeps/jsoncpp"
     ]
 }

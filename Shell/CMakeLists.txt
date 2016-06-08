@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 2.8)
 project (RhioClient)
 
+#Deps dependencies
+find_package(Deps)
+deps_add_libraries()
+
 # RhIO source directory
 set (RHIO_DIR "${CMAKE_SOURCE_DIR}/../")
 
@@ -54,9 +58,8 @@ link_directories ("${RHIO_DIR}/build")
 
 set (EXTRA_LIBS
     RhIOClient
-    jsoncpp 
     pthread 
-    zmq
+    ${DEPS_LIBRARIES}
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

@@ -6,6 +6,10 @@
 cmake_minimum_required(VERSION 2.8)
 project(RhIO)
 
+#Deps dependencies
+find_package(Deps)
+deps_add_libraries()
+
 #Option for compiling Tests
 option(BUILD_RHIO_TESTS "Build RhIO Tests" OFF)
 
@@ -40,7 +44,7 @@ set(SOURCES_FILES_CLIENT
 #Needed Libraries
 set(RHIO_LIBRARIES
     pthread
-    zmq
+    ${DEPS_LIBRARIES}
 )
 
 #Enable C++11
