@@ -151,7 +151,7 @@ void FrameNode::newFrame(const std::string& name,
         _frames.at(name).countWatchers = 0;
     } else {
         throw std::logic_error(
-            "RhIO already register frame name: " + name);
+            "RhIO already register frame name: '" + BaseNode::pwd + "/" + name + "'");
     }
 }
         
