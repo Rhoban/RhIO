@@ -64,10 +64,17 @@ static void runServerPub()
     initServerCount++;
 
     while (!serverThreadPubOver) {
+        int64_t tsStart = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
         server.sendToClient();
+        int64_t tsEnd = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::steady_clock::now().time_since_epoch()).count();
+        int64_t duration = tsEnd - tsStart;
         //Streaming value at 50Hz
-        std::this_thread::sleep_for(
-            std::chrono::milliseconds(20));
+        if (duration < 20) {
+            std::this_thread::sleep_for(
+                std::chrono::milliseconds(20-duration));
+        }
     }
 }
 
