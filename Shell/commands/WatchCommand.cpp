@@ -36,7 +36,7 @@ namespace RhIO
         // Reducing frequency when watching values, avoiding shell flickering.
         // We can't see more than 25 fps anyway.
         shell->getStream()->setFrequency(25);
-        shell->streamWait(&pool);
+        shell->streamWait(&pool, this);
     }
 
     void WatchCommand::update(NodePool *pool)

@@ -24,7 +24,7 @@
 namespace RhIO
 {
     Shell::Shell(std::string server_)
-        : server(server_), client(NULL), clientSub(NULL), stream(NULL), tree(NULL)
+        : server(server_), client(NULL), clientSub(NULL), stream(NULL), tree(NULL), currentCommand(NULL)
     {
     }
 
@@ -202,10 +202,16 @@ namespace RhIO
         quit();
     }
 
-    void Shell::quit()
+    bool Shell::quit()
     {
-        tcsetattr(fileno(stdin),TCSANOW,&termsave);
-        std::cout << std::endl << std::flush;
+        if (currentCommand) {
+            currentCommand->die();
+            return false;
+        } else {
+            tcsetattr(fileno(stdin),TCSANOW,&termsave);
+            std::cout << std::endl << std::flush;
+            return true;
+        }
     }
 
     std::string Shell::getLine()
@@ -925,7 +931,11 @@ namespace RhIO
                 }
                 try {
                     stream->setFrequency();
+
+                    commands[command]->dead = false;
+                    currentCommand = commands[command];
                     commands[command]->process(argsV);
+                    currentCommand = NULL;
                 } catch (std::runtime_error error) {
                     Terminal::setColor("red", true);
                     std::cout << "Error: " << error.what() << std::endl;
@@ -1241,17 +1251,16 @@ namespace RhIO
         }
     }
 
-    void Shell::streamWait(NodePool *pool)
+    void Shell::streamWait(NodePool *pool, Command *command)
     {
         stream->addPool(this, pool);
-        wait();
+        wait(command);
         stream->removePool(this, pool);
     }
 
-    void Shell::wait()
+    void Shell::wait(Command *command)
     {
-        std::string line;
-        std::getline(std::cin, line);
+        command->waitChar();
     }
 
     std::vector<std::string> Shell::getPossibilities(std::string prefix)

@@ -36,7 +36,7 @@ namespace RhIO
 
             client->enableStreamingStream(nodeStream.getName());
             stream->setStreamCallback(std::bind(&CatCommand::update, this, _1, _2));
-            shell->wait();
+            shell->wait(this);
             stream->unsetStreamCallback();
             clearStream();
             client->disableStreamingStream(nodeStream.getName());

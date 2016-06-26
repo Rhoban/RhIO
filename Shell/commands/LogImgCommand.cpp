@@ -40,7 +40,7 @@ namespace RhIO
             }
             
             stream->setFrameCallback(std::bind(&LogImgCommand::update, this, _1, _2, _3, _4, _5));
-            shell->wait();
+            shell->wait(this);
             stream->unsetFrameCallback();
             clearStream();
             

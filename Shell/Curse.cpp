@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <commands/Command.h>
 #include "StreamManager.h"
 #include "Curse.h"
 #include "Shell.h"
@@ -41,6 +42,11 @@ static bool inputAvailable()
 
 namespace RhIO
 {
+    Curse::Curse(Command *command)
+        : command(command)
+    {
+    }
+
     void Curse::run()
     {
         init();
@@ -131,7 +137,7 @@ namespace RhIO
         FORM *form = NULL;
         int names = row-3;
 
-        while(1) {   
+        while(!command->dead) {   
             attron(COLOR_PAIR(1));
 
             if (form == NULL) {
@@ -239,7 +245,7 @@ namespace RhIO
             do {
                 std::this_thread::sleep_for(
                     std::chrono::milliseconds(10));
-            } while (!inputAvailable() && !streamUpdated);
+            } while (!inputAvailable() && !streamUpdated && !command->dead);
 
             /**
              * Handle key press

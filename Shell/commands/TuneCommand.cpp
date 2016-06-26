@@ -24,7 +24,7 @@ namespace RhIO
 
     void TuneCommand::process(std::vector<std::string> args)
     {
-        Curse curse;
+        Curse curse(this);
         curse.values = shell->getPool(args);
         if (curse.values.size()) {
             curse.shell = shell;

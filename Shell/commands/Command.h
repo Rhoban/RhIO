@@ -1,5 +1,6 @@
 #pragma once
 
+#include <termios.h>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -16,6 +17,7 @@ namespace RhIO
             virtual std::string getName()=0;
             virtual std::string getDesc()=0;
             virtual std::string getUsage();
+            virtual void die();
             virtual void process(std::vector<std::string> args)=0;
 
             void setShell(Shell *shell_);
@@ -31,6 +33,10 @@ namespace RhIO
              */
             std::ostream *getStream(std::vector<std::string> &args);
             void clearStream();
+            
+            bool dead;
+
+            int waitChar();
 
         protected:
             std::ofstream ofs;

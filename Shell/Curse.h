@@ -8,11 +8,14 @@
 
 namespace RhIO
 {
+    class Command;
     class Shell;
     struct ValueBase;
     class Curse
     {
         public:
+            Curse(Command *command);
+
             void run(); 
             void init();
             void loop();
@@ -31,6 +34,7 @@ namespace RhIO
             void update(NodePool *);
 
             Shell *shell;
+            Command *command;
             NodePool values;
 
             bool streamUpdated;

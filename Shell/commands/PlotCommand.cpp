@@ -38,9 +38,9 @@ namespace RhIO
 
         auto stream = shell->getStream();
         stream->addPool(shell, &pool);
-        while (true) {
+        while (!dead) {
             char c;
-            if ((c=getchar())>0) {
+            if ((c=waitChar())>0) {
                 if (c == 'q') {
                     break;
                 }

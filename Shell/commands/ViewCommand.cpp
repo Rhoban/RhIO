@@ -44,7 +44,7 @@ namespace RhIO
             }
             
             stream->setFrameCallback(std::bind(&ViewCommand::update, this, _1, _2, _3, _4, _5));
-            shell->wait();
+            shell->wait(this);
             stream->unsetFrameCallback();
             clearStream();
             

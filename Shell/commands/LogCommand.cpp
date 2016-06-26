@@ -31,7 +31,7 @@ namespace RhIO
 
         CSV csv(output);
         pool.setCallback(std::bind(&LogCommand::update, this, &csv, _1));
-        shell->streamWait(&pool);
+        shell->streamWait(&pool, this);
         clearStream();
     }
 

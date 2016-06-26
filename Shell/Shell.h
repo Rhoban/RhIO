@@ -33,7 +33,7 @@ namespace RhIO
              * Runs the interactive shell, will get lines from stdin
              */
             void run(std::string cmd="");
-            void quit();
+            bool quit();
             void terminal_set_ioconfig();
             void terminal_set_config();
 
@@ -108,8 +108,8 @@ namespace RhIO
              * Add the poll to the stream, and wait the user to press enter, then
              * remove the pool from the stream
              */
-            void streamWait(NodePool *pool);
-            void wait();
+            void streamWait(NodePool *pool, Command *command);
+            void wait(Command *command);
             StreamManager *getStream();
             NodePool poolForNode(Node *node);
             NodePool getPool(std::vector<std::string> names, int start=0);
@@ -138,6 +138,8 @@ namespace RhIO
             bool hasInput();
 
         protected:
+            std::vector<char> chars;
+            Command *currentCommand;
             std::map<std::string, std::string> aliases;
             std::string hostname;
             ClientReq *client;

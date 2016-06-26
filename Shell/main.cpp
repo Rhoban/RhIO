@@ -34,9 +34,10 @@ void shell_quit(int s)
 {
     (void) s;
     if (shell != NULL) {
-        shell->quit();
+        if (shell->quit()) {
+            exit(1);
+        }
     }
-    exit(1);
 }
 
 int main(int argc, char *argv[])
