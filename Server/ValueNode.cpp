@@ -51,7 +51,8 @@ bool ValueNode::getBool(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Bool name: " + name);
+        throw std::logic_error("RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesBool.at(name).value;
     }
@@ -65,7 +66,8 @@ int64_t ValueNode::getInt(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
-        throw std::logic_error("RhIO unknown Int value name: " + name);
+        throw std::logic_error("RhIO unknown Int value name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesInt.at(name).value;
     }
@@ -79,7 +81,8 @@ double ValueNode::getFloat(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
-        throw std::logic_error("RhIO unknown Float value name: " + name);
+        throw std::logic_error("RhIO unknown Float value name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesFloat.at(name).value;
     }
@@ -93,7 +96,8 @@ const std::string& ValueNode::getStr(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
-        throw std::logic_error("RhIO unknown Str value name: " + name);
+        throw std::logic_error("RhIO unknown Str value name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesStr.at(name).value;
     }
@@ -113,7 +117,8 @@ void ValueNode::setBool(const std::string& name, bool val,
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Bool name: " + name);
+        throw std::logic_error("RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         //Bound to min/max
         if (
@@ -157,7 +162,8 @@ void ValueNode::setInt(const std::string& name, int64_t val,
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Int name: " + name);
+        throw std::logic_error("RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         //Bound to min/max
         if (
@@ -201,7 +207,8 @@ void ValueNode::setFloat(const std::string& name, double val,
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Float name: " + name);
+        throw std::logic_error("RhIO unknown value Float name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         //Bound to min/max
         if (
@@ -245,7 +252,8 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Str name: " + name);
+        throw std::logic_error("RhIO unknown value Str name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         //Update value
         _valuesStr[name].value = val;
@@ -288,7 +296,8 @@ std::unique_ptr<ValueBuilderBool> ValueNode::newBool(const std::string& name)
         if (getValueType(name) != TypeBool) {
             //Error if type conflic
             throw std::logic_error(
-                "RhIO value already known with other type: " + name);
+                "RhIO value already known with other type: '" + name + "' in '"
+                + BaseNode::pwd + "'");
         } else {
             //No conflic
             return std::unique_ptr<ValueBuilderBool>(
@@ -315,7 +324,8 @@ std::unique_ptr<ValueBuilderInt> ValueNode::newInt(const std::string& name)
         if (getValueType(name) != TypeInt) {
             //Error if type conflic
             throw std::logic_error(
-                "RhIO value already known with other type: " + name);
+                "RhIO value already known with other type: '" + name + "' in '"
+                + BaseNode::pwd + "'");
         } else {
             //No conflic
             return std::unique_ptr<ValueBuilderInt>(
@@ -342,7 +352,8 @@ std::unique_ptr<ValueBuilderFloat> ValueNode::newFloat(const std::string& name)
         if (getValueType(name) != TypeFloat) {
             //Error if type conflic
             throw std::logic_error(
-                "RhIO value already known with other type: " + name);
+                "RhIO value already known with other type: '" + name + "' in '"
+                + BaseNode::pwd + "'");
         } else {
             //No conflic
             return std::unique_ptr<ValueBuilderFloat>(
@@ -369,7 +380,8 @@ std::unique_ptr<ValueBuilderStr> ValueNode::newStr(const std::string& name)
         if (getValueType(name) != TypeStr) {
             //Error if type conflic
             throw std::logic_error(
-                "RhIO value already known with other type: " + name);
+                "RhIO value already known with other type: '" + name + "' in '"
+                + BaseNode::pwd + "'");
         } else {
             //No conflic
             return std::unique_ptr<ValueBuilderStr>(
@@ -396,7 +408,8 @@ void ValueNode::setCallbackBool(const std::string& name,
     //Assign new callback
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Bool name: " + name);
+        throw std::logic_error("RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         _valuesBool.at(name).callback = func;
     }
@@ -412,7 +425,8 @@ void ValueNode::setCallbackInt(const std::string& name,
     //Assign new callback
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Int name: " + name);
+        throw std::logic_error("RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         _valuesInt.at(name).callback = func;
     }
@@ -428,7 +442,8 @@ void ValueNode::setCallbackFloat(const std::string& name,
     //Assign new callback
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Float name: " + name);
+        throw std::logic_error("RhIO unknown value Float name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         _valuesFloat.at(name).callback = func;
     }
@@ -444,7 +459,8 @@ void ValueNode::setCallbackStr(const std::string& name,
     //Assign new callback
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Str name: " + name);
+        throw std::logic_error("RhIO unknown value Str name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         _valuesStr.at(name).callback = func;
     }
@@ -459,7 +475,8 @@ const ValueBool& ValueNode::getValueBool(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Bool name: " + name);
+        throw std::logic_error("RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesBool.at(name);
     }
@@ -473,7 +490,8 @@ const ValueInt& ValueNode::getValueInt(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesInt.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Int name: " + name);
+        throw std::logic_error("RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesInt.at(name);
     }
@@ -487,7 +505,8 @@ const ValueFloat& ValueNode::getValueFloat(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesFloat.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Float name: " + name);
+        throw std::logic_error("RhIO unknown value Float name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesFloat.at(name);
     }
@@ -501,7 +520,8 @@ const ValueStr& ValueNode::getValueStr(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesStr.count(name) == 0) {
-        throw std::logic_error("RhIO unknown value Str name: " + name);
+        throw std::logic_error("RhIO unknown value Str name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     } else {
         return _valuesStr.at(name);
     }
@@ -528,7 +548,8 @@ void ValueNode::enableStreamingValue(const std::string& name)
         _valuesStr.at(name).streamWatchers++;
     } else {
         throw std::logic_error(
-            "RhIO unknown value name: " + name);
+            "RhIO unknown value name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     }
 }
 void ValueNode::disableStreamingValue(const std::string& name)
@@ -564,7 +585,8 @@ void ValueNode::disableStreamingValue(const std::string& name)
         }
     } else {
         throw std::logic_error(
-            "RhIO unknown value name: " + name);
+            "RhIO unknown value name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
     }
 }
 
@@ -712,8 +734,8 @@ void ValueNode::loadValues(const std::string& path)
 
     auto error = [&path](const std::string& line) {
         throw std::runtime_error(
-                "RhIO invalid formated values file: " 
-                + path + ": " + line);
+            "RhIO invalid formated values file: " 
+            + path + ": " + line);
     };
 
     //For each lines

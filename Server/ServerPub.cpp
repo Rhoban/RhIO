@@ -90,6 +90,7 @@ void ServerPub::publishFrame(const std::string& name,
     //Directly allocate message data
     std::lock_guard<std::mutex> lock(_mutexQueueFrame);
     if (_isWritingTo1) {
+        _queue1Frame.clear();
         _queue1Frame.push_back(zmq::message_t(
             sizeof(MsgType) 
             + sizeof(int64_t) 
@@ -105,6 +106,7 @@ void ServerPub::publishFrame(const std::string& name,
         pub.writeInt((uint64_t)height);
         pub.writeData(data, size);
     } else {
+        _queue2Frame.clear();
         _queue2Frame.push_back(zmq::message_t(
             sizeof(MsgType) 
             + sizeof(int64_t) 

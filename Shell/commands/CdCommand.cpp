@@ -23,7 +23,9 @@ namespace RhIO
 
     void CdCommand::process(std::vector<std::string> args)
     {
-        if (args.size() != 1) {
+        if (args.size() == 0) {
+            shell->goToPath("/");
+        } else if (args.size() != 1) {
             errorUsage();
         } else {
             auto target = args.front();
