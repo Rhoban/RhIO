@@ -15,7 +15,7 @@ your nodes and parameters, and even trigger methods that are in your code.
 
 * [Example Video](https://youtu.be/MOizgXYENLc)
 * [Getting started](/Docs/getting_started.md)
-    * [Installing](/Docs/getting_started.md#install)
+    * [Installing](/Docs/getting_started.md#installing)
     * [Building the example](/Docs/getting_started.md#example)
 * [The API (server-side)](/Docs/api.md)
     * [Parameters](/Docs/api.md#parameters)
