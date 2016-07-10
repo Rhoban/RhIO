@@ -11,7 +11,7 @@ First, you should [install deps](https://github.com/rhoban/deps#installation), t
 
 RhIO and its dependencies will be downloaded and installed.
 
-## <a name="example"></a> Building the example
+## <a name="skeleton"></a> Building the skeleton example
 
 There is an example in the `Skeleton` directory, you can build it to try RhIO:
 
