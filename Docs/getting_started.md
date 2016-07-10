@@ -2,7 +2,7 @@
 
 ## Installing
 
-RhIO now used [deps](https://github.com/rhoban/deps), which is a lightweight package
+RhIO now uses [deps](https://github.com/rhoban/deps), which is a lightweight package
 manager used to handle dependencies.
 
 First, you should [install deps](https://github.com/rhoban/deps#installation), then type:
