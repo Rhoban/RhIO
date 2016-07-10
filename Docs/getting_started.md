@@ -1,51 +1,32 @@
 # Getting started
 
-## <a name="download"></a>Download
+## Installing
 
-You can get RhIO using git
+RhIO now used (deps)[https://github.com/rhoban/deps], which is a lightweight package
+manager used to handle dependencies.
 
-    git clone --depth=1 https://github.com/Rhoban/RhIO.git
+First, you should (install deps)[https://github.com/rhoban/deps#installation], then type:
 
-Or download the master version:
+    deps install rhoban/rhio
 
-* [RhIO master (zip)](https://github.com/Rhoban/RhIO/archive/master.zip)
-* [RhIO master (tar.gz)](https://github.com/Rhoban/RhIO/archive/master.tar.gz)
+RhIO and its dependencies will be downloaded and installed.
 
-## <a name="building"></a>Building
+## Building the example
 
-To build RhIO, you'll need cmake and a C++11 compliant compiler (gcc 4.8 or
-above for instance).
+There is an example in the `Skeleton` directory, you can build it to try RhIO:
 
-    apt-get install cmake g++
-
-Then, you'll first have to get and build ZeroMQ. To avoid compatibility reasons,
-RhIO uses its own build of ZeroMQ, that will be done automatically with the 
-following script:
-
-    ./install-zmq.sh
-
-You can now build the shell:
-
-    cd Shell
+    cd deps/packages/rhoban_rhio/Skeleton/
     mkdir build
     cd build
     cmake ..
     make
 
-And, for instance, the `Skeleton` demo:
-
-    cd Skeleton
-    mkdir build
-    cd build
-    cmake ..
-    make
-
-You can now run the skeleton project (in Skeleton/build):
+And then run the skeleton:
 
     ./skeleton
 
-And the rhio shell (in Shell/build):
+And run RhIO in another shell:
 
-    ./rhio
+    rhio
 
-
+Have a look to the (source of skeleton)[/Skeleton] to understand how it works.
