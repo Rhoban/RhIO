@@ -11,7 +11,9 @@ int main()
     float amplitude, s, t;
 
     RhIO::Bind bind("test");
-    RhIO::Root.load("rhio");
+    // Uncomment to enable persisting, you'll have to create a "rhio" directory
+    // in the same directory as the binary
+    // RhIO::Root.load("rhio");
 
     bind.bindNew("amplitude", amplitude, RhIO::Bind::PullOnly)
         ->defaultValue(1.0)->persisted(true)
