@@ -1,6 +1,6 @@
 # Getting started
 
-## Installing
+## <a name="installing"></a> Installing
 
 RhIO now uses [deps](https://github.com/rhoban/deps), which is a lightweight package
 manager used to handle dependencies.
@@ -11,7 +11,7 @@ First, you should [install deps](https://github.com/rhoban/deps#installation), t
 
 RhIO and its dependencies will be downloaded and installed.
 
-## Building the example
+## <a name="example"></a> Building the example
 
 There is an example in the `Skeleton` directory, you can build it to try RhIO:
 
