@@ -2,10 +2,10 @@
 
 ## Installing
 
-RhIO now used (deps)[https://github.com/rhoban/deps], which is a lightweight package
+RhIO now used [deps](https://github.com/rhoban/deps), which is a lightweight package
 manager used to handle dependencies.
 
-First, you should (install deps)[https://github.com/rhoban/deps#installation], then type:
+First, you should [install deps](https://github.com/rhoban/deps#installation), then type:
 
     deps install rhoban/rhio
 
@@ -29,4 +29,4 @@ And run RhIO in another shell:
 
     rhio
 
-Have a look to the (source of skeleton)[/Skeleton] to understand how it works.
+Have a look to the [source of skeleton](/Skeleton) to understand how it works.
