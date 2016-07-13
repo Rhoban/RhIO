@@ -115,11 +115,31 @@ RhIO::Root.newCommand("echo",
 
 ## <a name="streams"></a> Streams
 
-TO BE DOCUMENTED
+Streams are special nodes working like standard C++ output streams (std::ostream).
+They enable to create multiple debuging channel integrated into the RhIO tree.
+They can be display in the client Shell using the ``cat`` command.
+
+After beeing declared, data are output to streams using follwing syntax:
+```c++
+RhIO::Root.newStream("path/in/tree/stream1", "description of stream1");
+RhIO::Root.out("path/in/tree/stream1") << "This is a debug message" << std::endl;
+```
+
 (See Examples)
 
 ## <a name="frames"></a> Frames
 
-TO BE DOCUMENTED
+Frames are special nodes that enables to stream at real time raw images from server to the client.
+Raw RGB, BGR, YUV are currently supported. The image stream can then be display in the shell using the ``view`` command.
+
+```c++
+RhIO::Root.newFrame("path/in/tree/frame1", "description of frame1", RhIO::FrameFormat::RGB);
+if (RhIO::Root.frameIsStreaming("path/in/tree/frame1")) {
+    //The frame data is immedialy copied from given
+    //memory pointer and given size.
+    RhIO::Root.framePush("path/in/tree/frame1", width, height, frame, size);
+}
+```
+
 (See Examples)
 

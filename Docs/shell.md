@@ -165,6 +165,21 @@ key and then type your value, then enter to type the value manually.
 The granularity of the moves (with up and down arrows) is 1/100 by default, but can be changed
 by pressing the ``g`` key.
 
+### ``view``
+
+**Note: you need to have the ffplay program (ffmpeg package) to get this working.**
+
+The ``view`` command will display one or multiple image streams from the RhIO server in real time
+by using the ffplay viewer utility.
+The command is only valid on ``frame`` nodes which appears in green in the RhIO tree.
+The frames are sent from the server side using the framePush() function.
+
+### ``cat``
+
+The ``cat`` command is used to print special node streams (appearing in cyan in the shell).
+Stream nodes works in the same way as C++ standard output. This allow for example 
+to keep multiple debugging textual channels.
+
 ### ``tree``
 
 This will list all the available nodes recursively.
