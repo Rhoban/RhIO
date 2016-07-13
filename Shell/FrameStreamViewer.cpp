@@ -15,7 +15,7 @@ FrameStreamViewer::FrameStreamViewer(const std::string& name,
 
 void FrameStreamViewer::start()
 {
-    if (_width == -1 || _height == -1) {
+    if (_width == (size_t)-1 || _height == (size_t)-1) {
         throw std::logic_error(
             "FrameStreamViewer size uninitialize");
     }
@@ -75,13 +75,9 @@ void FrameStreamViewer::createPlayerInstance()
             throw std::runtime_error(
                 "StreamViewer failed to dup2");
         }
-        //Closing output and err
+        //Closing output
         int null = open("/dev/null", O_WRONLY);
         if (dup2(null, STDOUT_FILENO) == -1) {
-            throw std::runtime_error(
-                "StreamViewer failed to dup2");
-        }
-        if (dup2(null, STDERR_FILENO) == -1) {
             throw std::runtime_error(
                 "StreamViewer failed to dup2");
         }
@@ -109,8 +105,14 @@ void FrameStreamViewer::createPlayerInstance()
             "-framerate", "100", 
             "-",
             NULL);
+        std::cerr << 
+            "RhIOShell: Unable to create ffplay process" 
+            << std::endl;
+        std::cerr << 
+            "Have you installed the ffplay tool in the ffmpeg package ?" 
+            << std::endl;
         throw std::logic_error(
-            "StreamViewer exec fails");
+            "StreamViewer exec failed");
     } else {
         throw std::runtime_error(
             "StreamViewer failed to fork");
