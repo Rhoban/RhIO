@@ -14,6 +14,7 @@
 #include "Shell.h"
 #include "utils.h"
 #include <set>
+#include <cmath>
 #include "Completion.h"
 
 #include <commands/RemoteCommand.h>
