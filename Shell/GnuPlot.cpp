@@ -185,12 +185,16 @@ namespace RhIO
             }
             //Closing err
             int null = open("/dev/null", O_WRONLY);
-            close(STDOUT_FILENO);
             if (dup2(null, STDOUT_FILENO) == -1) {
+                throw std::runtime_error("Plot failed to dup2");
+            }
+            int fderr = dup(STDERR_FILENO);
+            if (dup2(null, STDERR_FILENO) == -1) {
                 throw std::runtime_error("Plot failed to dup2");
             }
             //Calling Gnuplot
             execlp("gnuplot", "gnuplot", "-", NULL);
+            dup2(fderr, STDERR_FILENO);
             std::cerr << 
                 "RhIOShell: Unable to create gnuplot process" 
                 << std::endl;
