@@ -6,9 +6,19 @@
 cmake_minimum_required(VERSION 2.8)
 project(RhIO)
 
-#Deps dependencies
-find_package(Deps)
-deps_add_libraries()
+#TODO fill catkin properties, replace DEPS_LIBRARIES by CATKIN version
+find_package(catkin REQUIRED COMPONENTS
+  jsoncpp
+  ZeroMQ
+  )
+
+# What is published by the 'jsoncpp package'
+catkin_package(
+  INCLUDE_DIRS .
+  LIBRARIES rhio
+  DEPENDS jsoncpp ZeroMQ
+)
+
 
 #Option for compiling Tests
 option(BUILD_RHIO_TESTS "Build RhIO Tests" OFF)
