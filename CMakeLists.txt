@@ -6,7 +6,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(RhIO)
 
-#TODO fill catkin properties, replace DEPS_LIBRARIES by CATKIN version
 find_package(catkin REQUIRED COMPONENTS
   jsoncpp
   ZeroMQ
@@ -15,8 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
 # What is published by the 'jsoncpp package'
 catkin_package(
   INCLUDE_DIRS .
-  LIBRARIES rhio
-  DEPENDS jsoncpp ZeroMQ
+  LIBRARIES RhIO
+  CATKIN_DEPENDS jsoncpp ZeroMQ
 )
 
 
@@ -54,7 +53,7 @@ set(SOURCES_FILES_CLIENT
 #Needed Libraries
 set(RHIO_LIBRARIES
     pthread
-    ${DEPS_LIBRARIES}
+    ${catkin_LIBRARIES}
 )
 
 #Enable C++11
