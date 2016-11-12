@@ -11,10 +11,10 @@ find_package(catkin REQUIRED COMPONENTS
   ZeroMQ
   )
 
-# What is published by the 'jsoncpp package'
+# What is published by the 'RhIO package'
 catkin_package(
   INCLUDE_DIRS .
-  LIBRARIES RhIO
+  LIBRARIES RhIO RhIOClient
   CATKIN_DEPENDS jsoncpp ZeroMQ
 )
 
@@ -26,7 +26,7 @@ option(BUILD_RHIO_TESTS "Build RhIO Tests" OFF)
 option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
 
 #Include sources directory
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${catkin_INCLUDE_DIRS})
 
 #Sources files
 set(SOURCES_FILES_SERVER
