@@ -1,16 +1,9 @@
 <?xml version="1.0"?>
 <package>
-  <name>RhIO</name>
+  <name>RhIOShell</name>
   <version>0.0.0</version>
   <description>
-    RhIO is a lightweight library that can be linked against your application
-    in order to interract with your program on-the-fly, through its integrated server.
-
-    Main feature are parameters that can be exposed in order to be changed, monitored
-    or persisted to configuration files. 
-
-    It also provide a shell client that will provide a bash-like interface to walk
-    your nodes and parameters, and even trigger methods that are in your code.
+    RhIOShell provide a shell environment to communicate with RhIOServers
   </description>
 
   <maintainer email="qrouxel@labri.fr">Quentin Rouxel</maintainer>
@@ -25,10 +18,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>ZeroMQ</build_depend>
+  <build_depend>RhIOClient</build_depend>
   <build_depend>jsoncpp</build_depend>
 
-  <run_depend>ZeroMQ</run_depend>
+  <run_depend>RhIOClient</run_depend>
   <run_depend>jsoncpp</run_depend>
 
 

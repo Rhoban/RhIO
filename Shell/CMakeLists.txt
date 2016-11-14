@@ -1,12 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
-project (RhioClient)
+project (RhIOShell)
 
-#Deps dependencies
-find_package(Deps)
-deps_add_libraries()
 
-# RhIO source directory
-set (RHIO_DIR "${CMAKE_SOURCE_DIR}/../")
+find_package(catkin REQUIRED COMPONENTS
+  RhIOClient
+  )
+
+catkin_package(
+  INCLUDE_DIRS .
+  CATKIN_DEPENDS RhIOClient
+)
 
 # Enable colors ?
 option (COLORS "Enable colors" ON)
@@ -52,14 +55,11 @@ set (SOURCES
     main.cpp
 )
 
-include_directories ("${CMAKE_SOURCE_DIR}")
-include_directories ("${RHIO_DIR}")
-link_directories ("${RHIO_DIR}/build")
+include_directories ("${CMAKE_SOURCE_DIR}" ${catkin_INCLUDE_DIRS})
 
 set (EXTRA_LIBS
-    RhIOClient
     pthread 
-    ${DEPS_LIBRARIES}
+    ${catkin_LIBRARIES}
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
