@@ -1,8 +1,8 @@
 #ifndef RHIOCLIENT_HPP
 #define RHIOCLIENT_HPP
 
-#include "Client/ClientReq.hpp"
-#include "Client/ClientSub.hpp"
+#include "ClientReq.hpp"
+#include "ClientSub.hpp"
 
 #endif
 

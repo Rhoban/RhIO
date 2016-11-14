@@ -7,6 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 project(RhIOClient)
 
 find_package(catkin REQUIRED COMPONENTS
+  RhIOCommon
   ZeroMQ
   )
 
@@ -14,7 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS src
   LIBRARIES RhIOClient
-  CATKIN_DEPENDS ZeroMQ
+  CATKIN_DEPENDS RhIOCommon ZeroMQ
 )
 
 #Include sources directory

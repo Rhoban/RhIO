@@ -5,8 +5,8 @@
 #include <thread>
 #include <zmq.hpp>
 #include "RhIO.hpp"
-#include "Server/IONode.hpp"
-#include "Common/DataBuffer.hpp"
+#include "IONode.hpp"
+#include "DataBuffer.hpp"
 
 namespace RhIO {
 

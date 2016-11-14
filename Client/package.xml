@@ -26,6 +26,8 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>ZeroMQ</build_depend>
+  <build_depend>RhIOCommon</build_depend>
 
   <run_depend>ZeroMQ</run_depend>
+  <run_depend>RhIOCommon</run_depend>
 </package>

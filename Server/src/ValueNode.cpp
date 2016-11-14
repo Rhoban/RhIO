@@ -1,8 +1,8 @@
 #include <stdexcept>
 #include <chrono>
 #include <fstream>
-#include "Server/ValueNode.hpp"
-#include "Server/ServerPub.hpp"
+#include "ValueNode.hpp"
+#include "ServerPub.hpp"
 #include "RhIO.hpp"
 
 namespace RhIO {

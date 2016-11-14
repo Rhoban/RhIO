@@ -4,11 +4,12 @@ project (RhIOShell)
 
 find_package(catkin REQUIRED COMPONENTS
   RhIOClient
+  jsoncpp
   )
 
 catkin_package(
   INCLUDE_DIRS .
-  CATKIN_DEPENDS RhIOClient
+  CATKIN_DEPENDS RhIOClient jsoncpp
 )
 
 # Enable colors ?
@@ -21,41 +22,41 @@ option (CURSES "Enable curses (libncurses5-dev)" ON)
 option (LOGIMG "Enable log img (libgd-dev required)" OFF)
 
 set (SOURCES
-    commands/Command.cpp
-    commands/ClearCommand.cpp
-    commands/HelpCommand.cpp
-    commands/LsCommand.cpp
-    commands/WatchCommand.cpp
-    commands/CdCommand.cpp
-    commands/LogCommand.cpp
-    commands/SyncCommand.cpp
-    commands/RemoteCommand.cpp
-    commands/PlotCommand.cpp
-    commands/Plot2DCommand.cpp
-    commands/Plot3DCommand.cpp
-    commands/DiffCommand.cpp
-    commands/SaveCommand.cpp
-    commands/LoadCommand.cpp
-    commands/TreeCommand.cpp
-    commands/CatCommand.cpp
-    commands/ViewCommand.cpp
-    commands/RepeatCommand.cpp
-    commands/DelayCommand.cpp
-    commands/PadCommand.cpp
-    joystick/Joystick.cpp
-    GnuPlot.cpp
-    FrameStreamViewer.cpp
-    Shell.cpp
-    CSV.cpp
-    Terminal.cpp
-    NodePool.cpp
-    StreamManager.cpp
-    Completion.cpp
-    Node.cpp
-    main.cpp
+    src/commands/Command.cpp
+    src/commands/ClearCommand.cpp
+    src/commands/HelpCommand.cpp
+    src/commands/LsCommand.cpp
+    src/commands/WatchCommand.cpp
+    src/commands/CdCommand.cpp
+    src/commands/LogCommand.cpp
+    src/commands/SyncCommand.cpp
+    src/commands/RemoteCommand.cpp
+    src/commands/PlotCommand.cpp
+    src/commands/Plot2DCommand.cpp
+    src/commands/Plot3DCommand.cpp
+    src/commands/DiffCommand.cpp
+    src/commands/SaveCommand.cpp
+    src/commands/LoadCommand.cpp
+    src/commands/TreeCommand.cpp
+    src/commands/CatCommand.cpp
+    src/commands/ViewCommand.cpp
+    src/commands/RepeatCommand.cpp
+    src/commands/DelayCommand.cpp
+    src/commands/PadCommand.cpp
+    src/joystick/Joystick.cpp
+    src/GnuPlot.cpp
+    src/FrameStreamViewer.cpp
+    src/Shell.cpp
+    src/CSV.cpp
+    src/Terminal.cpp
+    src/NodePool.cpp
+    src/StreamManager.cpp
+    src/Completion.cpp
+    src/Node.cpp
+    src/main.cpp
 )
 
-include_directories ("${CMAKE_SOURCE_DIR}" ${catkin_INCLUDE_DIRS})
+include_directories (src ${catkin_INCLUDE_DIRS})
 
 set (EXTRA_LIBS
     pthread 
@@ -74,7 +75,7 @@ if (LOGIMG)
     add_definitions(-DHAS_LOGIMG)
     set (SOURCES
         ${SOURCES}
-        commands/LogImgCommand.cpp
+        src/commands/LogImgCommand.cpp
         )
     set (EXTRA_LIBS
         ${EXTRA_LIBS}
@@ -87,8 +88,8 @@ if (CURSES)
     add_definitions(-DHAS_CURSES)
     set (SOURCES
         ${SOURCES}
-        commands/TuneCommand.cpp
-        Curse.cpp
+        src/commands/TuneCommand.cpp
+        src/Curse.cpp
     )
     set (EXTRA_LIBS
         ${EXTRA_LIBS}

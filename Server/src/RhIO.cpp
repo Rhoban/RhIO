@@ -2,8 +2,8 @@
 #include <chrono>
 #include <atomic>
 #include "RhIO.hpp"
-#include "Server/ServerRep.hpp"
-#include "Server/ServerPub.hpp"
+#include "ServerRep.hpp"
+#include "ServerPub.hpp"
 
 namespace RhIO {
 

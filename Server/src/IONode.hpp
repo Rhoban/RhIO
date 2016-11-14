@@ -5,10 +5,10 @@
 #include <vector>
 #include <string>
 #include <mutex>
-#include "Server/ValueNode.hpp"
-#include "Server/CommandNode.hpp"
-#include "Server/StreamNode.hpp"
-#include "Server/FrameNode.hpp"
+#include "ValueNode.hpp"
+#include "CommandNode.hpp"
+#include "StreamNode.hpp"
+#include "FrameNode.hpp"
 
 namespace RhIO {
 

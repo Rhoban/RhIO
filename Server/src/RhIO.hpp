@@ -1,8 +1,9 @@
 #ifndef RHIO_HPP
 #define RHIO_HPP
 
-#include "Server/IONode.hpp"
-#include "Server/Bind.hpp"
+#include "Protocol.hpp"
+#include "IONode.hpp"
+#include "Bind.hpp"
 
 namespace RhIO {
 
@@ -18,13 +19,6 @@ extern IONode Root;
  */
 class ServerPub;
 extern ServerPub* ServerStream;
-
-/**
- * Server replier and Server publisher port
- */
-constexpr char ServerRepPort[] = "9999";
-constexpr char ServerPubPort[] = "9998";
-
 }
 
 #endif

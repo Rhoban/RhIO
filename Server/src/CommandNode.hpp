@@ -7,7 +7,7 @@
 #include <mutex>
 #include <functional>
 
-#include "Server/BaseNode.hpp"
+#include "BaseNode.hpp"
 
 namespace RhIO {
 

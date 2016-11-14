@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <chrono>
-#include "Server/FrameNode.hpp"
-#include "Server/ServerPub.hpp"
+#include "FrameNode.hpp"
+#include "ServerPub.hpp"
 #include "RhIO.hpp"
 
 namespace RhIO {

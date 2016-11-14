@@ -9,7 +9,6 @@
 #include <string>
 #include <algorithm>
 #include <functional>
-#include <RhIO.hpp>
 #include "StreamManager.h"
 #include "Shell.h"
 #include "utils.h"

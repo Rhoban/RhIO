@@ -1,5 +1,5 @@
-#include "Server/StreamNode.hpp"
-#include "Server/IONode.hpp"
+#include "StreamNode.hpp"
+#include "IONode.hpp"
 
 namespace RhIO {
 

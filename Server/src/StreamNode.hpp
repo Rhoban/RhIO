@@ -7,8 +7,8 @@
 #include <map>
 #include <mutex>
 
-#include "Server/BaseNode.hpp"
-#include "Server/Stream.hpp"
+#include "BaseNode.hpp"
+#include "Stream.hpp"
 
 namespace RhIO {
 

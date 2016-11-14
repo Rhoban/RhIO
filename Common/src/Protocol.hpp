@@ -7,6 +7,12 @@
 namespace RhIO {
 
 /**
+ * Server replier and Server publisher port
+ */
+constexpr char ServerRepPort[] = "9999";
+constexpr char ServerPubPort[] = "9998";
+
+/**
  * Protocol message type
  */
 enum MsgType : uint8_t {
