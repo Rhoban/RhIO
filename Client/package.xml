@@ -25,8 +25,8 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>ZeroMQ</build_depend>
-  <build_depend>RhIOCommon</build_depend>
+  <build_depend>ZeroMQ</build_depend> <!-- git@github.com:RhobanDeps/libzmq.git -->
+  <build_depend>RhIOCommon</build_depend> <!-- git@github.com:Rhoban/RhIO.git -->
 
   <run_depend>ZeroMQ</run_depend>
   <run_depend>RhIOCommon</run_depend>
