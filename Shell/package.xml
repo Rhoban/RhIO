@@ -19,7 +19,7 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>RhIOClient</build_depend>
-  <build_depend>jsoncpp</build_depend> <!-- git@github.com:RhobanDeps/jsoncpp.git -->
+  <build_depend>jsoncpp</build_depend> <!-- rhobandeps/jsoncpp -->
 
   <run_depend>RhIOClient</run_depend>
   <run_depend>jsoncpp</run_depend>
