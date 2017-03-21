@@ -186,7 +186,7 @@ namespace RhIO
                  * Int & float: drawing jauge
                  */
                 if (Node::asInt(value) || Node::asFloat(value)) {
-                    float min, max, cvalue;
+                    float min, max, cvalue(0);
                     getMinMax(value, &min, &max);
 
                     if (auto v = Node::asInt(value)) {

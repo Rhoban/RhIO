@@ -10,7 +10,7 @@ namespace RhIO
             //so there are at least two elements but lets check anyway...
         if(matches.size()>1)
         {
-            int len=9999;
+            size_t len=9999;
             std::string tmpcmd;
             for(std::deque<std::string>::iterator it=matches.begin(); it!=matches.end();++it)
             {
@@ -22,7 +22,7 @@ namespace RhIO
             }
 
                 //ckeck char by char...
-            for(int i=1;i<tmpcmd.length()+1;i++) //+1?
+            for(size_t i=1;i<tmpcmd.length()+1;i++) //+1?
             {
                 bool iscommon=true;
                 std::string tmp(tmpcmd,0,i);
