@@ -179,7 +179,7 @@ namespace RhIO
         } else {
             std::stringstream ss;
             ss << "Error while loading " << path << std::endl;
-            ss << reader.getFormatedErrorMessages();
+            ss << reader.getFormattedErrorMessages();
             throw std::runtime_error(ss.str());
         }
 

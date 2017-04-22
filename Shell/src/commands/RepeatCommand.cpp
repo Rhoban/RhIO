@@ -25,7 +25,10 @@ namespace RhIO
         }
 
         while (!shell->hasInput()) {
-            system("clear");
+            int result = system("clear");
+            if (result != 0) {
+              std::cerr << "RhIO::ClearCommand:process: Failed to clear" << std::endl;
+            }
             shell->parse(command);
 
             std::this_thread::sleep_for(

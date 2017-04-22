@@ -67,7 +67,10 @@ namespace RhIO
         if (plotFd <= 0) {
             createGnuplotInstance();
         }
-        write(plotFd, commands.c_str(), commands.length());
+        int result = write(plotFd, commands.c_str(), commands.length());
+        if (result != (int)commands.length()) {
+          std::cerr << "GnuPlot::render: failed write" << std::endl;
+        }
         replot = true;
         //    waitCloseGnuplotInstance();
     }
@@ -210,9 +213,13 @@ namespace RhIO
 
     void GnuPlot::closeWindow()
     {
-        write(plotFd, "quit\n", 5);
-        write(plotFd, "quit\n", 5);
-        close(plotFd);
+        if (write(plotFd, "quit\n", 5) != 5)
+            std::cerr << "GnuPlot::closeWindow: failed to quit" << std::endl;
+        if (write(plotFd, "quit\n", 5) != 5)
+            std::cerr << "GnuPlot::closeWindow: failed to quit" << std::endl;
+        if (close(plotFd) != 0) {
+            perror("GnuPlot::closeWindow: failed to close plotFd");
+        }
     }
 
     void GnuPlot::changeHistory()

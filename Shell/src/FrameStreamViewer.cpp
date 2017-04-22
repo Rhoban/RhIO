@@ -44,7 +44,10 @@ void FrameStreamViewer::pushFrame(
         stop();
         start();
     }
-    write(_pipeFd, data, size);
+    int written = write(_pipeFd, data, size);
+    if (written != (int)size) {
+      std::cerr << "FrameStreamViewer::pushFrame: failed to write properly" << std::endl;
+    }
 }
 
 void FrameStreamViewer::createPlayerInstance()

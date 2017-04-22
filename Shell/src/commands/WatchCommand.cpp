@@ -30,7 +30,10 @@ namespace RhIO
 
         pool.setCallback(std::bind(&WatchCommand::update, this, _1));
     
-        system("clear");
+        int result = system("clear");
+        if (result != 0) {
+          std::cerr << "RhIO::ClearCommand:process: Failed to clear" << std::endl;
+        }
         pool.draw(true);
 
         // Reducing frequency when watching values, avoiding shell flickering.
@@ -41,7 +44,10 @@ namespace RhIO
 
     void WatchCommand::update(NodePool *pool)
     {
-        system("clear");
+        int result = system("clear");
+        if (result != 0) {
+          std::cerr << "RhIO::ClearCommand:process: Failed to clear" << std::endl;
+        }
         pool->draw(true);
     }
 }

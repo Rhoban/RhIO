@@ -18,6 +18,9 @@ namespace RhIO
     void ClearCommand::process(std::vector<std::string> args)
     {
         (void) args;
-        system("clear");
+        int result = system("clear");
+        if (result != 0) {
+          std::cerr << "RhIO::ClearCommand:process: Failed to clear" << std::endl;
+        }
     }
 }
