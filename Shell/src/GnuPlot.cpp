@@ -94,7 +94,7 @@ namespace RhIO
             if (mode3D) {
                 commands += "set term qt noraise; splot ";
             } else {
-                commands += "set term qt noraise; plot ";
+                commands += "set term qt noraise noenhanced; plot ";
             }
         }
 
