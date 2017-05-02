@@ -71,7 +71,7 @@ namespace RhIO
         if (result != (int)commands.length()) {
           std::cerr << "GnuPlot::render: failed write" << std::endl;
         }
-        replot = true;
+        //    replot = true;
         //    waitCloseGnuplotInstance();
     }
 
