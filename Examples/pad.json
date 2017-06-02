@@ -1,0 +1,101 @@
+[
+    /**
+     * To make a joypad work, first type in rhio:
+     *
+     * pad
+     *
+     * This will dump you all the events from your joypad. You can then write
+     * a json file in your ~/.rhio/ directory.
+     * This is an example.
+     *
+     * When your json is ready, type:
+     *
+     * pad my_file.json
+     *
+     * To run the binding
+     */
+
+
+    /**
+     * Here, the button number 3 will toggle the enabled variable. It will be
+     * set to 1 on the first push, then 0 and so.
+     */
+    {
+        "param": "/moves/walk/walkEnable",
+        "type": "toggle",
+        "number": 3
+    },
+
+    /**
+     * The axis 1 will set step in the range 38 to -38
+     */
+    {
+        "param": "/moves/walk/walkStep",
+        "type": "axis",
+        "number": 1,
+        "range": [50, -20]
+    },
+    {
+        "param": "/moves/walk/walkLateral",
+        "type": "axis",
+        "number": 0,
+        "range": [20, -20]
+    },
+    {
+        "param": "/moves/walk/walkTurn",
+        "type": "axis",
+        "number": 2,
+        "range": [15, -15]
+    },
+
+    /**
+     * Pressing the button 4 will increment the frequency, and
+     * pressing the button 6 will decrement it.
+     */
+    {
+        "param": "/moves/walk/freq",
+        "type": "increment",
+        "number": 4,
+        "step": 0.1
+    },
+    {
+        "param": "/moves/walk/freq",
+        "type": "decrement",
+        "number": 6,
+        "step": 0.1
+    },
+    
+    /**
+     * Standup
+     */
+    {
+        "command": "standup",
+        "type": "button",
+        "number": 12
+    },
+    {
+        "command": "start walk",
+        "type": "button",
+        "number": 15
+    },
+    {
+        "command": "stop walk",
+        "type": "button",
+        "number": 13
+    },
+
+    /**
+     * Kick
+     */
+    {
+        "param": "/moves/walk/walkKickLeft",
+        "type": "toggle",
+        "number": 10
+    },
+
+    {
+        "param": "/moves/walk/walkKickRight",
+        "type": "toggle",
+        "number": 11
+    }
+]
