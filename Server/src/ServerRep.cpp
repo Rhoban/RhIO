@@ -7,10 +7,16 @@
 
 namespace RhIO {
 
-ServerRep::ServerRep(const std::string& endpoint) :
+ServerRep::ServerRep(std::string endpoint) :
     _context(1),
     _socket(_context, ZMQ_REP)
 {
+    if (endpoint == "") {
+        std::stringstream ss;
+        ss << "tcp://*:" << (ServersPortBase + 1);
+        endpoint = ss.str();
+    }
+
     _socket.bind(endpoint.c_str());
     //Set recv timeout in ms for not
     //waiting infinitely

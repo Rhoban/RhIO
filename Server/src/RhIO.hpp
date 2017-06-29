@@ -19,6 +19,17 @@ extern IONode Root;
  */
 class ServerPub;
 extern ServerPub* ServerStream;
+
+/**
+ * Starts the RhIO server
+ */
+void start(unsigned int port = ServersPortBase);
+
+/**
+ * Has RhIO started?
+ */
+bool started();
+
 }
 
 #endif

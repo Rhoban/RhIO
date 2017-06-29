@@ -33,6 +33,8 @@ static std::thread* serverThreadRep = nullptr;
 static std::thread* serverThreadPub = nullptr;
 static bool serverThreadRepOver = false;
 static bool serverThreadPubOver = false;
+static unsigned int port = ServersPortBase;
+static bool serverStarting = false;
 
 /**
  * Reply Server main loop handling
@@ -40,7 +42,9 @@ static bool serverThreadPubOver = false;
  */
 static void runServerRep()
 {
-    ServerRep server;
+    std::stringstream ss;
+    ss << "tcp://*:" << (port+1);
+    ServerRep server(ss.str());
     //Notify main thread 
     //for initialization ready
     initServerCount++;
@@ -57,7 +61,9 @@ static void runServerRep()
 static void runServerPub()
 {
     //Allocating ServerStream
-    ServerPub server;
+    std::stringstream ss;
+    ss << "tcp://*:" << port;
+    ServerPub server(ss.str());
     ServerStream = &server;
     //Notify main thread 
     //for initialization ready
@@ -78,14 +84,16 @@ static void runServerPub()
     }
 }
 
-/**
- * Create a new thread at program start
- * for Server reply and another thread for
- * Streaming Server
- * (GCC specific)
- */
-static void __attribute__ ((constructor)) initThreadServer()
-{ 
+bool started()
+{
+    return serverStarting;
+}
+
+void start(unsigned int port_)
+{
+    serverStarting = true;
+    port = port_;
+
     //Init atomic counter
     initServerCount = 0;
     //Start Server threads
@@ -106,13 +114,15 @@ static void __attribute__ ((constructor)) initThreadServer()
  */
 static void __attribute__ ((destructor)) stopThreadServer()
 {
-    //Wait the end of server thread
-    serverThreadRepOver = true;
-    serverThreadPubOver = true;
-    serverThreadPub->join();
-    serverThreadRep->join();
-    delete serverThreadPub;
-    delete serverThreadRep;
+    if (initServerCount > 0) {
+        //Wait the end of server thread
+        serverThreadRepOver = true;
+        serverThreadPubOver = true;
+        serverThreadPub->join();
+        serverThreadRep->join();
+        delete serverThreadPub;
+        delete serverThreadRep;
+    }
 }
 
 }

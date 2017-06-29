@@ -156,8 +156,25 @@ namespace RhIO
         // std::cout<<"PATH: "<<history_path<<std::endl;
         history_file.open(history_path, std::fstream::out | std::fstream::app);
 
-        std::string reqServer = "tcp://"+server+":"+ServerRepPort;
-        std::string subServer = "tcp://"+server+":"+ServerPubPort;
+        std::string reqServer, subServer;
+
+        unsigned int portSub = ServersPortBase;
+        auto pos = server.find(":");
+
+        // If there is a port from the server given, extracting it
+        if (pos != std::string::npos) {
+            portSub = atoi(server.substr(pos+1).c_str());
+            server = server.substr(0, pos);
+        } 
+
+        unsigned int portReq = portSub + 1;
+        std::stringstream ss;
+        ss << "tcp://" << server << ":" << portReq;
+        reqServer = ss.str();
+        ss.str("");
+        ss << "tcp://" << server << ":" << portSub;
+        subServer = ss.str();
+
         terminate = false;
         if (!oneShot) {
             std::cout << "RhIO, connecting to " << server << std::endl;

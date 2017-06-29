@@ -24,8 +24,7 @@ class ServerRep
          * Initialization with the bind
          * endpoint string
          */
-        ServerRep(const std::string& 
-            endpoint = std::string("tcp://*:") + ServerRepPort);
+        ServerRep(std::string endpoint = "");
 
         /**
          * Wait for next Client request

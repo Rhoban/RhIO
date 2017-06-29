@@ -20,6 +20,7 @@ include_directories(src/)
 #Sources files
 set(SOURCES
     src/DataBuffer.cpp
+    src/Protocol.cpp
 )
 
 #Enable C++11

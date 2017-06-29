@@ -4,7 +4,7 @@
 
 namespace RhIO {
 
-ServerPub::ServerPub(const std::string& endpoint) :
+ServerPub::ServerPub(std::string endpoint) :
     _context(1),
     _socket(_context, ZMQ_PUB),
     _isWritingTo1(true),
@@ -27,6 +27,12 @@ ServerPub::ServerPub(const std::string& endpoint) :
     _mutexQueueStream(),
     _mutexQueueFrame()
 {
+    if (endpoint == "") {
+        std::stringstream ss;
+        ss << "tcp://*:" << ServersPortBase;
+        endpoint = ss.str();
+    }
+
     _socket.bind(endpoint.c_str());
 }
 

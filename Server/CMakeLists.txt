@@ -18,6 +18,9 @@ catkin_package(
   CATKIN_DEPENDS RhIOCommon ZeroMQ
 )
 
+#The server automatically start on program startup (RhIO::start())
+option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" ON)
+
 #Include sources directory
 include_directories(src ${catkin_INCLUDE_DIRS})
 
@@ -41,6 +44,10 @@ set(RHIO_LIBRARIES
     pthread
     ${catkin_LIBRARIES}
 )
+
+if(RHIO_SERVER_AUTOSTART)
+    set (SOURCES ${SOURCES} src/autostart.cpp)
+endif()
 
 #Enable C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

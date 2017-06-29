@@ -9,8 +9,7 @@ namespace RhIO {
 /**
  * Server replier and Server publisher port
  */
-constexpr char ServerRepPort[] = "9999";
-constexpr char ServerPubPort[] = "9998";
+extern unsigned int ServersPortBase;
 
 /**
  * Protocol message type

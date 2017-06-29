@@ -23,8 +23,7 @@ class ServerPub
          * Initialization with the bind
          * endpoint string
          */
-        ServerPub(const std::string& 
-            endpoint = std::string("tcp://*:") + ServerPubPort);
+        ServerPub(std::string endpoint = "");
 
         /**
          * Append to publish buffer value for type
