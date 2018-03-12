@@ -1,16 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
 project (RhIOShell)
 
+# Main RhIO directory
+set (RHIO_DIRECTORY "${CMAKE_SOURCE_DIR}/../"
+    CACHE STRING "Main RhIO directory")
 
-find_package(catkin REQUIRED COMPONENTS
-  RhIOClient
-  jsoncpp
-  )
-
-catkin_package(
-  INCLUDE_DIRS .
-  CATKIN_DEPENDS RhIOClient jsoncpp
-)
+# Adding common dependency
+add_subdirectory("${RHIO_DIRECTORY}/Client" client)
+include_directories("${RHIO_DIRECTORY}/Common/src")
+include_directories("${RHIO_DIRECTORY}/Client/src")
+include_directories("${CMAKE_SOURCE_DIR}/src/")
 
 # Enable colors ?
 option (COLORS "Enable colors" ON)
@@ -56,11 +55,12 @@ set (SOURCES
     src/main.cpp
 )
 
-include_directories (src ${catkin_INCLUDE_DIRS})
-
 set (EXTRA_LIBS
     pthread 
-    ${catkin_LIBRARIES}
+    zmq
+    jsoncpp
+    RhIOClient
+    RhIOCommon
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")

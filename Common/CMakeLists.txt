@@ -6,14 +6,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(RhIOCommon)
 
-find_package(catkin REQUIRED)
-
-# What is published by the 'RhIOCommon package'
-catkin_package(
-  INCLUDE_DIRS src
-  LIBRARIES RhIOCommon
-)
-
 #Include sources directory
 include_directories(src/)
 

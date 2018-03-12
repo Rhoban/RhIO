@@ -11,20 +11,9 @@ set (RHIO_DIRECTORY "${CMAKE_SOURCE_DIR}/../"
     CACHE STRING "Main RhIO directory")
 
 # Adding common dependency
-add_subdirectory("${RHIO_DIRECTORY}/Common" common)
+add_subdirectory("${RHIO_DIRECTORY}/Server" server)
+include_directories("${RHIO_DIRECTORY}/Server/src")
 include_directories("${RHIO_DIRECTORY}/Common/src")
-
-#Sources files
-set(SOURCES
-    src/ClientReq.cpp
-    src/ClientSub.cpp
-)
-
-#Needed Libraries
-set(RHIO_LIBRARIES
-    pthread
-    zmq
-)
 
 #Enable C++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -32,5 +21,5 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
 #Build Server and Client as shared library
-add_library(RhIOClient SHARED ${SOURCES})
-target_link_libraries(RhIOClient ${RHIO_LIBRARIES})
+add_executable(demo main.cpp)
+target_link_libraries(demo RhIO RhIOCommon)

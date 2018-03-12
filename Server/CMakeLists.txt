@@ -6,23 +6,16 @@
 cmake_minimum_required(VERSION 2.8)
 project(RhIOServer)
 
-find_package(catkin REQUIRED COMPONENTS
-  RhIOCommon
-  ZeroMQ
-  )
-
-# What is published by the 'RhIOServer package'
-catkin_package(
-  INCLUDE_DIRS src
-  LIBRARIES RhIO
-  CATKIN_DEPENDS RhIOCommon ZeroMQ
-)
+# Main RhIO directory
+set (RHIO_DIRECTORY "${CMAKE_SOURCE_DIR}/../"
+    CACHE STRING "Main RhIO directory")
 
 #The server automatically start on program startup (RhIO::start())
 option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" ON)
 
-#Include sources directory
-include_directories(src ${catkin_INCLUDE_DIRS})
+# Adding common dependency
+add_subdirectory("${RHIO_DIRECTORY}/Common" common)
+include_directories("${RHIO_DIRECTORY}/Common/src")
 
 #Sources files
 set(SOURCES
@@ -42,7 +35,7 @@ set(SOURCES
 #Needed Libraries
 set(RHIO_LIBRARIES
     pthread
-    ${catkin_LIBRARIES}
+    zmq
 )
 
 if(RHIO_SERVER_AUTOSTART)
