@@ -1,4 +1,5 @@
 # Rhoban Input/Output Library
+## Standalone version
 
 ![RhIO](Docs/imgs/rhio.gif)
 
