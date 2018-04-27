@@ -155,7 +155,7 @@ const IONode& IONode::child(const std::string& name) const
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_children.count(name) == 0) {
-        throw std::logic_error("RhIO unknown node name: " + name);
+        throw std::logic_error("RhIO unknown node name: '" + name + "' in '" + pwd() + "'");
     } else {
         return *(_children.at(name));
     }
@@ -169,7 +169,7 @@ IONode& IONode::child(const std::string& name)
 
     std::lock_guard<std::mutex> lock(_mutex);
     if (_children.count(name) == 0) {
-        throw std::logic_error("RhIO unknown node name: " + name);
+        throw std::logic_error("RhIO unknown node name: '" + name + "' in '" + pwd() + "'");
     } else {
         return *(_children.at(name));
     }
@@ -398,7 +398,7 @@ IONode* IONode::forwardChildren(
                 std::lock_guard<std::mutex> lock(_mutex);
                 if (pt->_children.count(part) == 0) {
                     throw std::logic_error(
-                        "RhIO unknown node name: " + part);
+                      "RhIO unknown node name: '" + part  + "' in '" + pwd() + "'");
                 }
             }
             std::lock_guard<std::mutex> lock(_mutex);
