@@ -18,6 +18,9 @@ catkin_package(
   CATKIN_DEPENDS RhIOCommon ZeroMQ
 )
 
+#Option for compiling Examples
+option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
+
 #The server automatically start on program startup (RhIO::start())
 option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" ON)
 
@@ -57,3 +60,21 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 #Build Server and Client as shared library
 add_library(RhIO SHARED ${SOURCES})
 target_link_libraries(RhIO ${RHIO_LIBRARIES})
+
+#Build Examples
+if (BUILD_RHIO_EXAMPLES)
+    add_executable(exampleIntro Examples/exampleIntro.cpp)
+    target_link_libraries(exampleIntro RhIO)
+
+    add_executable(exampleValues Examples/exampleValues.cpp)
+    target_link_libraries(exampleValues RhIO)
+
+    add_executable(exampleStreamsAndCommands Examples/exampleStreamsAndCommands.cpp)
+    target_link_libraries(exampleStreamsAndCommands RhIO)
+
+    add_executable(exampleFrames Examples/exampleFrames.cpp)
+    target_link_libraries(exampleFrames RhIO)
+
+    add_executable(exampleBind Examples/exampleBind.cpp)
+    target_link_libraries(exampleBind RhIO)
+endif (BUILD_RHIO_EXAMPLES)

@@ -33,10 +33,15 @@ ServerPub::ServerPub(std::string endpoint) :
         endpoint = ss.str();
     }
 
+    // Limiting the water mark to 10 to avoid stacking messages or frames and
+    // product a delay
+    int water_mark = 10;
+    zmq_setsockopt(_socket, ZMQ_SNDHWM, &water_mark, sizeof(int));
+
     _socket.bind(endpoint.c_str());
 }
 
-void ServerPub::publishBool(const std::string& name, 
+void ServerPub::publishBool(const std::string& name,
     bool val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueBool);
@@ -46,7 +51,7 @@ void ServerPub::publishBool(const std::string& name,
         _queue2Bool.push_back({name, val, timestamp});
     }
 }
-void ServerPub::publishInt(const std::string& name, 
+void ServerPub::publishInt(const std::string& name,
     int64_t val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueInt);
@@ -56,7 +61,7 @@ void ServerPub::publishInt(const std::string& name,
         _queue2Int.push_back({name, val, timestamp});
     }
 }
-void ServerPub::publishFloat(const std::string& name, 
+void ServerPub::publishFloat(const std::string& name,
     double val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueFloat);
@@ -66,7 +71,7 @@ void ServerPub::publishFloat(const std::string& name,
         _queue2Float.push_back({name, val, timestamp});
     }
 }
-void ServerPub::publishStr(const std::string& name, 
+void ServerPub::publishStr(const std::string& name,
     const std::string& val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueStr);
@@ -77,7 +82,7 @@ void ServerPub::publishStr(const std::string& name,
     }
 }
 
-void ServerPub::publishStream(const std::string& name, 
+void ServerPub::publishStream(const std::string& name,
     const std::string& val, int64_t timestamp)
 {
     std::lock_guard<std::mutex> lock(_mutexQueueStream);
@@ -98,10 +103,10 @@ void ServerPub::publishFrame(const std::string& name,
     if (_isWritingTo1) {
         _queue1Frame.clear();
         _queue1Frame.push_back(zmq::message_t(
-            sizeof(MsgType) 
-            + sizeof(int64_t) 
+            sizeof(MsgType)
+            + sizeof(int64_t)
             + name.length()
-            + 4*sizeof(int64_t) 
+            + 4*sizeof(int64_t)
             + size
         ));
         DataBuffer pub(_queue1Frame.back().data(), _queue1Frame.back().size());
@@ -114,10 +119,10 @@ void ServerPub::publishFrame(const std::string& name,
     } else {
         _queue2Frame.clear();
         _queue2Frame.push_back(zmq::message_t(
-            sizeof(MsgType) 
-            + sizeof(int64_t) 
+            sizeof(MsgType)
+            + sizeof(int64_t)
             + name.length()
-            + 4*sizeof(int64_t) 
+            + 4*sizeof(int64_t)
             + size
         ));
         DataBuffer pub(_queue2Frame.back().data(), _queue2Frame.back().size());
@@ -128,8 +133,8 @@ void ServerPub::publishFrame(const std::string& name,
         pub.writeInt((uint64_t)height);
         pub.writeData(data, size);
     }
-}        
-    
+}
+
 void ServerPub::sendToClient()
 {
     //Swap double buffer
@@ -137,24 +142,24 @@ void ServerPub::sendToClient()
     swapBuffer();
 
     //Reference on full value buffer to be send
-    std::list<PubValBool>& queueBool = 
+    std::list<PubValBool>& queueBool =
         (_isWritingTo1) ? _queue2Bool : _queue1Bool;
-    std::list<PubValInt>& queueInt = 
+    std::list<PubValInt>& queueInt =
         (_isWritingTo1) ? _queue2Int : _queue1Int;
-    std::list<PubValFloat>& queueFloat = 
+    std::list<PubValFloat>& queueFloat =
         (_isWritingTo1) ? _queue2Float : _queue1Float;
-    std::list<PubValStr>& queueStr = 
+    std::list<PubValStr>& queueStr =
         (_isWritingTo1) ? _queue2Str : _queue1Str;
-    std::list<PubValStr>& queueStream = 
+    std::list<PubValStr>& queueStream =
         (_isWritingTo1) ? _queue2Stream : _queue1Stream;
-    std::list<zmq::message_t>& queueFrame = 
+    std::list<zmq::message_t>& queueFrame =
         (_isWritingTo1) ? _queue2Frame : _queue1Frame;
 
     //Sending values Bool
     while (!queueBool.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(int64_t) 
+            sizeof(MsgType) + sizeof(int64_t)
             + queueBool.front().name.length()
             + sizeof(int64_t) + sizeof(uint8_t));
         DataBuffer pub(packet.data(), packet.size());
@@ -173,7 +178,7 @@ void ServerPub::sendToClient()
     while (!queueInt.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(int64_t) 
+            sizeof(MsgType) + sizeof(int64_t)
             + queueInt.front().name.length()
             + sizeof(int64_t) + sizeof(int64_t));
         DataBuffer pub(packet.data(), packet.size());
@@ -192,7 +197,7 @@ void ServerPub::sendToClient()
     while (!queueFloat.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(int64_t) 
+            sizeof(MsgType) + sizeof(int64_t)
             + queueFloat.front().name.length()
             + sizeof(int64_t) + sizeof(double));
         DataBuffer pub(packet.data(), packet.size());
@@ -211,7 +216,7 @@ void ServerPub::sendToClient()
     while (!queueStr.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(int64_t) 
+            sizeof(MsgType) + sizeof(int64_t)
             + queueStr.front().name.length()
             + sizeof(int64_t) + sizeof(int64_t)
             + queueStr.front().value.length());
@@ -231,7 +236,7 @@ void ServerPub::sendToClient()
     while (!queueStream.empty()) {
         //Allocate message data
         zmq::message_t packet(
-            sizeof(MsgType) + sizeof(int64_t) 
+            sizeof(MsgType) + sizeof(int64_t)
             + queueStream.front().name.length()
             + sizeof(int64_t) + sizeof(int64_t)
             + queueStream.front().value.length());
@@ -256,7 +261,7 @@ void ServerPub::sendToClient()
         queueFrame.pop_front();
     }
 }
-        
+
 void ServerPub::swapBuffer()
 {
     //Lock all publisher buffer for all types
@@ -271,4 +276,3 @@ void ServerPub::swapBuffer()
 }
 
 }
-
