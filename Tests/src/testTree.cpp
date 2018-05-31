@@ -12,7 +12,7 @@ void printTree(const RhIO::IONode& node, std::string prefix = "")
 
 int main() 
 {
-    if (!RhIO::started) {
+    if (!RhIO::started()) {
         RhIO::start();
     }
     assert(RhIO::started());

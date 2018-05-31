@@ -5,7 +5,7 @@
 int main()
 {
     //Start networking server
-    if (!RhIO::started) {
+    if (!RhIO::started()) {
         RhIO::start();
     }
 

@@ -106,7 +106,7 @@ void function5()
 
 int main()
 {
-    if (!RhIO::started) {
+    if (!RhIO::started()) {
         RhIO::start();
     }
     assert(RhIO::started());

@@ -154,7 +154,7 @@ class Object
 int main()
 {
     //Start server
-    if (!RhIO::started) {
+    if (!RhIO::started()) {
         RhIO::start();
     }
 
