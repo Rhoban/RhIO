@@ -13,7 +13,7 @@ ServerRep::ServerRep(std::string endpoint) :
 {
     if (endpoint == "") {
         std::stringstream ss;
-        ss << "tcp://*:" << (ServersPortBase + 1);
+        ss << "tcp://*:" << PortServerRep;
         endpoint = ss.str();
     }
 

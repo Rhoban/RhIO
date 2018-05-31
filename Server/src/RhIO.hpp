@@ -23,14 +23,15 @@ extern ServerPub* ServerStream;
 /**
  * Start the RhIO server.
  *
- * @param port Network TCP port for
- * pub server and port+1 for rep server.
- * @param period Target time period in milliseconds
+ * @param portRep_ Network TCP port for request server. 
+ * @param portPub_ Network TCP port for streaming server.
+ * @param period_ Target time period in milliseconds
  * of streaming pub server loop.
  */
 void start(
-    unsigned int port = ServersPortBase,
-    unsigned int period = 20);
+    unsigned int portRep_ = PortServerRep,
+    unsigned int portPub_ = PortServerPub,
+    unsigned int period_ = 20);
 
 /**
  * Has RhIO started?

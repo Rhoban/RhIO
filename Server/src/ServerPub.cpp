@@ -29,7 +29,7 @@ ServerPub::ServerPub(std::string endpoint) :
 {
     if (endpoint == "") {
         std::stringstream ss;
-        ss << "tcp://*:" << ServersPortBase;
+        ss << "tcp://*:" << PortServerPub;
         endpoint = ss.str();
     }
 

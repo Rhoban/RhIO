@@ -158,7 +158,7 @@ namespace RhIO
 
         std::string reqServer, subServer;
 
-        unsigned int portSub = ServersPortBase;
+        unsigned int portSub = PortServerPub;
         auto pos = server.find(":");
 
         // If there is a port from the server given, extracting it
@@ -167,7 +167,7 @@ namespace RhIO
             server = server.substr(0, pos);
         } 
 
-        unsigned int portReq = portSub + 1;
+        unsigned int portReq = PortServerRep;
         std::stringstream ss;
         ss << "tcp://" << server << ":" << portReq;
         reqServer = ss.str();

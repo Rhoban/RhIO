@@ -8,7 +8,7 @@
 int main() 
 {
     RhIO::ClientSub client(
-        std::string("tcp://localhost:") + std::to_string(RhIO::ServersPortBase));
+        std::string("tcp://localhost:") + std::to_string(RhIO::PortServerPub));
     
     client.setHandlerBool(
         [](const std::string name, int64_t timestamp, bool val) 

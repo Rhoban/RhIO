@@ -9,7 +9,8 @@ namespace RhIO {
 /**
  * Server replier and Server publisher port
  */
-extern unsigned int ServersPortBase;
+extern unsigned int PortServerRep;
+extern unsigned int PortServerPub;
 
 /**
  * Protocol message type

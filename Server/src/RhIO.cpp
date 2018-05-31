@@ -33,7 +33,8 @@ static std::thread* serverThreadRep = nullptr;
 static std::thread* serverThreadPub = nullptr;
 static bool serverThreadRepOver = false;
 static bool serverThreadPubOver = false;
-static unsigned int port = ServersPortBase;
+static unsigned int portRep = PortServerRep;
+static unsigned int portPub = PortServerPub;
 static unsigned int period = 20;
 static bool serverStarting = false;
 
@@ -44,7 +45,7 @@ static bool serverStarting = false;
 static void runServerRep()
 {
     std::stringstream ss;
-    ss << "tcp://*:" << (port+1);
+    ss << "tcp://*:" << portRep;
     ServerRep server(ss.str());
     //Notify main thread 
     //for initialization ready
@@ -63,7 +64,7 @@ static void runServerPub()
 {
     //Allocating ServerStream
     std::stringstream ss;
-    ss << "tcp://*:" << port;
+    ss << "tcp://*:" << portPub;
     ServerPub server(ss.str());
     ServerStream = &server;
     //Notify main thread 
@@ -90,10 +91,14 @@ bool started()
     return serverStarting;
 }
 
-void start(unsigned int port_, unsigned int period_)
+void start(
+    unsigned int portRep_, 
+    unsigned int portPub_, 
+    unsigned int period_)
 {
     serverStarting = true;
-    port = port_;
+    portRep = portRep_;
+    portPub = portPub_;
     period = period_;
 
     //Init atomic counter

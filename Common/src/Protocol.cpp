@@ -3,6 +3,7 @@
 namespace RhIO
 {
 
-unsigned int ServersPortBase = 9998;
+unsigned int PortServerRep = 9999;
+unsigned int PortServerPub = 9998;
 
 }
