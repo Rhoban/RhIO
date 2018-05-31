@@ -38,6 +38,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #Enable compiler Warning
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
-#Build Server and Client as shared library
+#Build Client as shared library
 add_library(rhio_client SHARED ${SOURCES})
 target_link_libraries(rhio_client ${RHIO_LIBRARIES})
+

@@ -20,6 +20,11 @@ void function2()
 
 int main()
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     RhIO::Root.newChild("test");
     RhIO::Root.newInt("test/int");
     RhIO::Root.setInt("test/int", 0);

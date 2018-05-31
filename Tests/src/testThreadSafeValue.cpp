@@ -230,6 +230,11 @@ void function4()
 
 int main()
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     RhIO::Root.newChild("test");
 
     std::thread t1(function1);

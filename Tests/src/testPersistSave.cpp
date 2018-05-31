@@ -5,6 +5,11 @@
 
 int main() 
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     RhIO::Root.newChild("test");
     RhIO::Root.newChild("test2/test3");
 

@@ -6,7 +6,7 @@
 int main() 
 {
     RhIO::ClientReq client(
-        std::string("tcp://localhost:") + RhIO::ServerRepPort);
+        std::string("tcp://localhost:") + std::to_string(RhIO::ServersPortBase));
     
     std::vector<std::string> list;
     

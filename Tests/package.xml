@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package>
+  <name>rhio_tests</name>
+  <version>0.0.0</version>
+  <description>
+    RhIO is a lightweight library that can be linked against your application
+    in order to interract with your program on-the-fly, through its integrated server.
+
+    Main feature are parameters that can be exposed in order to be changed, monitored
+    or persisted to configuration files. 
+
+    It also provide a shell client that will provide a bash-like interface to walk
+    your nodes and parameters, and even trigger methods that are in your code.
+  </description>
+
+  <maintainer email="qrouxel@labri.fr">Quentin Rouxel</maintainer>
+  <maintainer email="gpassault@labri.fr">Grégoire Passault</maintainer>
+
+  <license>MIT</license>
+
+  <url type="website">https://github.com/Rhoban/RhIO</url>
+
+  <author email="qrouxel@labri.fr">Quentin Rouxel</author>
+  <author email="gpassault@labri.fr">Grégoire Passault</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>uoe_zeromq</build_depend> <!-- rhobandeps/libzmq -->
+  <build_depend>rhio_common</build_depend>
+  <build_depend>rhio_client</build_depend>
+  <build_depend>rhio_server</build_depend>
+
+  <run_depend>uoe_zeromq</run_depend>
+  <run_depend>rhio_common</run_depend>
+  <run_depend>rhio_client</run_depend>
+  <run_depend>rhio_server</run_depend>
+</package>

@@ -6,6 +6,11 @@
 
 int main() 
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     RhIO::Root.newChild("test");
     RhIO::Root.newChild("test2/pouet");
     RhIO::Root.newBool("test/paramBool");
@@ -37,6 +42,9 @@ int main()
         RhIO::FrameFormat::RGB);
     RhIO::Root.child("test").newFrame("frame2", "frame2",
         RhIO::FrameFormat::BGR);
+
+    RhIO::start();
+    assert(RhIO::started());
 
     std::cout << "Waiting" << std::endl;
     std::this_thread::sleep_for(

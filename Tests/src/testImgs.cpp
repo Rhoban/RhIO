@@ -7,6 +7,11 @@
 
 int main()
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     RhIO::Root.newFrame("test/frame1", "Some frame stream", 
         RhIO::FrameFormat::RGB);
     RhIO::IONode& node = RhIO::Root.child("test"); 

@@ -106,6 +106,11 @@ void function5()
 
 int main()
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     std::thread t1(function1);
     std::thread t2(function2);
     std::thread t3(function3);

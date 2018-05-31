@@ -14,7 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 # What is published by the 'rhio_server package'
 catkin_package(
     INCLUDE_DIRS src
-    LIBRARIES RhIO
+    LIBRARIES rhio_server
     CATKIN_DEPENDS rhio_common uoe_zeromq
 )
 
@@ -57,24 +57,25 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #Enable compiler Warning
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
-#Build Server and Client as shared library
-add_library(RhIO SHARED ${SOURCES})
-target_link_libraries(RhIO ${RHIO_LIBRARIES})
+#Build Server as shared library
+add_library(rhio_server SHARED ${SOURCES})
+target_link_libraries(rhio_server ${RHIO_LIBRARIES})
 
 #Build Examples
 if (BUILD_RHIO_EXAMPLES)
     add_executable(exampleIntro Examples/exampleIntro.cpp)
-    target_link_libraries(exampleIntro RhIO)
+    target_link_libraries(exampleIntro rhio_server)
 
     add_executable(exampleValues Examples/exampleValues.cpp)
-    target_link_libraries(exampleValues RhIO)
+    target_link_libraries(exampleValues rhio_server)
 
     add_executable(exampleStreamsAndCommands Examples/exampleStreamsAndCommands.cpp)
-    target_link_libraries(exampleStreamsAndCommands RhIO)
+    target_link_libraries(exampleStreamsAndCommands rhio_server)
 
     add_executable(exampleFrames Examples/exampleFrames.cpp)
-    target_link_libraries(exampleFrames RhIO)
+    target_link_libraries(exampleFrames rhio_server)
 
     add_executable(exampleBind Examples/exampleBind.cpp)
-    target_link_libraries(exampleBind RhIO)
+    target_link_libraries(exampleBind rhio_server)
 endif (BUILD_RHIO_EXAMPLES)
+

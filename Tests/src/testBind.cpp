@@ -111,6 +111,11 @@ class Test
 
 int main()
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     RhIO::Root.newChild("test");
     RhIO::Root.newInt("test/valueInt1");
     RhIO::Root.newInt("test/valueInt2");

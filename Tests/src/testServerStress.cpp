@@ -30,6 +30,11 @@ void generate(int depth=0, std::string prefix="")
 
 int main() 
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     generate();
     printf("Generated %d values\n", values);
 

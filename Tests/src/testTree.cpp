@@ -12,6 +12,11 @@ void printTree(const RhIO::IONode& node, std::string prefix = "")
 
 int main() 
 {
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+    assert(RhIO::started());
+
     assert(RhIO::Root.name() == "ROOT");
     assert(RhIO::Root.listChildren().size() == 0);
     assert(RhIO::Root.parent().name() == "ROOT");
