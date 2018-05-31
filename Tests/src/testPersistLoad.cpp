@@ -53,11 +53,6 @@ int main()
     assert(RhIO::Root.getValueFloat("test/paramFloat").persisted == false);
     assert(RhIO::Root.getValueStr("test2/test3/paramStr").persisted == false);
 
-    assert(RhIO::Root.getValueBool("paramBool").comment == "bool parameter");
-    assert(RhIO::Root.getValueInt("test/paramInt").comment == "");
-    assert(RhIO::Root.getValueFloat("test/paramFloat").comment == "float parameter");
-    assert(RhIO::Root.getValueStr("test2/test3/paramStr").comment == "str parameter");
-
     assert(RhIO::Root.getValueBool("paramBool").hasMin == false);
     assert(RhIO::Root.getValueBool("paramBool").hasMax == false);
     assert(RhIO::Root.getValueInt("test/paramInt").hasMin == false);

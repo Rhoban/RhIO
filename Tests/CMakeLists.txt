@@ -32,6 +32,8 @@ set(RHIO_LIBRARIES
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #Enable compiler Warning
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
+#Enable testing (assert)
+set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(testTree src/testTree.cpp)
 target_link_libraries(testTree ${RHIO_LIBRARIES})

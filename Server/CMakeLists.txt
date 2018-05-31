@@ -44,6 +44,7 @@ set(SOURCES
 
 #Needed Libraries
 set(RHIO_LIBRARIES
+    yaml-cpp
     pthread
     ${catkin_LIBRARIES}
 )

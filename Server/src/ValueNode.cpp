@@ -1,6 +1,8 @@
 #include <stdexcept>
+#include <iomanip>
 #include <chrono>
 #include <fstream>
+#include <yaml-cpp/yaml.h>
 #include "ValueNode.hpp"
 #include "ServerPub.hpp"
 #include "RhIO.hpp"
@@ -653,28 +655,30 @@ void ValueNode::saveValues(const std::string& path)
         return;
     }
 
-    //Open values.conf file
+    //Open values.yaml file
     std::ofstream file;
     if (
         path.length() > 0 && 
         path[path.length()-1] != separator
     ) {
-        file.open(path + separator + "values.conf");
+        file.open(path + separator + "values.yaml");
     } else {
-        file.open(path + "values.conf");
+        file.open(path + "values.yaml");
     }
     if (!file.is_open()) {
         throw std::runtime_error(
             "RhIO unable to write values file: " + path);
     }
 
+    //Init YAWL producer
+    YAML::Emitter out;
+    out.SetIndent(4);
+    out << YAML::BeginMap;
     //Write Bool values
     for (auto& v : _valuesBool) {
         if (v.second.persisted) {
-            file << "[bool] " << v.second.name 
-                << ".value = " << v.second.value << std::endl;
-            file << "[bool] " << v.second.name 
-                << ".comment = " << v.second.comment << std::endl;
+            out << YAML::Key << v.second.name;
+            out << YAML::Value << v.second.value;
             //Update persisted value
             v.second.valuePersisted = v.second.value;
         }
@@ -682,10 +686,10 @@ void ValueNode::saveValues(const std::string& path)
     //Write Int values
     for (auto& v : _valuesInt) {
         if (v.second.persisted) {
-            file << "[int] " << v.second.name 
-                << ".value = " << v.second.value << std::endl;
-            file << "[int] " << v.second.name 
-                << ".comment = " << v.second.comment << std::endl;
+            std::ostringstream ss;
+            ss << (int64_t)v.second.value;
+            out << YAML::Key << v.second.name;
+            out << YAML::Value << ss.str();
             //Update persisted value
             v.second.valuePersisted = v.second.value;
         }
@@ -693,10 +697,11 @@ void ValueNode::saveValues(const std::string& path)
     //Write Float values
     for (auto& v : _valuesFloat) {
         if (v.second.persisted) {
-            file << "[float] " << v.second.name 
-                << ".value = " << v.second.value << std::endl;
-            file << "[float] " << v.second.name 
-                << ".comment = " << v.second.comment << std::endl;
+            std::ostringstream ss;
+            ss << std::fixed << std::setprecision(15) 
+                << (double)v.second.value;
+            out << YAML::Key << v.second.name;
+            out << YAML::Value << ss.str();
             //Update persisted value
             v.second.valuePersisted = v.second.value;
         }
@@ -704,148 +709,131 @@ void ValueNode::saveValues(const std::string& path)
     //Write Str values
     for (auto& v : _valuesStr) {
         if (v.second.persisted) {
-            file << "[str] " << v.second.name 
-                << ".value = " << v.second.value << std::endl;
-            file << "[str] " << v.second.name 
-                << ".comment = " << v.second.comment << std::endl;
+            out << YAML::Key << v.second.name;
+            out << YAML::Value << v.second.value;
             //Update persisted value
             v.second.valuePersisted = v.second.value;
         }
     }
+    out << YAML::EndMap;
+    file << out.c_str() << std::endl;
 
     file.close();
 }
         
 void ValueNode::loadValues(const std::string& path)
 {
-    //Open values.conf file
+    //Open values.yaml file
     std::ifstream file;
     if (
         path.length() > 0 && 
         path[path.length()-1] != separator
     ) {
-        file.open(path + separator + "values.conf");
+        file.open(path + separator + "values.yaml");
     } else {
-        file.open(path + "values.conf");
+        file.open(path + "values.yaml");
     }
     if (!file.is_open()) {
         return;
     }
-
-    auto error = [&path](const std::string& line) {
-        throw std::runtime_error(
-            "RhIO invalid formated values file: " 
-            + path + ": " + line);
-    };
-
-    //For each lines
-    while (file.good()) {
-        std::string line;
-        std::getline(file, line);
-        if (line.size() == 0) continue;
-        if (line[0] != '[') error(line);
-        //Extract type
-        size_t pos = 0;
-        size_t pos2 = line.find_first_of("]", pos);
-        if (pos2 == std::string::npos) error(line);
-        if (pos2 - pos == 0) error(line);
-        pos2++;
-        std::string type = line.substr(pos, pos2 - pos);
-        //Skip space
-        pos = pos2 + 1;
-        pos = line.find_first_not_of(" ", pos);
-        if (pos == std::string::npos) error(line);
-        //Extract name
-        pos2 = line.find_first_of(".", pos);
-        if (pos2 == std::string::npos) error(line);
-        if (pos2 - pos == 0) error(line);
-        std::string name = line.substr(pos, pos2 - pos);
-        //Extract field
-        pos = pos2 + 1;
-        pos2 = line.find_first_of(" ", pos);
-        if (pos2 == std::string::npos) error(line);
-        if (pos2 - pos == 0) error(line);
-        std::string field = line.substr(pos, pos2 - pos);
-        //Extact value
-        pos = pos2 + 1;
-        pos = line.find_first_of("=", pos);
-        if (pos == std::string::npos) error(line);
-        pos++;
-        pos = line.find_first_not_of(" ", pos);
-        std::string value;
-        if (pos == std::string::npos) {
-            value = "";
-        } else {
-            value = line.substr(pos);
-        }
-        
-        //Assign value, comment, min and max
-        if (type == "[bool]") {
-            //Bool type
-            if (_valuesBool.count(name) == 0) {
-                _valuesBool[name] = ValueBool();
-                _valuesBool[name].name = name;
-                ValueBuilderBool(_valuesBool[name], false);
-            }
-            if (field == "value") {
-                _valuesBool.at(name).value = std::stoi(value);
-                _valuesBool.at(name).valuePersisted = std::stoi(value);
-            } else if (field == "comment") {
-                _valuesBool.at(name).comment = value;
-            } else {
-                error(line);
-            }
-        } else if (type == "[int]") {
-            //Int type
-            if (_valuesInt.count(name) == 0) {
-                _valuesInt[name] = ValueInt();
-                _valuesInt[name].name = name;
-                ValueBuilderInt(_valuesInt[name], false);
-            }
-            if (field == "value") {
-                _valuesInt.at(name).value = std::stol(value);
-                _valuesInt.at(name).valuePersisted = std::stol(value);
-            } else if (field == "comment") {
-                _valuesInt.at(name).comment = value;
-            } else {
-                error(line);
-            }
-        } else if (type == "[float]") {
-            //Float type
-            if (_valuesFloat.count(name) == 0) {
-                _valuesFloat[name] = ValueFloat();
-                _valuesFloat[name].name = name;
-                ValueBuilderFloat(_valuesFloat[name], false);
-            }
-            if (field == "value") {
-                _valuesFloat.at(name).value = std::stod(value);
-                _valuesFloat.at(name).valuePersisted = std::stod(value);
-            } else if (field == "comment") {
-                _valuesFloat.at(name).comment = value;
-            } else {
-                error(line);
-            }
-        } else if (type == "[str]") {
-            //Str type
-            if (_valuesStr.count(name) == 0) {
-                _valuesStr[name] = ValueStr();
-                _valuesStr[name].name = name;
-                ValueBuilderStr(_valuesStr[name], false);
-            }
-            if (field == "value") {
-                _valuesStr.at(name).value = value;
-                _valuesStr.at(name).valuePersisted = value;
-            } else if (field == "comment") {
-                _valuesStr.at(name).comment = value;
-            } else {
-                error(line);
-            }
-        } else {
-            error(line);
-        }
-    }
     
+    //Read file content
+    std::string content(
+        (std::istreambuf_iterator<char>(file)), 
+        std::istreambuf_iterator<char>());
     file.close();
+    //Parse the YAML string
+    YAML::Node node = YAML::Load(content);
+
+    //Load values from YAML
+    if (node.IsMap()) {
+        for (const auto& it : node) {
+            std::string name = it.first.as<std::string>();
+            if (name.find_first_of("/") != std::string::npos) {
+                throw std::runtime_error(
+                    "RhIO invalid name (separator): " + name);
+            }
+            if (!it.second.IsScalar()) {
+                throw std::runtime_error(
+                    "RhIO invalid format (map type)");
+            }
+            //Guess the actual value type
+            bool isInt;
+            bool isFloat;
+            bool isStr;
+            try {
+                volatile auto tmp = it.second.as<int64_t>();
+                (void)tmp;
+                isInt = true;
+            } catch (const YAML::BadConversion& e) {
+                isInt = false;
+            }
+            try {
+                volatile auto tmp = it.second.as<double>();
+                (void)tmp;
+                isFloat = true;
+            } catch (const YAML::BadConversion& e) {
+                isFloat = false;
+            }
+            try {
+                volatile auto tmp = it.second.as<std::string>();
+                (void)tmp;
+                isStr = true;
+            } catch (const YAML::BadConversion& e) {
+                isStr = false;
+            }
+            //Deduce the type, create the value
+            //and assign the read value
+            if (!isInt && !isFloat && isStr) {
+                if (
+                    it.second.as<std::string>() == "true" ||
+                    it.second.as<std::string>() == "false"
+                ) {
+                    //Bool type
+                    if (_valuesBool.count(name) == 0) {
+                        _valuesBool[name] = ValueBool();
+                        _valuesBool[name].name = name;
+                        ValueBuilderBool(_valuesBool[name], false);
+                    }
+                    _valuesBool.at(name).value = it.second.as<bool>();
+                    _valuesBool.at(name).valuePersisted = it.second.as<bool>();
+                } else {
+                    //String type
+                    if (_valuesStr.count(name) == 0) {
+                        _valuesStr[name] = ValueStr();
+                        _valuesStr[name].name = name;
+                        ValueBuilderStr(_valuesStr[name], false);
+                    }
+                    _valuesStr.at(name).value = it.second.as<std::string>();
+                    _valuesStr.at(name).valuePersisted = it.second.as<std::string>();
+                }
+            } else if (!isInt && isFloat && isStr) {
+                //Float type
+                if (_valuesFloat.count(name) == 0) {
+                    _valuesFloat[name] = ValueFloat();
+                    _valuesFloat[name].name = name;
+                    ValueBuilderFloat(_valuesFloat[name], false);
+                }
+                _valuesFloat.at(name).value = it.second.as<double>();
+                _valuesFloat.at(name).valuePersisted = it.second.as<double>();
+            } else if (isInt && isFloat && isStr) {
+                //Int type
+                if (_valuesInt.count(name) == 0) {
+                    _valuesInt[name] = ValueInt();
+                    _valuesInt[name].name = name;
+                    ValueBuilderInt(_valuesInt[name], false);
+                }
+                _valuesInt.at(name).value = it.second.as<int64_t>();
+                _valuesInt.at(name).valuePersisted = it.second.as<int64_t>();
+            } else {
+                throw std::runtime_error(
+                    "RhIO unknown type: " + name);
+            }
+        }
+    } else {
+        throw std::runtime_error(
+            "RhIO invalid format (root type)");
+    }
 }
 
 }
