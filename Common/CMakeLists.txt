@@ -4,14 +4,14 @@
 ###
 
 cmake_minimum_required(VERSION 2.8)
-project(RhIOCommon)
+project(rhio_common)
 
 find_package(catkin REQUIRED)
 
-# What is published by the 'RhIOCommon package'
+# What is published by the 'rhio_common package'
 catkin_package(
   INCLUDE_DIRS src
-  LIBRARIES RhIOCommon
+  LIBRARIES rhio_common
 )
 
 #Include sources directory
@@ -29,4 +29,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
 #Build Server and Client as shared library
-add_library(RhIOCommon SHARED ${SOURCES})
+add_library(rhio_common SHARED ${SOURCES})

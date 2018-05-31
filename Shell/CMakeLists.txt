@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 2.8)
-project (RhIOShell)
+project (rhio_shell)
 
 
 find_package(catkin REQUIRED COMPONENTS
-  RhIOClient
+  rhio_client
   jsoncpp
-  )
+)
 
 catkin_package(
   INCLUDE_DIRS .
-  CATKIN_DEPENDS RhIOClient jsoncpp
+  CATKIN_DEPENDS rhio_client jsoncpp
 )
 
 # Enable colors ?

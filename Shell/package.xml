@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>RhIOShell</name>
+  <name>rhio_shell</name>
   <version>0.0.0</version>
   <description>
     RhIOShell provide a shell environment to communicate with RhIOServers
@@ -18,10 +18,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>RhIOClient</build_depend>
+  <build_depend>rhio_client</build_depend>
   <build_depend>jsoncpp</build_depend> <!-- rhobandeps/jsoncpp -->
 
-  <run_depend>RhIOClient</run_depend>
+  <run_depend>rhio_client</run_depend>
   <run_depend>jsoncpp</run_depend>
 
 

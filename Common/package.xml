@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>RhIOCommon</name>
+  <name>rhio_common</name>
   <version>0.0.0</version>
   <description>
     RhIO is a lightweight library that can be linked against your application

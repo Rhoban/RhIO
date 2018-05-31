@@ -1,3 +1,5 @@
+University of Edinburgh fork of RhIO from original repository: https://github.com/Rhoban/RhIO
+
 # Rhoban Input/Output Library
 
 ![RhIO](Docs/imgs/rhio.gif)

@@ -4,25 +4,25 @@
 ###
 
 cmake_minimum_required(VERSION 2.8)
-project(RhIOServer)
+project(rhio_server)
 
 find_package(catkin REQUIRED COMPONENTS
-  RhIOCommon
-  ZeroMQ
-  )
+    rhio_common
+    uoe_zeromq
+)
 
-# What is published by the 'RhIOServer package'
+# What is published by the 'rhio_server package'
 catkin_package(
-  INCLUDE_DIRS src
-  LIBRARIES RhIO
-  CATKIN_DEPENDS RhIOCommon ZeroMQ
+    INCLUDE_DIRS src
+    LIBRARIES RhIO
+    CATKIN_DEPENDS rhio_common uoe_zeromq
 )
 
 #Option for compiling Examples
 option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
 
 #The server automatically start on program startup (RhIO::start())
-option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" ON)
+option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" OFF)
 
 #Include sources directory
 include_directories(src ${catkin_INCLUDE_DIRS})

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package>
-  <name>RhIOServer</name>
+  <name>rhio_server</name>
   <version>0.0.0</version>
   <description>
     RhIO is a lightweight library that can be linked against your application
@@ -25,9 +25,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>ZeroMQ</build_depend> <!-- rhobandeps/libzmq -->
-  <build_depend>RhIOCommon</build_depend>
+  <build_depend>uoe_zeromq</build_depend> <!-- rhobandeps/libzmq -->
+  <build_depend>rhio_common</build_depend>
 
-  <run_depend>ZeroMQ</run_depend>
-  <run_depend>RhIOCommon</run_depend>
+  <run_depend>uoe_zeromq</run_depend>
+  <run_depend>rhio_common</run_depend>
 </package>
