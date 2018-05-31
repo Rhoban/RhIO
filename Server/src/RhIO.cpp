@@ -34,6 +34,7 @@ static std::thread* serverThreadPub = nullptr;
 static bool serverThreadRepOver = false;
 static bool serverThreadPubOver = false;
 static unsigned int port = ServersPortBase;
+static unsigned int period = 20;
 static bool serverStarting = false;
 
 /**
@@ -76,10 +77,10 @@ static void runServerPub()
         int64_t tsEnd = std::chrono::duration_cast<std::chrono::milliseconds>(
             std::chrono::steady_clock::now().time_since_epoch()).count();
         int64_t duration = tsEnd - tsStart;
-        //Streaming value at 50Hz
-        if (duration < 20) {
+        //Streaming value at target frequency (default is 50Hz)
+        if (duration < period) {
             std::this_thread::sleep_for(
-                std::chrono::milliseconds(20-duration));
+                std::chrono::milliseconds(period-duration));
         }
     }
 }
@@ -89,10 +90,11 @@ bool started()
     return serverStarting;
 }
 
-void start(unsigned int port_)
+void start(unsigned int port_, unsigned int period_)
 {
     serverStarting = true;
     port = port_;
+    period = period_;
 
     //Init atomic counter
     initServerCount = 0;
