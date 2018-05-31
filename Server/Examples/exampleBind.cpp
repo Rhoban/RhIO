@@ -153,6 +153,11 @@ class Object
 
 int main()
 {
+    //Start server
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+
     //Initialize the instance
     Object obj;
 

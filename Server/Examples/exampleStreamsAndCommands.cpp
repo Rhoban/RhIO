@@ -3,6 +3,11 @@
 
 int main()
 {
+    //Start networking server
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+
     //Like values, streams are associated with a name 
     //and stored into tree nodes. They are representing
     //a write-only output string stream (std:ostream) 

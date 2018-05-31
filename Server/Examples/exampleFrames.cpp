@@ -4,6 +4,11 @@
 
 int main()
 {
+    //Start networking server
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+
     //RhIO can also be used to stream real time image
     //frames from server to client. Image are non compressed
     //in raw RGB, BGR or YUV format. Each pixels is defined by

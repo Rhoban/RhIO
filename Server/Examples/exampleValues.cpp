@@ -3,6 +3,11 @@
 
 int main()
 {
+    //Start networking server
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+
     //Values are typed variables which can
     //be get or set, accessed and update across
     //network. Supported types are Bool, Int, 

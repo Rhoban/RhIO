@@ -3,8 +3,11 @@
 
 int main()
 {
-    //RhIO is automatically started and initialized
-    //at program startup before the main().
+    //Start networking server
+    if (!RhIO::started) {
+        RhIO::start();
+    }
+
     //The global main instance RhIO::IONode Root is defined
     //on startup and contains shared tree and all values,
     //commands and stream.
