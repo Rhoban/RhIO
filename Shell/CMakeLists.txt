@@ -4,12 +4,11 @@ project (rhio_shell)
 
 find_package(catkin REQUIRED COMPONENTS
   rhio_client
-  jsoncpp
 )
 
 catkin_package(
   INCLUDE_DIRS .
-  CATKIN_DEPENDS rhio_client jsoncpp
+  CATKIN_DEPENDS rhio_client
 )
 
 # Enable colors ?
@@ -60,6 +59,7 @@ include_directories (src ${catkin_INCLUDE_DIRS})
 
 set (EXTRA_LIBS
     pthread 
+    jsoncpp
     ${catkin_LIBRARIES}
 )
 

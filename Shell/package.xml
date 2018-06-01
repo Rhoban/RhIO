@@ -19,10 +19,8 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>rhio_client</build_depend>
-  <build_depend>jsoncpp</build_depend> <!-- rhobandeps/jsoncpp -->
 
   <run_depend>rhio_client</run_depend>
-  <run_depend>jsoncpp</run_depend>
 
 
 </package>

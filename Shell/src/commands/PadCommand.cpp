@@ -3,7 +3,7 @@
 #include "Shell.h"
 #include "PadCommand.h"
 #include "joystick/Joystick.h"
-#include <json/json.h>
+#include <jsoncpp/json/json.h>
 
 static std::string file_get_contents(std::string path)
 {
