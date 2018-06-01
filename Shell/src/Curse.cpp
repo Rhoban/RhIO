@@ -125,7 +125,7 @@ namespace RhIO
         } else if (auto val = Node::asFloat(value)) {
             float min, max;
             getMinMax(val, &min, &max);
-            val->value += delta*((max-min)/granularities[granularity]);
+            val->value = val->value + delta*((max-min)/granularities[granularity]);
         }
 
         bound(value);

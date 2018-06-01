@@ -53,6 +53,18 @@ class ValueNode : public BaseNode<ValueNode>
         const std::string& getStr(const std::string& name) const;
 
         /**
+         * Real time lock free version of values 
+         * getters with limited features. 
+         * Only direct child value access 
+         * (no sub child forward) is supported.
+         * No concurent creation of new values on 
+         * the same child node is also assumed.
+         */
+        bool getRTBool(const std::string& name) const;
+        int64_t getRTInt(const std::string& name) const;
+        double getRTFloat(const std::string& name) const;
+
+        /**
          * Values setters for each type
          * associated with given relative name 
          * from this Node
@@ -77,6 +89,25 @@ class ValueNode : public BaseNode<ValueNode>
             = std::chrono::steady_clock::now());
         void setStr(const std::string& name, const std::string& val,
             bool noCallblack = false,
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
+
+        /**
+         * Real time lock free version of values 
+         * setters with limited features. 
+         * Only direct child value access 
+         * (no sub child forward) is supported.
+         * Callback call is not supported.
+         * No concurent creation of new values on 
+         * the same child node is also assumed.
+         */
+        void setRTBool(const std::string& name, bool val,
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
+        void setRTInt(const std::string& name, int64_t val,
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
+        void setRTFloat(const std::string& name, double val,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
 

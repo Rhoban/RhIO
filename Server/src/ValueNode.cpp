@@ -105,6 +105,37 @@ const std::string& ValueNode::getStr(const std::string& name) const
     }
 }
 
+bool ValueNode::getRTBool(const std::string& name) const
+{
+    if (_valuesBool.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        return _valuesBool.at(name).value.load();
+    }
+}
+int64_t ValueNode::getRTInt(const std::string& name) const
+{
+    if (_valuesInt.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        return _valuesInt.at(name).value.load();
+    }
+}
+double ValueNode::getRTFloat(const std::string& name) const
+{
+    if (_valuesFloat.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Float name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        return _valuesFloat.at(name).value.load();
+    }
+}
+
 void ValueNode::setBool(const std::string& name, bool val,
     bool noCallblack,
     std::chrono::steady_clock::time_point timestamp)
@@ -143,8 +174,10 @@ void ValueNode::setBool(const std::string& name, bool val,
             _valuesBool[name].callback(val);
         }
         //Publish value
-        if (_valuesBool.at(name).streamWatchers > 0) {
-            ServerStream->publishBool(BaseNode::pwd + separator + name, val,
+        if (_valuesBool.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishBool(
+                BaseNode::pwd + separator + name, 
+                val,
                 std::chrono::duration_cast<std::chrono::milliseconds>
                     (timestamp.time_since_epoch()).count());
         }
@@ -188,8 +221,10 @@ void ValueNode::setInt(const std::string& name, int64_t val,
             _valuesInt[name].callback(val);
         }
         //Publish value
-        if (_valuesInt.at(name).streamWatchers > 0) {
-            ServerStream->publishInt(BaseNode::pwd + separator + name, val, 
+        if (_valuesInt.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishInt(
+                BaseNode::pwd + separator + name, 
+                val, 
                 std::chrono::duration_cast<std::chrono::milliseconds>
                     (timestamp.time_since_epoch()).count());
         }
@@ -233,8 +268,10 @@ void ValueNode::setFloat(const std::string& name, double val,
             _valuesFloat[name].callback(val);
         }
         //Publish value
-        if (_valuesFloat.at(name).streamWatchers > 0) {
-            ServerStream->publishFloat(BaseNode::pwd + separator + name, val,
+        if (_valuesFloat.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishFloat(
+                BaseNode::pwd + separator + name, 
+                val,
                 std::chrono::duration_cast<std::chrono::milliseconds>
                     (timestamp.time_since_epoch()).count());
         }
@@ -278,8 +315,113 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
             _valuesStr[name].callback(_valuesStr[name].value);
         }
         //Publish value
-        if (_valuesStr.at(name).streamWatchers > 0) {
-            ServerStream->publishStr(BaseNode::pwd + separator + name, val,
+        if (_valuesStr.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishStr(
+                BaseNode::pwd + separator + name, 
+                val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
+    }
+}
+
+void ValueNode::setRTBool(const std::string& name, bool val,
+    std::chrono::steady_clock::time_point timestamp)
+{
+    if (_valuesBool.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        //Bound to min/max
+        if (
+            _valuesBool.at(name).hasMin && 
+            val < _valuesBool.at(name).min
+        ) {
+            val = _valuesBool.at(name).min;
+        }
+        if (
+            _valuesBool.at(name).hasMax && 
+            val > _valuesBool.at(name).max
+        ) {
+            val = _valuesBool.at(name).max;
+        }
+        //Update value
+        _valuesBool[name].value.store(val);
+        _valuesBool[name].timestamp = timestamp;
+        //Publish value
+        if (_valuesBool.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishBool(
+                BaseNode::pwd + separator + name, 
+                val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
+    }
+}
+void ValueNode::setRTInt(const std::string& name, int64_t val,
+    std::chrono::steady_clock::time_point timestamp)
+{
+    if (_valuesInt.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        //Bound to min/max
+        if (
+            _valuesInt.at(name).hasMin && 
+            val < _valuesInt.at(name).min
+        ) {
+            val = _valuesInt.at(name).min;
+        }
+        if (
+            _valuesInt.at(name).hasMax && 
+            val > _valuesInt.at(name).max
+        ) {
+            val = _valuesInt.at(name).max;
+        }
+        //Update value
+        _valuesInt[name].value.store(val);
+        _valuesInt[name].timestamp = timestamp;
+        //Publish value
+        if (_valuesInt.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishInt(
+                BaseNode::pwd + separator + name, 
+                val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
+    }
+}
+void ValueNode::setRTFloat(const std::string& name, double val,
+    std::chrono::steady_clock::time_point timestamp)
+{
+    if (_valuesFloat.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Float name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        //Bound to min/max
+        if (
+            _valuesFloat.at(name).hasMin && 
+            val < _valuesFloat.at(name).min
+        ) {
+            val = _valuesFloat.at(name).min;
+        }
+        if (
+            _valuesFloat.at(name).hasMax && 
+            val > _valuesFloat.at(name).max
+        ) {
+            val = _valuesFloat.at(name).max;
+        }
+        //Update value
+        _valuesFloat[name].value.store(val);
+        _valuesFloat[name].timestamp = timestamp;
+        //Publish value
+        if (_valuesFloat.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishFloat(
+                BaseNode::pwd + separator + name, 
+                val,
                 std::chrono::duration_cast<std::chrono::milliseconds>
                     (timestamp.time_since_epoch()).count());
         }
@@ -567,23 +709,23 @@ void ValueNode::disableStreamingValue(const std::string& name)
     std::lock_guard<std::mutex> lock(_mutex);
     if (_valuesBool.count(name) > 0) {
         _valuesBool.at(name).streamWatchers--;
-        if (_valuesBool.at(name).streamWatchers < 0) {
-            _valuesBool.at(name).streamWatchers = 0;
+        if (_valuesBool.at(name).streamWatchers.load() < 0) {
+            _valuesBool.at(name).streamWatchers.store(0);
         }
     } else if (_valuesInt.count(name) > 0) {
         _valuesInt.at(name).streamWatchers--;
-        if (_valuesInt.at(name).streamWatchers < 0) {
-            _valuesInt.at(name).streamWatchers = 0;
+        if (_valuesInt.at(name).streamWatchers.load() < 0) {
+            _valuesInt.at(name).streamWatchers.store(0);
         }
     } else if (_valuesFloat.count(name) > 0) {
         _valuesFloat.at(name).streamWatchers--;
-        if (_valuesFloat.at(name).streamWatchers < 0) {
-            _valuesFloat.at(name).streamWatchers = 0;
+        if (_valuesFloat.at(name).streamWatchers.load() < 0) {
+            _valuesFloat.at(name).streamWatchers.store(0);
         }
     } else if (_valuesStr.count(name) > 0) {
         _valuesStr.at(name).streamWatchers--;
-        if (_valuesStr.at(name).streamWatchers < 0) {
-            _valuesStr.at(name).streamWatchers = 0;
+        if (_valuesStr.at(name).streamWatchers.load() < 0) {
+            _valuesStr.at(name).streamWatchers.store(0);
         }
     } else {
         throw std::logic_error(

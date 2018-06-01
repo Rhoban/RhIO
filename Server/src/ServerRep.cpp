@@ -481,7 +481,7 @@ void ServerRep::valMetaBool(DataBuffer& buffer)
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
-    rep.writeInt(val.streamWatchers);
+    rep.writeInt(val.streamWatchers.load());
     
     rep.writeBool(val.min);
     rep.writeBool(val.max);
@@ -512,7 +512,7 @@ void ServerRep::valMetaInt(DataBuffer& buffer)
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
-    rep.writeInt(val.streamWatchers);
+    rep.writeInt(val.streamWatchers.load());
     
     rep.writeInt(val.min);
     rep.writeInt(val.max);
@@ -543,7 +543,7 @@ void ServerRep::valMetaFloat(DataBuffer& buffer)
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
-    rep.writeInt(val.streamWatchers);
+    rep.writeInt(val.streamWatchers.load());
     
     rep.writeFloat(val.min);
     rep.writeFloat(val.max);
@@ -575,7 +575,7 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
     rep.writeBool(val.hasMin);
     rep.writeBool(val.hasMax);
     rep.writeBool(val.persisted);
-    rep.writeInt(val.streamWatchers);
+    rep.writeInt(val.streamWatchers.load());
     
     rep.writeStr(val.min);
     rep.writeStr(val.max);

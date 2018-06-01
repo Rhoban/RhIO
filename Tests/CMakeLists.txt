@@ -78,3 +78,6 @@ target_link_libraries(testBind ${RHIO_LIBRARIES})
 add_executable(testImgs src/testImgs.cpp)
 target_link_libraries(testImgs ${RHIO_LIBRARIES})
 
+add_executable(benchValues src/benchValues.cpp)
+target_link_libraries(benchValues ${RHIO_LIBRARIES})
+
