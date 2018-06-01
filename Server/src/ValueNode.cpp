@@ -428,6 +428,74 @@ void ValueNode::setRTFloat(const std::string& name, double val,
     }
 }
 
+int64_t ValueNode::addRTInt(const std::string& name, int64_t val,
+    std::chrono::steady_clock::time_point timestamp)
+{
+    if (_valuesInt.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        //Update value
+        int64_t fetch = _valuesInt[name].value.fetch_add(val);
+        _valuesInt[name].timestamp = timestamp;
+        //Publish value
+        if (_valuesInt.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishInt(
+                BaseNode::pwd + separator + name, 
+                fetch + val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
+        return fetch;
+    }
+}
+int64_t ValueNode::subRTInt(const std::string& name, int64_t val,
+    std::chrono::steady_clock::time_point timestamp)
+{
+    if (_valuesInt.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Int name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        //Update value
+        int64_t fetch = _valuesInt[name].value.fetch_sub(val);
+        _valuesInt[name].timestamp = timestamp;
+        //Publish value
+        if (_valuesInt.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishInt(
+                BaseNode::pwd + separator + name, 
+                fetch - val,
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
+        return fetch;
+    }
+}
+
+bool ValueNode::toggleRTBool(const std::string& name,
+    std::chrono::steady_clock::time_point timestamp)
+{
+    if (_valuesBool.count(name) == 0) {
+        throw std::logic_error(
+            "RhIO unknown value Bool name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    } else {
+        //Update value
+        int64_t fetch = _valuesBool[name].value.fetch_xor(1);
+        _valuesBool[name].timestamp = timestamp;
+        //Publish value
+        if (_valuesBool.at(name).streamWatchers.load() > 0) {
+            ServerStream->publishBool(
+                BaseNode::pwd + separator + name, 
+                (!(bool)fetch),
+                std::chrono::duration_cast<std::chrono::milliseconds>
+                    (timestamp.time_since_epoch()).count());
+        }
+        return (bool)fetch;
+    }
+}
+
 std::unique_ptr<ValueBuilderBool> ValueNode::newBool(const std::string& name)
 {
     //Forward to subtree

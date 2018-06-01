@@ -57,7 +57,7 @@ class ValueNode : public BaseNode<ValueNode>
          * getters with limited features. 
          * Only direct child value access 
          * (no sub child forward) is supported.
-         * No concurent creation of new values on 
+         * No concurrent creation of new values on 
          * the same child node is also assumed.
          */
         bool getRTBool(const std::string& name) const;
@@ -98,7 +98,7 @@ class ValueNode : public BaseNode<ValueNode>
          * Only direct child value access 
          * (no sub child forward) is supported.
          * Callback call is not supported.
-         * No concurent creation of new values on 
+         * No concurrent creation of new values on 
          * the same child node is also assumed.
          */
         void setRTBool(const std::string& name, bool val,
@@ -108,6 +108,37 @@ class ValueNode : public BaseNode<ValueNode>
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
         void setRTFloat(const std::string& name, double val,
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
+
+        /**
+         * Real time lock free and atomically add or subtract 
+         * given value to a given integral value.
+         * Return stored value before the operation is applied.
+         * Only direct child value access 
+         * (no sub child forward) is supported.
+         * Callback call is not supported.
+         * No concurrent creation of new values on 
+         * the same child node is also assumed.
+         * Bounds checks are skipped.
+         */
+        int64_t addRTInt(const std::string& name, int64_t val,
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
+        int64_t subRTInt(const std::string& name, int64_t val,
+            std::chrono::steady_clock::time_point timestamp 
+            = std::chrono::steady_clock::now());
+
+        /**
+         * Real time lock free and atomically negate a boolean value.
+         * Return stored value before the operation is applied.
+         * Only direct child value access 
+         * (no sub child forward) is supported.
+         * Callback call is not supported.
+         * No concurrent creation of new values on 
+         * the same child node is also assumed.
+         */
+        bool toggleRTBool(const std::string& name,
             std::chrono::steady_clock::time_point timestamp 
             = std::chrono::steady_clock::now());
 
@@ -190,7 +221,7 @@ class ValueNode : public BaseNode<ValueNode>
         std::map<std::string, ValueStr> _valuesStr;
 
         /**
-         * Mutex protecting concurent values creation
+         * Mutex protecting concurrent values creation
          */
         mutable std::mutex _mutex;
 };
