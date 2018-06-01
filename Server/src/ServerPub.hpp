@@ -6,6 +6,7 @@
 #include <mutex>
 #include <zmq.hpp>
 #include "RhIO.hpp"
+#include "LockFreeDoubleQueue.hpp"
 
 namespace RhIO {
 
@@ -66,8 +67,8 @@ class ServerPub
     private:
 
         /**
-         * Structure for typed values to 
-         * publish
+         * Structure for typed values 
+         * to publish
          */
         template <typename T>
         struct PubValue {
@@ -95,6 +96,16 @@ class ServerPub
         zmq::socket_t _socket;
 
         /**
+         * Lock free double buffer for RT publish
+         * of boll, int, float and str values and streams
+         */
+        LockFreeDoubleQueue<PubValBool> _bufferBool;
+        LockFreeDoubleQueue<PubValInt> _bufferInt;
+        LockFreeDoubleQueue<PubValFloat> _bufferFloat;
+        LockFreeDoubleQueue<PubValStr> _bufferStr;
+        LockFreeDoubleQueue<PubValStr> _bufferStream;
+
+        /**
          * If true, the external writing buffer
          * is the 1 and the outputing network buffer is the 2.
          * If false, the external writing buffer 
@@ -103,36 +114,18 @@ class ServerPub
         bool _isWritingTo1;
 
         /**
-         * First double buffer values to
-         * publish container
+         * First double buffer for frame publishing
          */
-        std::list<PubValBool> _queue1Bool;
-        std::list<PubValInt> _queue1Int;
-        std::list<PubValFloat> _queue1Float;
-        std::list<PubValStr> _queue1Str;
-        std::list<PubValStr> _queue1Stream;
         std::list<zmq::message_t> _queue1Frame;
 
         /**
-         * Second double buffer values to
-         * publish container
+         * Second double buffer for frame publishing
          */
-        std::list<PubValBool> _queue2Bool;
-        std::list<PubValInt> _queue2Int;
-        std::list<PubValFloat> _queue2Float;
-        std::list<PubValStr> _queue2Str;
-        std::list<PubValStr> _queue2Stream;
         std::list<zmq::message_t> _queue2Frame;
 
         /**
-         * Mutex protecting external values container
-         * from concurent access for each type
+         * Mutex protecting access to frame double buffer
          */
-        std::mutex _mutexQueueBool;
-        std::mutex _mutexQueueInt;
-        std::mutex _mutexQueueFloat;
-        std::mutex _mutexQueueStr;
-        std::mutex _mutexQueueStream;
         std::mutex _mutexQueueFrame;
 
         /**
