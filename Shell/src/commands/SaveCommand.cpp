@@ -19,8 +19,13 @@ namespace RhIO
 
     void SaveCommand::process(std::vector<std::string> args)
     {
-        auto node = getNode(args);
+        //Retrieve config path
         std::string target = "rhio";
+        if (auto value = shell->getValue("/server/config")) {
+            target = Node::toString(value);
+        } 
+
+        auto node = getNode(args);
         auto name = node->getPath();
         if (name != "") {
             target += "/" + name;
