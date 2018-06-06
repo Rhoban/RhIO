@@ -83,7 +83,7 @@ namespace RhIO
         if (replot) {
             commands = "replot ";
         } else {
-            commands = "";
+            commands += "set grid;";
 #ifdef PLOT_ACCESSIBILITY_MODE
             commands += "set xtics font \",30\";";
             commands += "set ytics font \",30\";";
@@ -122,7 +122,7 @@ namespace RhIO
 #ifdef PLOT_ACCESSIBILITY_MODE
                 commands += " lw 5";
 #endif
-                commands += " w l";
+                commands += " with linespoints";
                 commands += " title '" + signal->name + "' ";
             }
 
