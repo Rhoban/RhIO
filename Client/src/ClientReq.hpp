@@ -108,10 +108,14 @@ class ClientReq
         /**
          * Enable and disable streaming for given
          * absolute value name
-         * (Increment and decrement stream watchers number)
+         * (Increment and decrement stream watchers number).
+         * Check streaming insure that given value name
+         * streaming is enabled with at least one watchers
+         * (use in case of server restart).
          */
         void enableStreamingValue(const std::string& name);
         void disableStreamingValue(const std::string& name);
+        void checkStreamingValue(const std::string& name);
 
         /**
          * Return the list of available streams on 
@@ -143,18 +147,26 @@ class ClientReq
         /**
          * Enable and disable streaming for given
          * absolute stream name
-         * (Increment and decrement stream watchers number)
+         * (Increment and decrement stream watchers number).
+         * Check streaming insure that given value name
+         * streaming is enabled with at least one watchers
+         * (use in case of server restart).
          */
         void enableStreamingStream(const std::string& name);
         void disableStreamingStream(const std::string& name);
+        void checkStreamingStream(const std::string& name);
 
         /**
          * Enable and disable streaming for given
          * absolute frame name
-         * (Increment and decrement stream watchers number)
+         * (Increment and decrement stream watchers number).
+         * Check streaming insure that given value name
+         * streaming is enabled with at least one watchers
+         * (use in case of server restart).
          */
         void enableStreamingFrame(const std::string& name);
         void disableStreamingFrame(const std::string& name);
+        void checkStreamingFrame(const std::string& name);
 
         /**
          * Save and Load into given absolute node name

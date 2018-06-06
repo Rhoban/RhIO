@@ -3,6 +3,7 @@
 #include <set>
 #include <mutex>
 #include <thread>
+#include <chrono>
 #include "Shell.h"
 
 #define DEFAULT_FREQ    100
@@ -63,5 +64,8 @@ namespace RhIO
             std::set<NodePool*> pools;
             StreamUpdateHandler handlerStream;
             FrameUpdateHandler handlerFrame;
+            std::chrono::time_point<std::chrono::system_clock> lastStreamingCheck;
+            ClientReq* clientRep;
+            ClientSub* clientSub;
     };
 }

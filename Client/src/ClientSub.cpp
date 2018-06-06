@@ -76,7 +76,7 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         if (!socket.recv(&packet, ZMQ_NOBLOCK)) {
             //If no data is available wait a bit
             std::this_thread::sleep_for(
-                std::chrono::milliseconds(10));
+                std::chrono::milliseconds(1));
             continue;
         }
         DataBuffer sub(packet.data(), packet.size());

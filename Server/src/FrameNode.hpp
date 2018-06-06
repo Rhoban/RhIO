@@ -64,10 +64,13 @@ class FrameNode: public BaseNode<FrameNode>
         
         /**
          * Enable or disable (increase or decrease watchers
-         * count) for given frame stream name
+         * count) for given frame stream name.
+         * Check for given name that the streaming frame is 
+         * enabled with at least one watcher.
          */
         void enableStreamingFrame(const std::string& name);
         void disableStreamingFrame(const std::string& name);
+        void checkStreamingFrame(const std::string& name);
         
         /**
          * Register a new frame with given name,

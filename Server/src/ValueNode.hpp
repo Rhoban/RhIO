@@ -184,10 +184,13 @@ class ValueNode : public BaseNode<ValueNode>
 
         /**
          * Enable or disable (increase or decrease stream watchers) 
-         * for given value name
+         * for given value name.
+         * Check for given name that the streaming value is 
+         * enabled with at least one watcher.
          */
         void enableStreamingValue(const std::string& name);
         void disableStreamingValue(const std::string& name);
+        void checkStreamingValue(const std::string& name);
 
         /**
          * Return the relative name list of all registered

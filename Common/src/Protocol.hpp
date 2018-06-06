@@ -76,7 +76,7 @@ enum MsgType : uint8_t {
     MsgAskMetaStr,
     /**
      * Client
-     * Ask for streaming enable and disable 
+     * Ask for streaming enable, disable or check
      * on given absolute value name (for any type).
      * (Streaming watcher is incremented/decremented)
      * Args:
@@ -84,9 +84,10 @@ enum MsgType : uint8_t {
      */
     MsgEnableStreamingValue,
     MsgDisableStreamingValue,
+    MsgCheckStreamingValue,
     /**
      * Client
-     * Ask for streaming enable and disable 
+     * Ask for streaming enable, disable or check
      * on given absolute stream name (for any type).
      * (Streaming watcher is incremented/decremented)
      * Args:
@@ -94,9 +95,10 @@ enum MsgType : uint8_t {
      */
     MsgEnableStreamingStream,
     MsgDisableStreamingStream,
+    MsgCheckStreamingStream,
     /**
      * Client
-     * Ask for streaming enable and disable 
+     * Ask for streaming enable, disable or check
      * on given absolute frame name.
      * (Streaming watcher is incremented/decremented)
      * Args:
@@ -104,6 +106,7 @@ enum MsgType : uint8_t {
      */
     MsgEnableStreamingFrame,
     MsgDisableStreamingFrame,
+    MsgCheckStreamingFrame,
     /**
      * Client.
      * Ask for Server persist dump and load for all

@@ -10,14 +10,15 @@ namespace RhIO
     StreamManager::StreamManager(Shell *shell)
         : alive(true), frequency(DEFAULT_FREQ)
     {
-        auto sub = shell->getClientSub();
+        clientRep = shell->getClient();
+        clientSub = shell->getClientSub();
 
-        sub->setHandlerBool(std::bind(&StreamManager::boolHandler, this, _1, _2, _3));
-        sub->setHandlerInt(std::bind(&StreamManager::intHandler, this, _1, _2, _3));
-        sub->setHandlerFloat(std::bind(&StreamManager::floatHandler, this, _1, _2, _3));
-        sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
-        sub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
-        sub->setHandlerFrame(std::bind(&StreamManager::frameHandler, this, _1, _2, _3, _4, _5, _6));
+        clientSub->setHandlerBool(std::bind(&StreamManager::boolHandler, this, _1, _2, _3));
+        clientSub->setHandlerInt(std::bind(&StreamManager::intHandler, this, _1, _2, _3));
+        clientSub->setHandlerFloat(std::bind(&StreamManager::floatHandler, this, _1, _2, _3));
+        clientSub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
+        clientSub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
+        clientSub->setHandlerFrame(std::bind(&StreamManager::frameHandler, this, _1, _2, _3, _4, _5, _6));
 
         worker = new std::thread(&StreamManager::update, this);
     }
@@ -52,9 +53,9 @@ namespace RhIO
     void StreamManager::boolHandler(const std::string &name, long timestamp, bool val)
     {
         mutex.lock();
-        for (auto pool : pools) {
-            for (auto node : *pool) {
-                if (auto var = Node::asBool(node.value)) {
+        for (auto& pool : pools) {
+            for (auto& node : *pool) {
+                if (const auto& var = Node::asBool(node.value)) {
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
@@ -69,9 +70,9 @@ namespace RhIO
     void StreamManager::intHandler(const std::string &name, long timestamp, int val)
     {
         mutex.lock();
-        for (auto pool : pools) {
-            for (auto node : *pool) {
-                if (auto var = Node::asInt(node.value)) {
+        for (auto& pool : pools) {
+            for (auto& node : *pool) {
+                if (const auto& var = Node::asInt(node.value)) {
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
@@ -86,9 +87,9 @@ namespace RhIO
     void StreamManager::floatHandler(const std::string &name, long timestamp, float val)
     {
         mutex.lock();
-        for (auto pool : pools) {
-            for (auto node : *pool) {
-                if (auto var = Node::asFloat(node.value)) {
+        for (auto& pool : pools) {
+            for (auto& node : *pool) {
+                if (const auto& var = Node::asFloat(node.value)) {
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
@@ -103,9 +104,9 @@ namespace RhIO
     void StreamManager::stringHandler(const std::string &name, long timestamp, const std::string &val)
     {
         mutex.lock();
-        for (auto pool : pools) {
-            for (auto node : *pool) {
-                if (auto var = Node::asString(node.value)) {
+        for (auto& pool : pools) {
+            for (auto& node : *pool) {
+                if (const auto& var = Node::asString(node.value)) {
                     if (node.getName() == name) {
                         var->value = val;
                         pool->dirty = true;
@@ -139,11 +140,10 @@ namespace RhIO
     {
         mutex.lock();
         auto client = shell->getClient();
-        for (auto entry : *pool) {
+        for (auto& entry : *pool) {
             try {
                 client->enableStreamingValue(entry.getName());
-            } catch (...)
-            {
+            } catch (...) {
             }
         }
         pools.insert(pool);
@@ -154,7 +154,7 @@ namespace RhIO
     {
         mutex.lock();
         auto client = shell->getClient();
-        for (auto entry : *pool) {
+        for (auto& entry : *pool) {
             try {
                 client->disableStreamingValue(entry.getName());
             } catch (...)
@@ -167,12 +167,30 @@ namespace RhIO
 
     void StreamManager::update()
     {
+        lastStreamingCheck = std::chrono::system_clock::now();
         while (alive) {
             mutex.lock();
-            for (auto pool : pools) {
+            for (auto& pool : pools) {
                 if (pool->dirty) {
                     pool->update();
                 }
+            }
+            //Check regularly than streaming is
+            //enabled for registered values
+            auto timeNow = std::chrono::system_clock::now();
+            std::chrono::duration<double, std::milli> dur = 
+                timeNow - lastStreamingCheck;
+            if (dur.count() > 2000.0) {
+                for (auto& pool : pools) {
+                    for (auto& entry : *pool) {
+                        try {
+                            clientRep->checkStreamingValue(entry.getName());
+                        } catch (...)
+                        {
+                        }
+                    }
+                }
+                lastStreamingCheck = std::chrono::system_clock::now();
             }
             mutex.unlock();
 

@@ -77,6 +77,26 @@ void StreamNode::disableStreamingStream(const std::string& name)
             "RhIO unknown stream name: " + name);
     }
 }
+void StreamNode::checkStreamingStream(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    StreamNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->checkStreamingStream(tmpName);
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_streams.count(name) > 0) {
+        if (_streams.at(name).buffer->_streamWatchers <= 0) {
+            _streams.at(name).buffer->_streamWatchers = 1;
+        }
+    } else {
+        throw std::logic_error(
+            "RhIO unknown stream name: " + name);
+    }
+}
         
 std::ostream& StreamNode::out(const std::string& name)
 {

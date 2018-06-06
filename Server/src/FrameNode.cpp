@@ -129,6 +129,26 @@ void FrameNode::disableStreamingFrame(const std::string& name)
             "RhIO unknown frame name: " + name);
     }
 }
+void FrameNode::checkStreamingFrame(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    FrameNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->checkStreamingFrame(tmpName);
+        return;
+    }
+
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_frames.count(name) > 0) {
+        if (_frames.at(name).countWatchers <= 0) {
+            _frames.at(name).countWatchers = 1;
+        }
+    } else {
+        throw std::logic_error(
+            "RhIO unknown frame name: " + name);
+    }
+}
 
 void FrameNode::newFrame(const std::string& name,
     const std::string& comment, 

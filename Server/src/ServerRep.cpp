@@ -104,17 +104,26 @@ void ServerRep::handleRequest()
             case MsgDisableStreamingValue:
                   disableStreamingValue(req);
                   return;
+            case MsgCheckStreamingValue:
+                  checkStreamingValue(req);
+                  return;
             case MsgEnableStreamingStream:
                   enableStreamingStream(req);
                   return;
             case MsgDisableStreamingStream:
                   disableStreamingStream(req);
                   return;
+            case MsgCheckStreamingStream:
+                  checkStreamingStream(req);
+                  return;
             case MsgEnableStreamingFrame:
                   enableStreamingFrame(req);
                   return;
             case MsgDisableStreamingFrame:
                   disableStreamingFrame(req);
+                  return;
+            case MsgCheckStreamingFrame:
+                  checkStreamingFrame(req);
                   return;
             case MsgAskSave:
                   save(req);
@@ -615,6 +624,21 @@ void ServerRep::disableStreamingValue(DataBuffer& buffer)
     //Send reply
     _socket.send(reply);
 }
+void ServerRep::checkStreamingValue(DataBuffer& buffer)
+{
+    //Get asked value name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.checkStreamingValue(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
     
 void ServerRep::enableStreamingStream(DataBuffer& buffer)
 {
@@ -646,6 +670,21 @@ void ServerRep::disableStreamingStream(DataBuffer& buffer)
     //Send reply
     _socket.send(reply);
 }
+void ServerRep::checkStreamingStream(DataBuffer& buffer)
+{
+    //Get asked stream name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.checkStreamingStream(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
 
 void ServerRep::enableStreamingFrame(DataBuffer& buffer)
 {
@@ -668,6 +707,21 @@ void ServerRep::disableStreamingFrame(DataBuffer& buffer)
     std::string name = buffer.readStr();
     //Update streaming mode
     RhIO::Root.disableStreamingFrame(name);
+
+    //Allocate message data
+    zmq::message_t reply(sizeof(MsgType));
+    DataBuffer rep(reply.data(), reply.size());
+    rep.writeType(MsgStreamingOK);
+
+    //Send reply
+    _socket.send(reply);
+}
+void ServerRep::checkStreamingFrame(DataBuffer& buffer)
+{
+    //Get asked frame name
+    std::string name = buffer.readStr();
+    //Update streaming mode
+    RhIO::Root.checkStreamingFrame(name);
 
     //Allocate message data
     zmq::message_t reply(sizeof(MsgType));

@@ -801,6 +801,39 @@ void ValueNode::disableStreamingValue(const std::string& name)
             + BaseNode::pwd + "'");
     }
 }
+void ValueNode::checkStreamingValue(const std::string& name)
+{
+    //Forward to subtree
+    std::string tmpName;
+    ValueNode* child = BaseNode::forwardFunc(name, tmpName, false);
+    if (child != nullptr) {
+        child->checkStreamingValue(tmpName);
+        return;
+    }
+    
+    std::lock_guard<std::mutex> lock(_mutex);
+    if (_valuesBool.count(name) > 0) {
+        if (_valuesBool.at(name).streamWatchers.load() <= 0) {
+            _valuesBool.at(name).streamWatchers.store(1);
+        }
+    } else if (_valuesInt.count(name) > 0) {
+        if (_valuesInt.at(name).streamWatchers.load() <= 0) {
+            _valuesInt.at(name).streamWatchers.store(1);
+        }
+    } else if (_valuesFloat.count(name) > 0) {
+        if (_valuesFloat.at(name).streamWatchers.load() <= 0) {
+            _valuesFloat.at(name).streamWatchers.store(1);
+        }
+    } else if (_valuesStr.count(name) > 0) {
+        if (_valuesStr.at(name).streamWatchers.load() <= 0) {
+            _valuesStr.at(name).streamWatchers.store(1);
+        }
+    } else {
+        throw std::logic_error(
+            "RhIO unknown value name: '" + name + "' in '"
+            + BaseNode::pwd + "'");
+    }
+}
 
 std::vector<std::string> ValueNode::listValuesBool() const
 {

@@ -46,10 +46,13 @@ class StreamNode: public BaseNode<StreamNode>
         
         /**
          * Enable or disable (increase or decrease stream watchers) 
-         * for given stream name
+         * for given stream name.
+         * Check for given name that the streaming stream is 
+         * enabled with at least one watcher.
          */
         void enableStreamingStream(const std::string& name);
         void disableStreamingStream(const std::string& name);
+        void checkStreamingStream(const std::string& name);
 
         /**
          * Return the std::ostream output stream instance
