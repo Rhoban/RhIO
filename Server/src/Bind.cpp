@@ -18,6 +18,11 @@ std::unique_ptr<ValueBuilderBool> Bind::bindNew(
     const std::string& name, bool& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Create non existing hierarchy
     createPath(_prefix+name);
     //Add to bind container
@@ -33,6 +38,11 @@ std::unique_ptr<ValueBuilderInt> Bind::bindNew(
     const std::string& name, int& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Create non existing hierarchy
     createPath(_prefix+name);
     //Add to bind container
@@ -48,6 +58,11 @@ std::unique_ptr<ValueBuilderInt> Bind::bindNew(
     const std::string& name, long& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Create non existing hierarchy
     createPath(_prefix+name);
     //Add to bind container
@@ -63,6 +78,11 @@ std::unique_ptr<ValueBuilderFloat> Bind::bindNew(
     const std::string& name, float& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Create non existing hierarchy
     createPath(_prefix+name);
     //Add to bind container
@@ -78,6 +98,11 @@ std::unique_ptr<ValueBuilderFloat> Bind::bindNew(
     const std::string& name, double& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Create non existing hierarchy
     createPath(_prefix+name);
     //Add to bind container
@@ -93,6 +118,11 @@ std::unique_ptr<ValueBuilderStr> Bind::bindNew(
     const std::string& name, std::string& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Create non existing hierarchy
     createPath(_prefix+name);
     //Add to bind container
@@ -108,6 +138,11 @@ std::unique_ptr<ValueBuilderStr> Bind::bindNew(
 void Bind::bind(const std::string& name, bool& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeBool) {
         throw std::logic_error(
@@ -123,6 +158,11 @@ void Bind::bind(const std::string& name, bool& var,
 void Bind::bind(const std::string& name, int& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeInt) {
         throw std::logic_error(
@@ -138,6 +178,11 @@ void Bind::bind(const std::string& name, int& var,
 void Bind::bind(const std::string& name, long& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeInt) {
         throw std::logic_error(
@@ -153,6 +198,11 @@ void Bind::bind(const std::string& name, long& var,
 void Bind::bind(const std::string& name, float& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeFloat) {
         throw std::logic_error(
@@ -168,6 +218,11 @@ void Bind::bind(const std::string& name, float& var,
 void Bind::bind(const std::string& name, double& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeFloat) {
         throw std::logic_error(
@@ -183,6 +238,11 @@ void Bind::bind(const std::string& name, double& var,
 void Bind::bind(const std::string& name, std::string& var,
     Policy policy)
 {
+    //Check that variable is not already registered
+    if (checkIsRegistered(&var)) {
+        throw std::logic_error(
+            "RhIO::Bind: Variable address already bind: " + name);
+    }
     //Check values exist
     if (RhIO::Root.getValueType(_prefix+name) != TypeStr) {
         throw std::logic_error(
@@ -352,6 +412,41 @@ std::string Bind::relativeName(const std::string& name) const
     } else {
         return name;
     }
+}
+        
+bool Bind::checkIsRegistered(const void* addr) const
+{
+    for (size_t i=0;i<_bindsBool.size();i++) {
+        if (_bindsBool[i].ptr == (bool*)addr) {
+            return true;
+        }
+    }
+    for (size_t i=0;i<_bindsInt.size();i++) {
+        if (_bindsInt[i].ptr == (int*)addr) {
+            return true;
+        }
+    }
+    for (size_t i=0;i<_bindsLong.size();i++) {
+        if (_bindsLong[i].ptr == (long*)addr) {
+            return true;
+        }
+    }
+    for (size_t i=0;i<_bindsFloat.size();i++) {
+        if (_bindsFloat[i].ptr == (float*)addr) {
+            return true;
+        }
+    }
+    for (size_t i=0;i<_bindsDouble.size();i++) {
+        if (_bindsDouble[i].ptr == (double*)addr) {
+            return true;
+        }
+    }
+    for (size_t i=0;i<_bindsStr.size();i++) {
+        if (_bindsStr[i].ptr == (std::string*)addr) {
+            return true;
+        }
+    }
+    return false;
 }
 
 }
