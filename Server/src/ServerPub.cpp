@@ -36,7 +36,7 @@ ServerPub::ServerPub(std::string endpoint) :
     // Limiting the water mark to 10 to avoid stacking messages or frames and
     // product a delay
     //FIXME too low warter mark value breaks Leph openGL 3d viewer
-    int water_mark = 100;
+    int water_mark = 10;
     zmq_setsockopt(_socket, ZMQ_SNDHWM, &water_mark, sizeof(int));
 
     _socket.bind(endpoint.c_str());
