@@ -2,6 +2,12 @@
 #include "Protocol.hpp"
 #include "DataBuffer.hpp"
 
+#ifdef VISION_COMPONENT
+#define WATERMARK 10
+#else
+#define WATERMARK 0
+#endif
+
 namespace RhIO {
 
 ServerPub::ServerPub(std::string endpoint) :
@@ -36,7 +42,7 @@ ServerPub::ServerPub(std::string endpoint) :
     // Limiting the water mark to 10 to avoid stacking messages or frames and
     // product a delay
     //FIXME too low warter mark value breaks Leph openGL 3d viewer
-    int water_mark = 10;
+    int water_mark = WATERMARK;
     zmq_setsockopt(_socket, ZMQ_SNDHWM, &water_mark, sizeof(int));
 
     _socket.bind(endpoint.c_str());
