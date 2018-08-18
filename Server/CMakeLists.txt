@@ -24,6 +24,13 @@ option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
 #The server automatically start on program startup (RhIO::start())
 option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" ON)
 
+#
+option (BUILD_KID_SIZE_VISION "Build the Vision" ON)
+if (BUILD_KID_SIZE_VISION)
+   add_definitions(-DVISION_COMPONENT)
+endif ()
+
+
 #Include sources directory
 include_directories(src ${catkin_INCLUDE_DIRS})
 
