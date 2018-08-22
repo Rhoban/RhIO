@@ -204,3 +204,5 @@ will wait 2 second and then run the ls command.
 
 You can use a joypad with RhIO to directly change parameters. The documentation can be found
 on a [separate page](joypad.md).
+
+## Some more details in the context of Rhoban robots can be found [here](RhioOnRhobanRobots.md)
