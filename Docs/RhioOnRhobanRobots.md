@@ -1,17 +1,20 @@
-! Rhio Shell in the context of Rhoban robots
+# Rhio Shell in the context of Rhoban robots
 
    USAGE: rhio [IP_ADDRESS]
+   
    If you don't input the IP_ADDRESS parameter, the default value will be 127.0.0.1 (localhost=your computer)
+   
    Otherwise you should input the robot's IP_ADDRESS.
 
    Inside the rhio shell, data are organised as Commands, Directories and Files. You can navigate through the rhio virtual filesystem using the standard *ls* and *cd* commands.
+  
    You can also use the autocompletion using the TAB key.
 
    The main directories are:
-   The */lowlevel* directory contains everything related to the low level system i.e the motors and sensors.
-   The */moves* directory contains everything related to the moves (one sub directory for every move).
-   The */Vision* directory contains everything related to the vision (this directory doesn't exist in novision mode) i.e. one sub directory for every vision filter.
-   The */localisation* directory contains everything related to the localisation and the Particule Filter.
+   - The */lowlevel* directory contains everything related to the low level system i.e the motors and sensors.
+   - The */moves* directory contains everything related to the moves (one sub directory for every move).
+   - The */Vision* directory contains everything related to the vision (this directory doesn't exist in novision mode) i.e. one sub directory for every vision filter.
+   - The */localisation* directory contains everything related to the localisation and the Particule Filter.
 
    The main rhio shell commands:
 
@@ -20,8 +23,11 @@
 
 * pad [GAMEPAD_CONFIG.json]: 
      If run without argument it will display the buttons of the plugged gamepad (useful to configure a new gamepad)
+     
      If run with a filename it will run the gamepad control. Example of configuration files are located in workspace/env/rhio/
+     
      To use the configuration file you should put it into the directory ~/.rhio/ (create it if it doesn't exist)
+     
      example: pad xbox_walk.json (have a look at the content of the file for more explanations)
 
 * delay: 
@@ -49,12 +55,16 @@
 
 * log: 
      Usage: log [param1 [param2 [param3 ...]]] [> filename]
+     
      Log values to a csv file. Very similar to plot, but instead of plotting it will save the data.
+     
      Example: log lowlevel/imu/yaw lowlevel/head_pitch/position > tmplog (will save the values of imu/yaw and head_pitch/position into the local file tmplog)
-     Example: If you want to log the time series of the actual motors position during the walk, you should first initiate the robot and run the walk, then
-              you can log all the motors you need with for example: log lowlevel/right_knee/position lowlevel/right_ankle_pitch/position 
-	      you can also log the motors commands: log lowlevel/right_knee/goalPosition lowlevel/right_ankle_pitch/goalPosition
-	      Notice that in fake mode, only the goalPosition is updated.
+     
+     Example: 
+     - If you want to log the time series of the actual motors position during the walk, you should first initiate the robot and run the walk, then 
+     - you can log all the motors you need with for example: log lowlevel/right_knee/position lowlevel/right_ankle_pitch/position 
+     - you can also log the motors commands: log lowlevel/right_knee/goalPosition lowlevel/right_ankle_pitch/goalPosition
+     - Notice that in fake mode, only the goalPosition is updated.
 
 * plot2d: 
      Usage: x-var y1 [y2 [y3...]]
@@ -97,6 +107,7 @@
      Usage: view [frame]
      View a frame stream. Only in vision mode, in each Vision filter sub directory there is a *out* frame that you can display.
      Example: view /Vision/green/out (will show the result of the green filter)
+     
      Some special frames also exists: view /Vision/TaggedImg (shows a summary of the vision computation)
    
    Some rhio shell commands related to the localisation particule filter:
