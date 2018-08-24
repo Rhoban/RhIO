@@ -117,10 +117,16 @@ namespace RhIO
         // Loading file
         char *homedir;
         std::string path;
-        if ((homedir = getenv("HOME")) != NULL) {
+        if (
+            (homedir = getenv("HOME")) != NULL &&
+            name.length() > 0 &&
+            name.front() != '/'
+        ) {
             path = homedir;
             path += "/.rhio/";
             path += name;
+        } else {
+            path = name;
         }
 
         Json::Value value;
