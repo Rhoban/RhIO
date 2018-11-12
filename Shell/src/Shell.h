@@ -3,7 +3,7 @@
 #include <map>
 #include <list>
 #include <string>
-#include <RhIOClient.hpp>
+#include <rhio_client/RhIOClient.hpp>
 #include "commands/Command.h"
 #include "Terminal.h"
 #include "Node.h"

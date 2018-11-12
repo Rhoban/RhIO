@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include "RhIO.hpp"
-#include "Filesystem.hpp"
+#include "rhio_server/Filesystem.hpp"
 
 void printTree(const RhIO::IONode& node, std::string prefix = "")
 {

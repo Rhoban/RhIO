@@ -24,7 +24,7 @@
   <author email="gpassault@labri.fr">Grégoire Passault</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>uoe_zeromq</build_depend> <!-- rhobandeps/libzmq -->
+  <build_depend>uoe_zeromq</build_depend>
   <build_depend>rhio_common</build_depend>
 
   <run_depend>uoe_zeromq</run_depend>

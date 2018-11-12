@@ -1,6 +1,6 @@
-#include "ServerPub.hpp"
-#include "Protocol.hpp"
-#include "DataBuffer.hpp"
+#include "rhio_server/ServerPub.hpp"
+#include "rhio_common/Protocol.hpp"
+#include "rhio_common/DataBuffer.hpp"
 
 namespace RhIO {
 
@@ -26,8 +26,8 @@ ServerPub::ServerPub(std::string endpoint) :
 
     // Limiting the water mark to 10 to avoid stacking messages or frames and
     // product a delay
-    int water_mark = 10;
-    zmq_setsockopt(_socket, ZMQ_SNDHWM, &water_mark, sizeof(int));
+    //int water_mark = 10;
+    //zmq_setsockopt(_socket, ZMQ_SNDHWM, &water_mark, sizeof(int));
 
     _socket.bind(endpoint.c_str());
 }

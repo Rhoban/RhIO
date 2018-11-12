@@ -13,13 +13,13 @@ find_package(catkin REQUIRED COMPONENTS
 
 # What is published by the 'rhio_client package'
 catkin_package(
-  INCLUDE_DIRS src
+  INCLUDE_DIRS include
   LIBRARIES rhio_client
   CATKIN_DEPENDS rhio_common uoe_zeromq
 )
 
 #Include sources directory
-include_directories(src ${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 #Sources files
 set(SOURCES
@@ -41,4 +41,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 #Build Client as shared library
 add_library(rhio_client SHARED ${SOURCES})
 target_link_libraries(rhio_client ${RHIO_LIBRARIES})
+
+#Install rules
+install(TARGETS rhio_client DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
+install(FILES include/rhio_client/RhIOClient.hpp DESTINATION include)
 

@@ -10,12 +10,12 @@ find_package(catkin REQUIRED)
 
 # What is published by the 'rhio_common package'
 catkin_package(
-  INCLUDE_DIRS src
+  INCLUDE_DIRS include
   LIBRARIES rhio_common
 )
 
 #Include sources directory
-include_directories(src/)
+include_directories(include/)
 
 #Sources files
 set(SOURCES
@@ -30,4 +30,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
 #Build Common as shared library
 add_library(rhio_common SHARED ${SOURCES})
+
+#Install rules
+install(TARGETS rhio_common DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
 

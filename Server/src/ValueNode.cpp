@@ -3,9 +3,9 @@
 #include <chrono>
 #include <fstream>
 #include <yaml-cpp/yaml.h>
-#include "ValueNode.hpp"
-#include "ServerPub.hpp"
-#include "RhIO.hpp"
+#include "rhio_server/ValueNode.hpp"
+#include "rhio_server/ServerPub.hpp"
+#include "rhio_server/RhIO.hpp"
 
 namespace RhIO {
         

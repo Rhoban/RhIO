@@ -1,4 +1,4 @@
-#include "Protocol.hpp"
+#include "rhio_common/Protocol.hpp"
 
 namespace RhIO
 {

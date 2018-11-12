@@ -1,6 +1,6 @@
 #include <unistd.h>
 #include <iostream>
-#include "RhIO.hpp"
+#include "rhio_server/RhIO.hpp"
 
 int main()
 {

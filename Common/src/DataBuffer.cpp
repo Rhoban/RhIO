@@ -1,7 +1,7 @@
 #include <stdexcept>
 #include <cstring>
 #include <cstdlib>
-#include "DataBuffer.hpp"
+#include "rhio_common/DataBuffer.hpp"
 
 namespace RhIO {
 

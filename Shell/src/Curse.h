@@ -2,7 +2,7 @@
 #include <vector>
 #include <stdio.h>
 #include <ncurses.h>
-#include <RhIOClient.hpp>
+#include <rhio_client/RhIOClient.hpp>
 #include "NodePool.h"
 #include "Node.h"
 

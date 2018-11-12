@@ -13,7 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 # What is published by the 'rhio_server package'
 catkin_package(
-    INCLUDE_DIRS src
+    INCLUDE_DIRS include
     LIBRARIES rhio_server
     CATKIN_DEPENDS rhio_common uoe_zeromq
 )
@@ -25,7 +25,7 @@ option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
 option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" OFF)
 
 #Include sources directory
-include_directories(src ${catkin_INCLUDE_DIRS})
+include_directories(include ${catkin_INCLUDE_DIRS})
 
 #Sources files
 set(SOURCES
@@ -79,4 +79,9 @@ if (BUILD_RHIO_EXAMPLES)
     add_executable(exampleBind Examples/exampleBind.cpp)
     target_link_libraries(exampleBind rhio_server)
 endif (BUILD_RHIO_EXAMPLES)
+
+#Install rules
+install(TARGETS rhio_server DESTINATION lib)
+install(DIRECTORY include/ DESTINATION include)
+install(FILES include/rhio_server/RhIO.hpp DESTINATION include)
 
