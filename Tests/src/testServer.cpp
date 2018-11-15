@@ -26,6 +26,10 @@ int main()
         ->comment("this is a test float")
         ->defaultValue(42.0)
         ->persisted(true);
+    RhIO::Root.child("test").newFloat("bigFloat")
+        ->comment("this is a large float")
+        ->defaultValue(4200000000.1234)
+        ->persisted(false);
     RhIO::Root.child("test/test3").newStr("paramStr");
 
     RhIO::Root.newChild("server");

@@ -1,5 +1,6 @@
 #include <math.h>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include "Node.h"
 
@@ -218,7 +219,7 @@ namespace RhIO
             return ss.str();
         } else if (auto val = asFloat(value)) {
             std::stringstream ss;
-            ss << val->value;
+            ss << std::setprecision(14) << val->value;
             return ss.str();
         } else if (auto val = asString(value)) {
             return val->value;
