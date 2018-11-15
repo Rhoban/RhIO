@@ -4,7 +4,7 @@
 #include <string>
 #include <thread>
 #include <zmq.hpp>
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 #include "rhio_server/IONode.hpp"
 #include "rhio_common/DataBuffer.hpp"
 

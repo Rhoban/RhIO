@@ -1,9 +1,9 @@
 #ifndef RHIO_HPP
 #define RHIO_HPP
 
-#include "Protocol.hpp"
-#include "IONode.hpp"
-#include "Bind.hpp"
+#include "rhio_common/Protocol.hpp"
+#include "rhio_server/IONode.hpp"
+#include "rhio_server/Bind.hpp"
 
 namespace RhIO {
 

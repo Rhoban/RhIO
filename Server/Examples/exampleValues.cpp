@@ -1,5 +1,5 @@
 #include <iostream>
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 
 int main()
 {

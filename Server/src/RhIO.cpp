@@ -1,7 +1,7 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 #include "rhio_server/ServerRep.hpp"
 #include "rhio_server/ServerPub.hpp"
 

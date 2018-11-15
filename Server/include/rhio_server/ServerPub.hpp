@@ -5,7 +5,7 @@
 #include <list>
 #include <mutex>
 #include <zmq.hpp>
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 #include "rhio_server/LockFreeDoubleQueue.hpp"
 
 namespace RhIO {

@@ -83,5 +83,4 @@ endif (BUILD_RHIO_EXAMPLES)
 #Install rules
 install(TARGETS rhio_server DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
-install(FILES include/rhio_server/RhIO.hpp DESTINATION include)
 

@@ -2,7 +2,7 @@
 #include <chrono>
 #include "rhio_server/FrameNode.hpp"
 #include "rhio_server/ServerPub.hpp"
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 
 namespace RhIO {
 

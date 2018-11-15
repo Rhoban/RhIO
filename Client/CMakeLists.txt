@@ -45,5 +45,4 @@ target_link_libraries(rhio_client ${RHIO_LIBRARIES})
 #Install rules
 install(TARGETS rhio_client DESTINATION lib)
 install(DIRECTORY include/ DESTINATION include)
-install(FILES include/rhio_client/RhIOClient.hpp DESTINATION include)
 

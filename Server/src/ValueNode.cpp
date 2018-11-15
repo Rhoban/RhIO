@@ -5,7 +5,7 @@
 #include <yaml-cpp/yaml.h>
 #include "rhio_server/ValueNode.hpp"
 #include "rhio_server/ServerPub.hpp"
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 
 namespace RhIO {
         

@@ -1,5 +1,5 @@
 #include "rhio_common/Stream.hpp"
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 #include "rhio_server/ServerPub.hpp"
 
 namespace RhIO {

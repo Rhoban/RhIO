@@ -3,7 +3,7 @@
 #include <list>
 #include "rhio_server/ServerRep.hpp"
 #include "rhio_common/Protocol.hpp"
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 
 namespace RhIO {
 

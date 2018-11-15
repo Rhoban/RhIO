@@ -1,4 +1,4 @@
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 
 namespace RhIO
 {

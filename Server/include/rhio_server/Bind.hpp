@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "rhio_server/RhIO.hpp"
+#include "RhIO.hpp"
 #include "rhio_common/Value.hpp"
 #include "rhio_server/ValueNode.hpp"
 
