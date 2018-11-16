@@ -86,11 +86,6 @@ static void runServerPub()
     }
 }
 
-bool started()
-{
-    return serverStarting;
-}
-
 void start(
     unsigned int portRep_, 
     unsigned int portPub_, 
@@ -114,6 +109,20 @@ void start(
         std::this_thread::sleep_for(
             std::chrono::milliseconds(10));
     }
+}
+
+bool started()
+{
+    return serverStarting;
+}
+
+void reset()
+{
+    //Call destructor
+    (&Root)->~IONode();
+    //Call constructor with 
+    //placement allocation
+    new (&Root) IONode();
 }
 
 /**

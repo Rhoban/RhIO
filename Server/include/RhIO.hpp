@@ -34,9 +34,15 @@ void start(
     unsigned int period_ = 20);
 
 /**
- * Has RhIO started?
+ * Has RhIO servers started?
  */
 bool started();
+
+/**
+ * Clear the whole RhIO 
+ * tree and reset it
+ */
+void reset();
 
 }
 
