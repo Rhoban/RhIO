@@ -1,6 +1,7 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <sys/prctl.h>
 #include "RhIO.hpp"
 #include "rhio_server/ServerRep.hpp"
 #include "rhio_server/ServerPub.hpp"
@@ -51,6 +52,9 @@ static void runServerRep()
     //for initialization ready
     initServerCount++;
 
+    //Set thread name
+    prctl(PR_SET_NAME, "rhio_server_rep", 0, 0, 0);
+
     while (!serverThreadRepOver) {
         server.handleRequest();
     }
@@ -70,6 +74,9 @@ static void runServerPub()
     //Notify main thread 
     //for initialization ready
     initServerCount++;
+    
+    //Set thread name
+    prctl(PR_SET_NAME, "rhio_server_pub", 0, 0, 0);
 
     while (!serverThreadPubOver) {
         int64_t tsStart = std::chrono::duration_cast<std::chrono::milliseconds>(
