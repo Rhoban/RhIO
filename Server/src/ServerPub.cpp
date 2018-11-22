@@ -6,7 +6,7 @@ namespace RhIO {
 
 ServerPub::ServerPub(std::string endpoint) :
     _context(1),
-    _socket(_context, ZMQ_PUB),
+    _socket(_context, ZMQ_RADIO),
     //Maximum buffer length memory allocation
     _bufferBool(10000),
     _bufferInt(10000),
@@ -20,16 +20,11 @@ ServerPub::ServerPub(std::string endpoint) :
 {
     if (endpoint == "") {
         std::stringstream ss;
-        ss << "tcp://*:" << PortServerPub;
+        ss << "udp://" << AddressMulticast << ":" << PortServerPub;
         endpoint = ss.str();
     }
 
-    // Limiting the water mark to 10 to avoid stacking messages or frames and
-    // product a delay
-    //int water_mark = 10;
-    //zmq_setsockopt(_socket, ZMQ_SNDHWM, &water_mark, sizeof(int));
-
-    _socket.bind(endpoint.c_str());
+    _socket.connect(endpoint.c_str());
 }
 
 void ServerPub::publishBool(const std::string& name,
@@ -135,6 +130,7 @@ void ServerPub::sendToClient()
         pub.writeBool(bufBool[i].value);
 
         //Send packet
+        packet.set_group("rhio");
         _socket.send(packet);
     }
     //Sending values Int
@@ -151,6 +147,7 @@ void ServerPub::sendToClient()
         pub.writeInt(bufInt[i].value);
 
         //Send packet
+        packet.set_group("rhio");
         _socket.send(packet);
     }
     //Sending values Float
@@ -167,6 +164,7 @@ void ServerPub::sendToClient()
         pub.writeFloat(bufFloat[i].value);
 
         //Send packet
+        packet.set_group("rhio");
         _socket.send(packet);
     }
     //Sending values Str
@@ -184,6 +182,7 @@ void ServerPub::sendToClient()
         pub.writeStr(bufStr[i].value);
 
         //Send packet
+        packet.set_group("rhio");
         _socket.send(packet);
     }
     //Sending values Stream
@@ -201,11 +200,13 @@ void ServerPub::sendToClient()
         pub.writeStr(bufStream[i].value);
 
         //Send packet
+        packet.set_group("rhio");
         _socket.send(packet);
     }
     //Sending values Frame
     while (!queueFrame.empty()) {
         //Send packet
+        queueFrame.front().set_group("rhio");
         _socket.send(queueFrame.front());
 
         //Pop value

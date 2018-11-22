@@ -9,8 +9,13 @@ namespace RhIO {
 /**
  * Server replier and Server publisher port
  */
-extern unsigned int PortServerRep;
-extern unsigned int PortServerPub;
+extern const unsigned int PortServerRep;
+extern const unsigned int PortServerPub;
+
+/**
+ *
+ */
+extern const std::string AddressMulticast;
 
 /**
  * Protocol message type

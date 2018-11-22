@@ -172,7 +172,7 @@ namespace RhIO
         ss << "tcp://" << server << ":" << portReq;
         reqServer = ss.str();
         ss.str("");
-        ss << "tcp://" << server << ":" << portSub;
+        ss << "udp://" << AddressMulticast << ":" << portSub;
         subServer = ss.str();
 
         terminate = false;

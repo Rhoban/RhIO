@@ -3,7 +3,9 @@
 namespace RhIO
 {
 
-unsigned int PortServerRep = 9999;
-unsigned int PortServerPub = 9998;
+const unsigned int PortServerRep = 9999;
+const unsigned int PortServerPub = 9998;
+
+const std::string AddressMulticast = "239.9.9.9";
 
 }
