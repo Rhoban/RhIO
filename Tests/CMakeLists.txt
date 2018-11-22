@@ -66,6 +66,11 @@ target_link_libraries(testClientSub ${RHIO_LIBRARIES})
 add_executable(testServer src/testServer.cpp)
 target_link_libraries(testServer ${RHIO_LIBRARIES})
 
+add_executable(testServerHighFreq src/testServerHighFreq.cpp)
+target_link_libraries(testServerHighFreq ${RHIO_LIBRARIES})
+add_executable(testClientHighFreq src/testClientHighFreq.cpp)
+target_link_libraries(testClientHighFreq ${RHIO_LIBRARIES})
+
 add_executable(testServerStress src/testServerStress.cpp)
 target_link_libraries(testServerStress ${RHIO_LIBRARIES})
 
