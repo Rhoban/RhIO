@@ -17,7 +17,8 @@ class ClientSub
     public:
 
         /**
-         * Typedef for stream custom handlers for each type
+         * Typedef for stream custom handlers for each type.
+         * Timestamp in microseconds.
          */
         typedef std::function<void
             (const std::string& name, int64_t timestamp, bool val)> 

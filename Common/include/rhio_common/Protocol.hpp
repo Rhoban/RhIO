@@ -269,7 +269,7 @@ enum MsgType : uint8_t {
      * Bool, Int, Float, Str, Stream or Frame
      * Args:
      * String: value absolute name
-     * Int: timestamp
+     * Int: timestamp (in microseconds)
      * Bool: value
      * or
      * Int: value

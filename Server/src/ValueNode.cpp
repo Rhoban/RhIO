@@ -178,7 +178,7 @@ void ValueNode::setBool(const std::string& name, bool val,
             ServerStream->publishBool(
                 BaseNode::pwd + separator + name, 
                 val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -225,7 +225,7 @@ void ValueNode::setInt(const std::string& name, int64_t val,
             ServerStream->publishInt(
                 BaseNode::pwd + separator + name, 
                 val, 
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -272,7 +272,7 @@ void ValueNode::setFloat(const std::string& name, double val,
             ServerStream->publishFloat(
                 BaseNode::pwd + separator + name, 
                 val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -319,7 +319,7 @@ void ValueNode::setStr(const std::string& name, const std::string& val,
             ServerStream->publishStr(
                 BaseNode::pwd + separator + name, 
                 val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -354,7 +354,7 @@ void ValueNode::setRTBool(const std::string& name, bool val,
             ServerStream->publishBool(
                 BaseNode::pwd + separator + name, 
                 val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -388,7 +388,7 @@ void ValueNode::setRTInt(const std::string& name, int64_t val,
             ServerStream->publishInt(
                 BaseNode::pwd + separator + name, 
                 val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -422,7 +422,7 @@ void ValueNode::setRTFloat(const std::string& name, double val,
             ServerStream->publishFloat(
                 BaseNode::pwd + separator + name, 
                 val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
     }
@@ -444,7 +444,7 @@ int64_t ValueNode::addRTInt(const std::string& name, int64_t val,
             ServerStream->publishInt(
                 BaseNode::pwd + separator + name, 
                 fetch + val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
         return fetch;
@@ -466,7 +466,7 @@ int64_t ValueNode::subRTInt(const std::string& name, int64_t val,
             ServerStream->publishInt(
                 BaseNode::pwd + separator + name, 
                 fetch - val,
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
         return fetch;
@@ -489,7 +489,7 @@ bool ValueNode::toggleRTBool(const std::string& name,
             ServerStream->publishBool(
                 BaseNode::pwd + separator + name, 
                 (!(bool)fetch),
-                std::chrono::duration_cast<std::chrono::milliseconds>
+                std::chrono::duration_cast<std::chrono::microseconds>
                     (timestamp.time_since_epoch()).count());
         }
         return (bool)fetch;
