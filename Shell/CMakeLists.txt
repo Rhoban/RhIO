@@ -3,12 +3,15 @@ project (rhio_shell)
 
 
 find_package(catkin REQUIRED COMPONENTS
-  rhio_client
+    uoe_zeromq
+    rhio_client
 )
 
 catkin_package(
-  INCLUDE_DIRS .
-  CATKIN_DEPENDS rhio_client
+    INCLUDE_DIRS .
+    CATKIN_DEPENDS 
+        uoe_zeromq
+        rhio_client
 )
 
 # Enable colors ?

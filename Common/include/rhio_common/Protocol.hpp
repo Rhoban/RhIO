@@ -13,7 +13,7 @@ extern const unsigned int PortServerRep;
 extern const unsigned int PortServerPub;
 
 /**
- *
+ * Streaming server UDP multicast address
  */
 extern const std::string AddressMulticast;
 

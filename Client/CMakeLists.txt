@@ -7,15 +7,17 @@ cmake_minimum_required(VERSION 2.8)
 project(rhio_client)
 
 find_package(catkin REQUIRED COMPONENTS
-  rhio_common
   uoe_zeromq
+  rhio_common
 )
 
 # What is published by the 'rhio_client package'
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES rhio_client
-  CATKIN_DEPENDS rhio_common uoe_zeromq
+  CATKIN_DEPENDS 
+    uoe_zeromq
+    rhio_common 
 )
 
 #Include sources directory

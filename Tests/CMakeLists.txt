@@ -7,16 +7,18 @@ cmake_minimum_required(VERSION 2.8)
 project(rhio_tests)
 
 find_package(catkin REQUIRED COMPONENTS
-    rhio_common
+    uoe_zeromq
     rhio_server
     rhio_client
-    uoe_zeromq
 )
 
 # What is published by the 'rhio_test package'
 catkin_package(
     INCLUDE_DIRS src
-    CATKIN_DEPENDS rhio_common rhio_server rhio_client uoe_zeromq
+    CATKIN_DEPENDS 
+        uoe_zeromq
+        rhio_server 
+        rhio_client 
 )
 
 #Include sources directory
