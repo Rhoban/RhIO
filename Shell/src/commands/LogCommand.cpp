@@ -37,7 +37,7 @@ namespace RhIO
 
     void LogCommand::update(CSV *csv, NodePool *pool)
     {
-        csv->push("t", pool->timestamp);
+        csv->push("t", (double)pool->timestamp/1000000.0);
         for (auto val : *pool) {
             csv->push(val.getName(), Node::toNumber(val.value));
         }

@@ -65,7 +65,7 @@ namespace RhIO
     void PlotCommand::update(GnuPlot *plot, NodePool *pool)
     {
         if (!paused) {
-            plot->setX(pool->timestamp);
+            plot->setX((double)pool->timestamp/1000000.0);
             for (auto node : *pool) {
                 plot->push(node.getName(), Node::toNumber(node.value));
             }

@@ -39,7 +39,7 @@ namespace RhIO
             /**
              * Change the X
              */
-            void setX(int x);
+            void setX(double x);
 
             /**
              * Push a value
@@ -81,12 +81,12 @@ namespace RhIO
             /**
              * Time reference offset
              */
-            int timeRefOffset;
+            double timeRefOffset;
 
             /**
              * Time reference
              */
-            std::deque<int> timeRef;
+            std::deque<double> timeRef;
 
             /**
              * Values to plot

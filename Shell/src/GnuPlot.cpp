@@ -12,7 +12,7 @@ namespace RhIO
     }
 
     GnuPlot::GnuPlot(int mode)
-        : plotFd(-1), replot(false), history(0), timeRefOffset(-1), 
+        : plotFd(-1), replot(false), history(0), timeRefOffset(-1.0), 
         mode2D((mode == 2)),
         mode3D((mode == 3))
     {
@@ -25,9 +25,9 @@ namespace RhIO
         }
     }
 
-    void GnuPlot::setX(int x)
+    void GnuPlot::setX(double x)
     {
-        if (timeRefOffset < 0) {
+        if (timeRefOffset < 0.0) {
             timeRefOffset = x;
         }
         timeRef.push_back(x-timeRefOffset);
@@ -46,7 +46,7 @@ namespace RhIO
 
     void GnuPlot::render()
     {
-        int timeWindow = histories[history]*1000;
+        int timeWindow = histories[history];
         bool removed;
         do {
             removed = false;
@@ -134,17 +134,17 @@ namespace RhIO
                         << signals[1]->values[k] << " " 
                         << signal->values[k];
                     if (signals.size() == 3) {
-                        oss << " " << (timeRef[k]/1000.0);
+                        oss << " " << timeRef[k];
                     };
                     oss << std::endl;
                 } else if (mode2D) {
                     oss << signals[0]->values[k] << " " << signal->values[k];
                     if (signals.size() == 2) {
-                        oss << " " << (timeRef[k]/1000.0);
+                        oss << " " << timeRef[k];
                     };
                     oss << std::endl;
                 } else {
-                    oss << (timeRef[k]/1000.0) << " " << signal->values[k] << std::endl;
+                    oss << timeRef[k] << " " << signal->values[k] << std::endl;
                 }
             }
             data += oss.str();

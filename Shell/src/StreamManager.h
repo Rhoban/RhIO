@@ -35,12 +35,12 @@ namespace RhIO
             /**
              * Handlers
              */
-            void boolHandler(const std::string &name, long timestamp, bool val);
-            void intHandler(const std::string &name, long timestamp, int val);
-            void floatHandler(const std::string &name, long timestamp, float val);
-            void stringHandler(const std::string &name, long timestamp, const std::string &val);
-            void streamHandler(const std::string &name, long timestamp, const std::string &str);
-            void frameHandler(const std::string &name, long timestamp, 
+            void boolHandler(const std::string &name, uint64_t timestamp, bool val);
+            void intHandler(const std::string &name, uint64_t timestamp, int val);
+            void floatHandler(const std::string &name, uint64_t timestamp, float val);
+            void stringHandler(const std::string &name, uint64_t timestamp, const std::string &val);
+            void streamHandler(const std::string &name, uint64_t timestamp, const std::string &str);
+            void frameHandler(const std::string &name, uint64_t timestamp, 
                 size_t width, size_t height, unsigned char* data, size_t size);
             
             /**

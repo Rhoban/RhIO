@@ -50,7 +50,7 @@ namespace RhIO
         delete worker;
     }
 
-    void StreamManager::boolHandler(const std::string &name, long timestamp, bool val)
+    void StreamManager::boolHandler(const std::string &name, uint64_t timestamp, bool val)
     {
         mutex.lock();
         for (auto& pool : pools) {
@@ -67,7 +67,7 @@ namespace RhIO
         mutex.unlock();
     }
 
-    void StreamManager::intHandler(const std::string &name, long timestamp, int val)
+    void StreamManager::intHandler(const std::string &name, uint64_t timestamp, int val)
     {
         mutex.lock();
         for (auto& pool : pools) {
@@ -84,7 +84,7 @@ namespace RhIO
         mutex.unlock();
     }
 
-    void StreamManager::floatHandler(const std::string &name, long timestamp, float val)
+    void StreamManager::floatHandler(const std::string &name, uint64_t timestamp, float val)
     {
         mutex.lock();
         for (auto& pool : pools) {
@@ -101,7 +101,7 @@ namespace RhIO
         mutex.unlock();
     }
 
-    void StreamManager::stringHandler(const std::string &name, long timestamp, const std::string &val)
+    void StreamManager::stringHandler(const std::string &name, uint64_t timestamp, const std::string &val)
     {
         mutex.lock();
         for (auto& pool : pools) {
@@ -118,7 +118,7 @@ namespace RhIO
         mutex.unlock();
     }
             
-    void StreamManager::streamHandler(const std::string &name, long timestamp, const std::string &str)
+    void StreamManager::streamHandler(const std::string &name, uint64_t timestamp, const std::string &str)
     {
         (void) timestamp;
         if (handlerStream) {
@@ -126,7 +126,7 @@ namespace RhIO
         }
     }
     
-    void StreamManager::frameHandler(const std::string &name, long timestamp, 
+    void StreamManager::frameHandler(const std::string &name, uint64_t timestamp, 
         size_t width, size_t height,
         unsigned char* data, size_t size)
     {
