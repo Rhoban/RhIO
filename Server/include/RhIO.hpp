@@ -34,6 +34,12 @@ void start(
     unsigned int period_ = 20);
 
 /**
+ * Wait for the RhIO server
+ * Rep and Pub threads to stop
+ */
+void stop();
+
+/**
  * Has RhIO servers started?
  */
 bool started();

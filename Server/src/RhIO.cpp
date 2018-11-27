@@ -90,6 +90,7 @@ static void runServerRep()
         while (!serverThreadRepOver) {
             server.handleRequest();
         }
+        initServerCount--;
     } catch (const std::string& e) {
         raiseSignalAndHold(e);
     } catch (const std::exception& e) {
@@ -131,6 +132,7 @@ static void runServerPub()
                     std::chrono::milliseconds(period-duration));
             }
         }
+        initServerCount--;
     } catch (const std::string& e) {
         raiseSignalAndHold(e);
     } catch (const std::exception& e) {
@@ -170,19 +172,7 @@ bool started()
     return serverStarting;
 }
 
-void reset()
-{
-    //Call destructor
-    (&Root)->~IONode();
-    //Call constructor with 
-    //placement allocation
-    new (&Root) IONode();
-}
-
-/**
- * Ask and wait Server thread ending
- */
-static void __attribute__ ((destructor)) stopThreadServer()
+void stop()
 {
     if (initServerCount > 0) {
         //Wait the end of server thread
@@ -193,6 +183,23 @@ static void __attribute__ ((destructor)) stopThreadServer()
         delete serverThreadPub;
         delete serverThreadRep;
     }
+}
+
+void reset()
+{
+    //Call destructor
+    (&Root)->~IONode();
+    //Call constructor with 
+    //placement allocation
+    new (&Root) IONode("ROOT", nullptr);
+}
+
+/**
+ * Ask and wait Server thread ending
+ */
+static void __attribute__ ((destructor)) stopThreadServer()
+{
+    stop();
 }
 
 }
