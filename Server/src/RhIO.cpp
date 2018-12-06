@@ -13,7 +13,7 @@ namespace RhIO {
 IONode Root("ROOT", nullptr);
 
 /**
- * Default initialization of 
+ * Default initialization of
  * ServerStream server
  */
 ServerPub* ServerStream = nullptr;
@@ -45,7 +45,7 @@ static void runServerRep()
     std::stringstream ss;
     ss << "tcp://*:" << (port+1);
     ServerRep server(ss.str());
-    //Notify main thread 
+    //Notify main thread
     //for initialization ready
     initServerCount++;
 
@@ -65,7 +65,7 @@ static void runServerPub()
     ss << "tcp://*:" << port;
     ServerPub server(ss.str());
     ServerStream = &server;
-    //Notify main thread 
+    //Notify main thread
     //for initialization ready
     initServerCount++;
 
@@ -109,6 +109,19 @@ void start(unsigned int port_)
     }
 }
 
+void stop()
+{
+  if (initServerCount > 0) {
+    //Wait the end of server thread
+    serverThreadRepOver = true;
+    serverThreadPubOver = true;
+    serverThreadPub->join();
+    serverThreadRep->join();
+    delete serverThreadPub;
+    delete serverThreadRep;
+  }
+}
+
 /**
  * Ask and wait Server thread ending
  */
@@ -126,4 +139,3 @@ static void __attribute__ ((destructor)) stopThreadServer()
 }
 
 }
-
