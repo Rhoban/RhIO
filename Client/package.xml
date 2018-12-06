@@ -25,9 +25,9 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
-  <build_depend>uoe_zeromq</build_depend>
+  <build_depend>uoe_zmq</build_depend>
   <build_depend>rhio_common</build_depend>
 
-  <run_depend>uoe_zeromq</run_depend>
+  <run_depend>uoe_zmq</run_depend>
   <run_depend>rhio_common</run_depend>
 </package>

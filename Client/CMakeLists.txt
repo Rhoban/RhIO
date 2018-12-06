@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 project(rhio_client)
 
 find_package(catkin REQUIRED COMPONENTS
-  uoe_zeromq
+  uoe_zmq
   rhio_common
 )
 
@@ -16,7 +16,7 @@ catkin_package(
   INCLUDE_DIRS include
   LIBRARIES rhio_client
   CATKIN_DEPENDS 
-    uoe_zeromq
+    uoe_zmq
     rhio_common 
 )
 
@@ -39,6 +39,8 @@ set(RHIO_LIBRARIES
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 #Enable compiler Warning
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
+#Enable ZMP Draft API for UDP support
+add_definitions(-DZMQ_BUILD_DRAFT_API)
 
 #Build Client as shared library
 add_library(rhio_client SHARED ${SOURCES})
