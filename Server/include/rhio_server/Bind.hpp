@@ -196,6 +196,12 @@ class Bind
          * given value absolute name
          */
         std::string relativeName(const std::string& name) const;
+
+        /**
+         * Return true if given variable address
+         * is already known and bind internally
+         */
+        bool checkIsRegistered(const void* addr) const;
 };
 
 }
