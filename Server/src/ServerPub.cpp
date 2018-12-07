@@ -4,8 +4,10 @@
 
 #ifdef VISION_COMPONENT
 #define WATERMARK 10
+#pragma message("RHIO WATERMARK=10")
 #else
 #define WATERMARK 0
+#pragma message("RHIO WATERMARK disabled")
 #endif
 
 namespace RhIO {

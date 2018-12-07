@@ -24,7 +24,7 @@ extern ServerPub* ServerStream;
  * Starts the RhIO server
  */
 void start(unsigned int port = ServersPortBase);
-
+void stop();
 /**
  * Has RhIO started?
  */
@@ -33,4 +33,3 @@ bool started();
 }
 
 #endif
-
