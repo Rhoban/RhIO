@@ -6,12 +6,12 @@
 
 namespace RhIO
 {
-    class Node;
-    class SaveCommand : public Command
-    {
-        public:
-            virtual std::string getName();
-            virtual std::string getDesc();
-            virtual void process(std::vector<std::string> args);
-    };
-}
+class Node;
+class SaveCommand : public Command
+{
+public:
+  virtual std::string getName();
+  virtual std::string getDesc();
+  virtual void process(std::vector<std::string> args);
+};
+}  // namespace RhIO

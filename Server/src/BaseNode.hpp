@@ -4,8 +4,8 @@
 #include <string>
 #include <functional>
 
-namespace RhIO {
-
+namespace RhIO
+{
 /**
  * BaseNode
  *
@@ -19,54 +19,48 @@ namespace RhIO {
 template <typename T>
 class BaseNode
 {
-    public:
+public:
+  /**
+   * Typedef for forward function
+   * to be defined by IONode
+   *
+   * name is the asked relative path element in tree.
+   * If given name is referring to this Node, nullptr
+   * is returned.
+   * If given name is referring to a child Node, a pointer
+   * to this Node is returned and newName is set to the
+   * given name converted relatively to returned Node.
+   * If given name is invalid, throw logic_error exception unless
+   * createBranch is true and missing Node are created.
+   */
+  typedef std::function<T*(const std::string& name, std::string& newName, bool createBranch)> ForwardFunc;
 
-        /**
-         * Typedef for forward function 
-         * to be defined by IONode
-         *
-         * name is the asked relative path element in tree.
-         * If given name is referring to this Node, nullptr
-         * is returned. 
-         * If given name is referring to a child Node, a pointer
-         * to this Node is returned and newName is set to the 
-         * given name converted relatively to returned Node.
-         * If given name is invalid, throw logic_error exception unless
-         * createBranch is true and missing Node are created.
-         */
-        typedef std::function<T*(
-            const std::string& name, std::string& newName, 
-            bool createBranch)> ForwardFunc;
-        
-        /**
-         * Initialize and store the forward function
-         */
-        BaseNode(ForwardFunc func) :
-            forwardFunc(func)
-        {
-        }
+  /**
+   * Initialize and store the forward function
+   */
+  BaseNode(ForwardFunc func) : forwardFunc(func)
+  {
+  }
 
-        /**
-         * Virtual destructor
-         */
-        virtual ~BaseNode()
-        {
-        }
+  /**
+   * Virtual destructor
+   */
+  virtual ~BaseNode()
+  {
+  }
 
-    protected:
+protected:
+  /**
+   * Hold forward function for derived class
+   */
+  ForwardFunc forwardFunc;
 
-        /**
-         * Hold forward function for derived class
-         */
-        ForwardFunc forwardFunc;
-
-        /**
-         * Hold Node absolute name
-         */
-        std::string pwd;
+  /**
+   * Hold Node absolute name
+   */
+  std::string pwd;
 };
 
-}
+}  // namespace RhIO
 
 #endif
-

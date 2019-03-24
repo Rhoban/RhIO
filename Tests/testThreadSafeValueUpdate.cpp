@@ -6,32 +6,33 @@
 
 void function1()
 {
-    for (size_t i=0;i<10000;i++) {
-        RhIO::Root.setInt("test/int", RhIO::Root.getInt("test/int")+1);
-    }
+  for (size_t i = 0; i < 10000; i++)
+  {
+    RhIO::Root.setInt("test/int", RhIO::Root.getInt("test/int") + 1);
+  }
 }
 
 void function2()
 {
-    for (size_t i=0;i<10000;i++) {
-        RhIO::Root.setInt("test/int", RhIO::Root.getInt("test/int")-1);
-    }
+  for (size_t i = 0; i < 10000; i++)
+  {
+    RhIO::Root.setInt("test/int", RhIO::Root.getInt("test/int") - 1);
+  }
 }
 
 int main()
 {
-    RhIO::Root.newChild("test");
-    RhIO::Root.newInt("test/int");
-    RhIO::Root.setInt("test/int", 0);
+  RhIO::Root.newChild("test");
+  RhIO::Root.newInt("test/int");
+  RhIO::Root.setInt("test/int", 0);
 
-    std::thread t1(function1);
-    std::thread t2(function2);
-    
-    t1.join();
-    t2.join();
-    
-    std::cout << RhIO::Root.getInt("test/int") << std::endl;
+  std::thread t1(function1);
+  std::thread t2(function2);
 
-    return 0;
+  t1.join();
+  t2.join();
+
+  std::cout << RhIO::Root.getInt("test/int") << std::endl;
+
+  return 0;
 }
-

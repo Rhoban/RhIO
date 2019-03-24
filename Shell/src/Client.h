@@ -2,7 +2,7 @@
 
 namespace RhIO
 {
-    class Client
-    {
-    }
+class Client
+{
 }
+}  // namespace RhIO

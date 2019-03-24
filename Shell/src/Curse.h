@@ -8,35 +8,35 @@
 
 namespace RhIO
 {
-    class Command;
-    class Shell;
-    struct ValueBase;
-    class Curse
-    {
-        public:
-            Curse(Command *command);
+class Command;
+class Shell;
+struct ValueBase;
+class Curse
+{
+public:
+  Curse(Command* command);
 
-            void run(); 
-            void init();
-            void loop();
-            void end();
-            void draw(int x, int y, std::string s);
+  void run();
+  void init();
+  void loop();
+  void end();
+  void draw(int x, int y, std::string s);
 
-            int selected;
-            int row, col;
-            int granularity;
-            int maxSliders, offset;
-    
-            void getMinMax(ValueBase *value, float *min, float *max);
-            void increment(ValueBase *value, int delta);
-            void bound(ValueBase *value);
+  int selected;
+  int row, col;
+  int granularity;
+  int maxSliders, offset;
 
-            void update(NodePool *);
+  void getMinMax(ValueBase* value, float* min, float* max);
+  void increment(ValueBase* value, int delta);
+  void bound(ValueBase* value);
 
-            Shell *shell;
-            Command *command;
-            NodePool values;
+  void update(NodePool*);
 
-            bool streamUpdated;
-    };
-}
+  Shell* shell;
+  Command* command;
+  NodePool values;
+
+  bool streamUpdated;
+};
+}  // namespace RhIO

@@ -2,7 +2,5 @@
 
 namespace RhIO
 {
-
 unsigned int ServersPortBase = 9998;
-
 }

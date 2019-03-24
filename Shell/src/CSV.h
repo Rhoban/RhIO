@@ -8,23 +8,23 @@
 
 namespace RhIO
 {
-    class CSV
-    {
-        public:
-            CSV(std::ostream *os);
+class CSV
+{
+public:
+  CSV(std::ostream* os);
 
-            void push(std::string column, double value);
-            void newLine();
+  void push(std::string column, double value);
+  void newLine();
 
-        protected:
-            std::ostream *os;
-            bool header;
-            std::map<std::string, int> columns;
-            std::map<int, std::string> columnIndexes;
-            std::map<int, double> values;
+protected:
+  std::ostream* os;
+  bool header;
+  std::map<std::string, int> columns;
+  std::map<int, std::string> columnIndexes;
+  std::map<int, double> values;
 
-            void produceHeader();
-    };
-}
+  void produceHeader();
+};
+}  // namespace RhIO
 
 #endif

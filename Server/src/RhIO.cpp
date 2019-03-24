@@ -5,8 +5,8 @@
 #include "ServerRep.hpp"
 #include "ServerPub.hpp"
 
-namespace RhIO {
-
+namespace RhIO
+{
 /**
  * Main instance global allocation
  */
@@ -42,16 +42,17 @@ static bool serverStarting = false;
  */
 static void runServerRep()
 {
-    std::stringstream ss;
-    ss << "tcp://*:" << (port+1);
-    ServerRep server(ss.str());
-    //Notify main thread
-    //for initialization ready
-    initServerCount++;
+  std::stringstream ss;
+  ss << "tcp://*:" << (port + 1);
+  ServerRep server(ss.str());
+  // Notify main thread
+  // for initialization ready
+  initServerCount++;
 
-    while (!serverThreadRepOver) {
-        server.handleRequest();
-    }
+  while (!serverThreadRepOver)
+  {
+    server.handleRequest();
+  }
 }
 
 /**
@@ -60,59 +61,63 @@ static void runServerRep()
  */
 static void runServerPub()
 {
-    //Allocating ServerStream
-    std::stringstream ss;
-    ss << "tcp://*:" << port;
-    ServerPub server(ss.str());
-    ServerStream = &server;
-    //Notify main thread
-    //for initialization ready
-    initServerCount++;
+  // Allocating ServerStream
+  std::stringstream ss;
+  ss << "tcp://*:" << port;
+  ServerPub server(ss.str());
+  ServerStream = &server;
+  // Notify main thread
+  // for initialization ready
+  initServerCount++;
 
-    while (!serverThreadPubOver) {
-        int64_t tsStart = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now().time_since_epoch()).count();
-        server.sendToClient();
-        int64_t tsEnd = std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::steady_clock::now().time_since_epoch()).count();
-        int64_t duration = tsEnd - tsStart;
-        //Streaming value at 50Hz
-        if (duration < 20) {
-            std::this_thread::sleep_for(
-                std::chrono::milliseconds(20-duration));
-        }
+  while (!serverThreadPubOver)
+  {
+    int64_t tsStart =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())
+            .count();
+    server.sendToClient();
+    int64_t tsEnd =
+        std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch())
+            .count();
+    int64_t duration = tsEnd - tsStart;
+    // Streaming value at 50Hz
+    if (duration < 20)
+    {
+      std::this_thread::sleep_for(std::chrono::milliseconds(20 - duration));
     }
+  }
 }
 
 bool started()
 {
-    return serverStarting;
+  return serverStarting;
 }
 
 void start(unsigned int port_)
 {
-    serverStarting = true;
-    port = port_;
+  serverStarting = true;
+  port = port_;
 
-    //Init atomic counter
-    initServerCount = 0;
-    //Start Server threads
-    serverThreadRepOver = false;
-    serverThreadPubOver = false;
-    serverThreadRep = new std::thread(runServerRep);
-    serverThreadPub = new std::thread(runServerPub);
+  // Init atomic counter
+  initServerCount = 0;
+  // Start Server threads
+  serverThreadRepOver = false;
+  serverThreadPubOver = false;
+  serverThreadRep = new std::thread(runServerRep);
+  serverThreadPub = new std::thread(runServerPub);
 
-    //Wait until both Server are initialized
-    while (initServerCount != 2) {
-        std::this_thread::sleep_for(
-            std::chrono::milliseconds(10));
-    }
+  // Wait until both Server are initialized
+  while (initServerCount != 2)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
 }
 
 void stop()
 {
-  if (initServerCount > 0) {
-    //Wait the end of server thread
+  if (initServerCount > 0)
+  {
+    // Wait the end of server thread
     serverThreadRepOver = true;
     serverThreadPubOver = true;
     serverThreadPub->join();
@@ -125,17 +130,18 @@ void stop()
 /**
  * Ask and wait Server thread ending
  */
-static void __attribute__ ((destructor)) stopThreadServer()
+static void __attribute__((destructor)) stopThreadServer()
 {
-    if (initServerCount > 0) {
-        //Wait the end of server thread
-        serverThreadRepOver = true;
-        serverThreadPubOver = true;
-        serverThreadPub->join();
-        serverThreadRep->join();
-        delete serverThreadPub;
-        delete serverThreadRep;
-    }
+  if (initServerCount > 0)
+  {
+    // Wait the end of server thread
+    serverThreadRepOver = true;
+    serverThreadPubOver = true;
+    serverThreadPub->join();
+    serverThreadRep->join();
+    delete serverThreadPub;
+    delete serverThreadRep;
+  }
 }
 
-}
+}  // namespace RhIO

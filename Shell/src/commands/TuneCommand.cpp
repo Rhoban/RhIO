@@ -7,30 +7,33 @@
 
 namespace RhIO
 {
-    std::string TuneCommand::getName()
-    {
-        return "tune";
-    }
-
-    std::string TuneCommand::getDesc()
-    {
-        return "Run the tuner";
-    }
-
-    std::string TuneCommand::getUsage()
-    {
-        return "tune [var1] [var2] [var3]...";
-    }
-
-    void TuneCommand::process(std::vector<std::string> args)
-    {
-        Curse curse(this);
-        curse.values = shell->getPool(args);
-        if (curse.values.size()) {
-            curse.shell = shell;
-            curse.run();
-        } else {
-            throw std::runtime_error("Nothing to tune");
-        }
-    }
+std::string TuneCommand::getName()
+{
+  return "tune";
 }
+
+std::string TuneCommand::getDesc()
+{
+  return "Run the tuner";
+}
+
+std::string TuneCommand::getUsage()
+{
+  return "tune [var1] [var2] [var3]...";
+}
+
+void TuneCommand::process(std::vector<std::string> args)
+{
+  Curse curse(this);
+  curse.values = shell->getPool(args);
+  if (curse.values.size())
+  {
+    curse.shell = shell;
+    curse.run();
+  }
+  else
+  {
+    throw std::runtime_error("Nothing to tune");
+  }
+}
+}  // namespace RhIO

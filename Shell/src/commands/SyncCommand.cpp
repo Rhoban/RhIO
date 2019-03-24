@@ -4,19 +4,19 @@
 
 namespace RhIO
 {
-    std::string SyncCommand::getName()
-    {
-        return "sync";
-    }
-
-    std::string SyncCommand::getDesc()
-    {
-        return "Synchronize the local tree with remote one";
-    }
-
-    void SyncCommand::process(std::vector<std::string> args)
-    {
-        (void) args;
-        shell->sync();
-    }
+std::string SyncCommand::getName()
+{
+  return "sync";
 }
+
+std::string SyncCommand::getDesc()
+{
+  return "Synchronize the local tree with remote one";
+}
+
+void SyncCommand::process(std::vector<std::string> args)
+{
+  (void)args;
+  shell->sync();
+}
+}  // namespace RhIO

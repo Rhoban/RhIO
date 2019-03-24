@@ -5,8 +5,8 @@
 #include "IONode.hpp"
 #include "Bind.hpp"
 
-namespace RhIO {
-
+namespace RhIO
+{
 /**
  * Main RhIO global instance
  * Root of ParameterNode tree
@@ -30,6 +30,6 @@ void stop();
  */
 bool started();
 
-}
+}  // namespace RhIO
 
 #endif

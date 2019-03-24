@@ -9,8 +9,8 @@
 #include <unistd.h>
 #include <RhIOClient.hpp>
 
-namespace RhIO {
-
+namespace RhIO
+{
 /**
  * FrameStreamViewer
  *
@@ -19,62 +19,56 @@ namespace RhIO {
  */
 class FrameStreamViewer
 {
-    public:
+public:
+  /**
+   * Initialization with image size
+   */
+  FrameStreamViewer(const std::string& name, FrameFormat format);
 
-        /**
-         * Initialization with image size
-         */
-        FrameStreamViewer(const std::string& name, 
-            FrameFormat format);
+  /**
+   * Start and stop player instance.
+   * (The proccess is forked
+   * and a pipe is created).
+   */
+  void start();
+  void stop();
 
-        /**
-         * Start and stop player instance.
-         * (The proccess is forked 
-         * and a pipe is created).
-         */
-        void start();
-        void stop();
+  /**
+   * Display the given image with the Player.
+   * Raw image data and its size are given.
+   * Image width and height size are given.
+   */
+  void pushFrame(size_t width, size_t height, unsigned char* data, size_t size);
 
-        /**
-         * Display the given image with the Player.
-         * Raw image data and its size are given.
-         * Image width and height size are given.
-         */
-        void pushFrame(
-            size_t width, size_t height, 
-            unsigned char* data, size_t size);
+private:
+  /**
+   * Windows name
+   */
+  std::string _name;
 
-    private:
+  /**
+   * Image format
+   */
+  FrameFormat _format;
 
-        /**
-         * Windows name
-         */
-        std::string _name;
+  /**
+   * Image stream format
+   */
+  size_t _width;
+  size_t _height;
 
-        /**
-         * Image format
-         */
-        FrameFormat _format;
+  /**
+   * Player pipe file descriptor
+   * and child PID
+   */
+  int _pipeFd;
+  int _playerPID;
 
-        /**
-         * Image stream format
-         */
-        size_t _width;
-        size_t _height;
-
-        /**
-         * Player pipe file descriptor
-         * and child PID
-         */
-        int _pipeFd;
-        int _playerPID;
-
-        /**
-         * Fork current process to create 
-         * a new Player window
-         */
-        void createPlayerInstance();
+  /**
+   * Fork current process to create
+   * a new Player window
+   */
+  void createPlayerInstance();
 };
 
-}
-
+}  // namespace RhIO

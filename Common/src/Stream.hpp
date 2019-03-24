@@ -7,39 +7,37 @@
 #include <chrono>
 #include <memory>
 
-namespace RhIO {
-
+namespace RhIO
+{
 /**
  * Custom string buffer to catch
  * stream flush operation
  */
 struct StreamBuffer : public std::stringbuf
 {
-    public:
+public:
+  /**
+   * Initialization with stream absolute name
+   */
+  StreamBuffer(const std::string& name);
 
-        /**
-         * Initialization with stream absolute name
-         */
-        StreamBuffer(const std::string& name);
+  /**
+   * Override to catch ostream flush
+   */
+  virtual int sync() override;
 
-        /**
-         * Override to catch ostream flush
-         */
-        virtual int sync() override;
-        
-        /**
-         * The number of registered watcher.
-         * Streaming is enabled while at least
-         * one watcher is registered
-         */
-        int64_t _streamWatchers;
+  /**
+   * The number of registered watcher.
+   * Streaming is enabled while at least
+   * one watcher is registered
+   */
+  int64_t _streamWatchers;
 
-    private:
-
-        /**
-         * Stream absolute name
-         */
-        std::string _pwd;
+private:
+  /**
+   * Stream absolute name
+   */
+  std::string _pwd;
 };
 
 /**
@@ -50,23 +48,22 @@ struct StreamBuffer : public std::stringbuf
  */
 struct Stream
 {
-    /**
-     * Textual description
-     */
-    std::string comment;
-    
-    /**
-     * External ostream instance
-     */
-    std::shared_ptr<std::ostream> stream;
+  /**
+   * Textual description
+   */
+  std::string comment;
 
-    /**
-     * Internal custom string buffer
-     */
-    std::shared_ptr<StreamBuffer> buffer;
+  /**
+   * External ostream instance
+   */
+  std::shared_ptr<std::ostream> stream;
+
+  /**
+   * Internal custom string buffer
+   */
+  std::shared_ptr<StreamBuffer> buffer;
 };
 
-}
+}  // namespace RhIO
 
 #endif
-

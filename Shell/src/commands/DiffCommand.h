@@ -6,14 +6,14 @@
 
 namespace RhIO
 {
-    class Node;
-    class DiffCommand : public Command
-    {
-        public:
-            virtual std::string getName();
-            virtual std::string getDesc();
-            virtual void process(std::vector<std::string> args);
+class Node;
+class DiffCommand : public Command
+{
+public:
+  virtual std::string getName();
+  virtual std::string getDesc();
+  virtual void process(std::vector<std::string> args);
 
-            int showDiff(Node *node);
-    };
-}
+  int showDiff(Node* node);
+};
+}  // namespace RhIO

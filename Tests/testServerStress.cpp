@@ -8,36 +8,38 @@
 
 int values = 0;
 
-void generate(int depth=0, std::string prefix="")
+void generate(int depth = 0, std::string prefix = "")
 {
-    if (prefix != "") {
-        prefix += "/";
-    }
+  if (prefix != "")
+  {
+    prefix += "/";
+  }
 
-    if (depth < 4) {
-        for (int k=0; k<9; k++) {
-            values++;
-            std::stringstream ss, ssc;
-            ss << "float" << k;
-            RhIO::Root.newFloat(prefix+ss.str());
+  if (depth < 4)
+  {
+    for (int k = 0; k < 9; k++)
+    {
+      values++;
+      std::stringstream ss, ssc;
+      ss << "float" << k;
+      RhIO::Root.newFloat(prefix + ss.str());
 
-            ssc << "child" << k;
-            std::string name = prefix+ssc.str();
-            generate(depth+1, name);
-        }
+      ssc << "child" << k;
+      std::string name = prefix + ssc.str();
+      generate(depth + 1, name);
     }
+  }
 }
 
-int main() 
+int main()
 {
-    generate();
-    printf("Generated %d values\n", values);
+  generate();
+  printf("Generated %d values\n", values);
 
-    while (true) {
-        std::this_thread::sleep_for(
-            std::chrono::milliseconds(1000));
-    }
+  while (true)
+  {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+  }
 
-    return 0;
+  return 0;
 }
-
