@@ -59,8 +59,8 @@ if(RHIO_SERVER_AUTOSTART)
     set (SOURCES ${SOURCES} src/autostart.cpp)
 endif()
 
-#Enable C++11
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+#Enable C++17
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 #Enable compiler Warning
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 
