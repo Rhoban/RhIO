@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project (RhIOShell)
 
+set(OpenCV_DIR "/usr/local/include/")
+find_package(OpenCV 3.2.0 REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   RhIOClient
@@ -56,11 +58,12 @@ set (SOURCES
     src/main.cpp
 )
 
-include_directories (src ${catkin_INCLUDE_DIRS})
+include_directories (src ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 set (EXTRA_LIBS
     pthread 
     ${catkin_LIBRARIES}
+    ${OpenCV_LIBS}
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")

@@ -46,7 +46,7 @@ public:
    * frame data and size.
    * The data is immediatly copied.
    */
-  void publishFrame(const std::string& name, size_t width, size_t height, unsigned char* data, size_t size,
+  void publishFrame(const std::string& name, const cv::Mat &frame,
                     int64_t timestamp);
 
   /**

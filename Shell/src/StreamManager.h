@@ -26,7 +26,7 @@ public:
   /**
    * Handle to update the frame
    */
-  typedef std::function<void(std::string name, size_t width, size_t height, unsigned char* data, size_t size)>
+  typedef std::function<void(std::string name, const cv::Mat &frame)>
       FrameUpdateHandler;
   void setFrameCallback(FrameUpdateHandler handler);
   void unsetFrameCallback();
@@ -39,8 +39,7 @@ public:
   void floatHandler(const std::string& name, long timestamp, float val);
   void stringHandler(const std::string& name, long timestamp, const std::string& val);
   void streamHandler(const std::string& name, long timestamp, const std::string& str);
-  void frameHandler(const std::string& name, long timestamp, size_t width, size_t height, unsigned char* data,
-                    size_t size);
+  void frameHandler(const std::string& name, long timestamp, const cv::Mat &frame);
 
   /**
    * Add a node pool to monitor

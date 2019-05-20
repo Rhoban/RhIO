@@ -1,10 +1,7 @@
-#include <form.h>
-#include <panel.h>
 #include <iostream>
 #include <string>
 #include <vector>
 #include <stdio.h>
-#include <ncurses.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -13,6 +10,9 @@
 #include "Curse.h"
 #include "Shell.h"
 #include "utils.h"
+#include <form.h>
+#include <panel.h>
+#include <ncurses.h>
 
 using namespace std::placeholders;
 

@@ -6,6 +6,7 @@
 #include <thread>
 #include <mutex>
 #include <zmq.hpp>
+#include <opencv2/opencv.hpp>
 
 namespace RhIO
 {
@@ -22,9 +23,7 @@ public:
   typedef std::function<void(const std::string& name, int64_t timestamp, int64_t val)> StreamIntHandler;
   typedef std::function<void(const std::string& name, int64_t timestamp, double val)> StreamFloatHandler;
   typedef std::function<void(const std::string& name, int64_t timestamp, const std::string& val)> StreamStrHandler;
-  typedef std::function<void(const std::string& name, int64_t timestamp, size_t width, size_t height,
-                             unsigned char* data, size_t size)>
-      StreamFrameHandler;
+  typedef std::function<void(const std::string& name, int64_t timestamp, const cv::Mat& frame)> StreamFrameHandler;
 
   /**
    * Initialization with the bind

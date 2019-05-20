@@ -1,7 +1,7 @@
 #include <iostream>
-#include <ncurses.h>
 #include "Shell.h"
 #include "ClearCommand.h"
+#include <ncurses.h>
 
 namespace RhIO
 {

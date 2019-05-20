@@ -63,7 +63,7 @@ const Frame& FrameNode::getFrame(const std::string& name) const
   }
 }
 
-void FrameNode::framePush(const std::string& name, size_t width, size_t height, unsigned char* data, size_t size,
+void FrameNode::framePush(const std::string& name, const cv::Mat& frame,
                           std::chrono::steady_clock::time_point timestamp)
 {
   // Forward to subtree
@@ -71,21 +71,17 @@ void FrameNode::framePush(const std::string& name, size_t width, size_t height, 
   FrameNode* child = BaseNode::forwardFunc(name, tmpName, false);
   if (child != nullptr)
   {
-    child->framePush(tmpName, width, height, data, size);
+    child->framePush(tmpName, frame, timestamp);
     return;
   }
 
   std::lock_guard<std::mutex> lock(_mutex);
   if (_frames.count(name) > 0)
   {
-    if (size != 3 * width * height)
-    {
-      throw std::logic_error("RhIO frame size seems wrong: " + name);
-    }
     if (_frames.at(name).countWatchers > 0)
     {
       ServerStream->publishFrame(
-          BaseNode::pwd + separator + name, width, height, data, size,
+          BaseNode::pwd + separator + name, frame,
           std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()).count());
     }
   }
@@ -142,14 +138,14 @@ void FrameNode::disableStreamingFrame(const std::string& name)
   }
 }
 
-void FrameNode::newFrame(const std::string& name, const std::string& comment, FrameFormat format)
+void FrameNode::newFrame(const std::string& name, const std::string& comment)
 {
   // Forward to subtree
   std::string tmpName;
   FrameNode* child = BaseNode::forwardFunc(name, tmpName, true);
   if (child != nullptr)
   {
-    child->newFrame(tmpName, comment, format);
+    child->newFrame(tmpName, comment);
     return;
   }
 
@@ -159,7 +155,6 @@ void FrameNode::newFrame(const std::string& name, const std::string& comment, Fr
     _frames[name] = Frame();
     _frames.at(name).name = name;
     _frames.at(name).comment = comment;
-    _frames.at(name).format = format;
     _frames.at(name).countWatchers = 0;
   }
   else

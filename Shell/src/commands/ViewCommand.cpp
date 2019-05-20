@@ -39,11 +39,12 @@ void ViewCommand::process(std::vector<std::string> args)
     for (size_t i = 0; i < args.size(); i++)
     {
       auto nodeFrame = shell->getNodeFrame(args[i]);
-      _viewers.push_back({ nodeFrame.getName(), FrameStreamViewer(nodeFrame.getName(), nodeFrame.format) });
+      _viewers.push_back({ nodeFrame.getName(), FrameStreamViewer(nodeFrame.getName()) });
+      _viewers[i].second.start();
       client->enableStreamingFrame(nodeFrame.getName());
     }
 
-    stream->setFrameCallback(std::bind(&ViewCommand::update, this, _1, _2, _3, _4, _5));
+    stream->setFrameCallback(std::bind(&ViewCommand::update, this, _1, _2));
     shell->wait(this);
     stream->unsetFrameCallback();
     clearStream();
@@ -57,13 +58,13 @@ void ViewCommand::process(std::vector<std::string> args)
   }
 }
 
-void ViewCommand::update(std::string name, size_t width, size_t height, unsigned char* data, size_t size)
+void ViewCommand::update(std::string name, const cv::Mat& frame)
 {
   for (size_t i = 0; i < _viewers.size(); i++)
   {
     if (name == _viewers[i].first)
     {
-      _viewers[i].second.pushFrame(width, height, data, size);
+      _viewers[i].second.pushFrame(frame);
     }
   }
 }

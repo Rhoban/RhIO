@@ -16,7 +16,7 @@ public:
   virtual std::string getDesc();
   virtual std::string getUsage();
   virtual void process(std::vector<std::string> args);
-  void update(std::string name, size_t width, size_t height, unsigned char* data, size_t size);
+  void update(std::string name, const cv::Mat& frame);
 
 protected:
   std::ostream* os;

@@ -118,7 +118,6 @@ Node::Node(ClientReq* client_, std::string path) : parent(NULL), name(""), clien
     frame.node = this;
     frame.name = name;
     frame.desc = meta.comment;
-    frame.format = meta.format;
     frames.push_back(frame);
   }
 

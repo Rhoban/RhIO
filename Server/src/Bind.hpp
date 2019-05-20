@@ -102,9 +102,9 @@ public:
    * and FrameNode::framePush
    * using internal prefix child
    */
-  void newFrame(const std::string& name, const std::string& comment, FrameFormat format);
+  void newFrame(const std::string& name, const std::string& comment);
   bool frameIsStreaming(const std::string& name) const;
-  void framePush(const std::string& name, size_t width, size_t height, unsigned char* data, size_t size);
+  void framePush(const std::string& name, const cv::Mat &frame);
 
   /**
    * Import RhIO global values to

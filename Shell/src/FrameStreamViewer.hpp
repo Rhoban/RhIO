@@ -23,7 +23,7 @@ public:
   /**
    * Initialization with image size
    */
-  FrameStreamViewer(const std::string& name, FrameFormat format);
+  FrameStreamViewer(const std::string& name);
 
   /**
    * Start and stop player instance.
@@ -38,37 +38,13 @@ public:
    * Raw image data and its size are given.
    * Image width and height size are given.
    */
-  void pushFrame(size_t width, size_t height, unsigned char* data, size_t size);
+  void pushFrame(const cv::Mat &frame);
 
 private:
   /**
    * Windows name
    */
   std::string _name;
-
-  /**
-   * Image format
-   */
-  FrameFormat _format;
-
-  /**
-   * Image stream format
-   */
-  size_t _width;
-  size_t _height;
-
-  /**
-   * Player pipe file descriptor
-   * and child PID
-   */
-  int _pipeFd;
-  int _playerPID;
-
-  /**
-   * Fork current process to create
-   * a new Player window
-   */
-  void createPlayerInstance();
 };
 
 }  // namespace RhIO

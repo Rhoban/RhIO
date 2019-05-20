@@ -1015,7 +1015,6 @@ void ServerRep::valMetaFrame(DataBuffer& buffer)
   DataBuffer rep(reply.data(), reply.size());
   rep.writeType(MsgValMetaFrame);
   rep.writeStr(frame.comment);
-  rep.writeInt((uint64_t)frame.format);
   rep.writeInt(frame.countWatchers);
 
   // Send reply

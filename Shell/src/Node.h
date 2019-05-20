@@ -55,8 +55,6 @@ class NodeStream : public NodeItem
 
 class NodeFrame : public NodeItem
 {
-public:
-  FrameFormat format;
 };
 
 class Node

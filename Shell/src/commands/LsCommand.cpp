@@ -72,27 +72,9 @@ void LsCommand::process(std::vector<std::string> args)
     Terminal::setColor("green", true);
     std::cout << std::setw(21) << frame.name;
 
-    std::string format = "";
-    if (frame.format == FrameFormat::RGB)
-    {
-      format = "RGB";
-    }
-    else if (frame.format == FrameFormat::BGR)
-    {
-      format = "BGR";
-    }
-    else if (frame.format == FrameFormat::YUV)
-    {
-      format = "YUV";
-    }
-
     std::cout << std::left;
     Terminal::setColor("magenta", false);
     std::cout << std::setw(21) << frame.desc;
-
-    std::cout << std::left;
-    Terminal::setColor("magenta", false);
-    std::cout << std::setw(21) << format;
 
     std::cout << std::endl;
     Terminal::clear();

@@ -1,7 +1,6 @@
 #include <string>
 #include <vector>
 #include <stdio.h>
-#include <ncurses.h>
 #include <RhIOClient.hpp>
 #include "NodePool.h"
 #include "Node.h"

@@ -16,7 +16,7 @@ StreamManager::StreamManager(Shell* shell) : alive(true), frequency(DEFAULT_FREQ
   sub->setHandlerFloat(std::bind(&StreamManager::floatHandler, this, _1, _2, _3));
   sub->setHandlerStr(std::bind(&StreamManager::stringHandler, this, _1, _2, _3));
   sub->setHandlerStream(std::bind(&StreamManager::streamHandler, this, _1, _2, _3));
-  sub->setHandlerFrame(std::bind(&StreamManager::frameHandler, this, _1, _2, _3, _4, _5, _6));
+  sub->setHandlerFrame(std::bind(&StreamManager::frameHandler, this, _1, _2, _3));
 
   worker = new std::thread(&StreamManager::update, this);
 }
@@ -141,13 +141,12 @@ void StreamManager::streamHandler(const std::string& name, long timestamp, const
   }
 }
 
-void StreamManager::frameHandler(const std::string& name, long timestamp, size_t width, size_t height,
-                                 unsigned char* data, size_t size)
+void StreamManager::frameHandler(const std::string& name, long timestamp, const cv::Mat &frame)
 {
   (void)timestamp;
   if (handlerFrame)
   {
-    handlerFrame(name, width, height, data, size);
+    handlerFrame(name, frame);
   }
 }
 

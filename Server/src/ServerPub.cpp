@@ -113,35 +113,36 @@ void ServerPub::publishStream(const std::string& name, const std::string& val, i
   }
 }
 
-void ServerPub::publishFrame(const std::string& name, size_t width, size_t height, unsigned char* data, size_t size,
-                             int64_t timestamp)
+void ServerPub::publishFrame(const std::string& name, const cv::Mat& frame, int64_t timestamp)
 {
+  // Encoding image to png
+  std::vector<uchar> buffer;
+  cv::imencode(".png", frame, buffer);
+  unsigned char* data = reinterpret_cast<unsigned char*>(buffer.data());
+  int size = buffer.size();
+
   // Directly allocate message data
   std::lock_guard<std::mutex> lock(_mutexQueueFrame);
   if (_isWritingTo1)
   {
     _queue1Frame.clear();
     _queue1Frame.push_back(
-        zmq::message_t(sizeof(MsgType) + sizeof(int64_t) + name.length() + 4 * sizeof(int64_t) + size));
+        zmq::message_t(sizeof(MsgType) + sizeof(int64_t) + name.length() + 2 * sizeof(int64_t) + size));
     DataBuffer pub(_queue1Frame.back().data(), _queue1Frame.back().size());
     pub.writeType(MsgStreamFrame);
     pub.writeStr(name);
     pub.writeInt(timestamp);
-    pub.writeInt((uint64_t)width);
-    pub.writeInt((uint64_t)height);
     pub.writeData(data, size);
   }
   else
   {
     _queue2Frame.clear();
     _queue2Frame.push_back(
-        zmq::message_t(sizeof(MsgType) + sizeof(int64_t) + name.length() + 4 * sizeof(int64_t) + size));
+        zmq::message_t(sizeof(MsgType) + sizeof(int64_t) + name.length() + 2 * sizeof(int64_t) + size));
     DataBuffer pub(_queue2Frame.back().data(), _queue2Frame.back().size());
     pub.writeType(MsgStreamFrame);
     pub.writeStr(name);
     pub.writeInt(timestamp);
-    pub.writeInt((uint64_t)width);
-    pub.writeInt((uint64_t)height);
     pub.writeData(data, size);
   }
 }

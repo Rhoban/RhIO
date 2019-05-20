@@ -6,17 +6,6 @@
 namespace RhIO
 {
 /**
- * Frame format.
- * (3 channels, 24 bits per pixel).
- */
-enum class FrameFormat : unsigned char
-{
-  RGB,
-  BGR,
-  YUV,
-};
-
-/**
  * Frame
  *
  * Structure for frame
@@ -30,11 +19,6 @@ struct Frame
    */
   std::string name;
   std::string comment;
-
-  /**
-   * Frame format
-   */
-  FrameFormat format;
 
   /**
    * Frame stream current watchers count

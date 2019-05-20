@@ -160,14 +160,17 @@ void ClientSub::subscriberThread(const std::string& endpoint)
       // Stream Frame value
       std::string name = sub.readStr();
       int64_t timestamp = sub.readInt();
-      int64_t width = sub.readInt();
-      int64_t height = sub.readInt();
       size_t size;
+
+      // Decoding image using OpenCV
       unsigned char* data = sub.readData(size);
+      std::vector<uchar> buffer(data, data + size);
+      cv::Mat frame = cv::imdecode(cv::Mat(buffer), 1);
+
       std::lock_guard<std::mutex> lock(_mutex);
       if (_handlerFrame)
       {
-        _handlerFrame(name, timestamp, width, height, data, size);
+        _handlerFrame(name, timestamp, frame);
       }
       continue;
     }

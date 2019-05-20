@@ -6,6 +6,9 @@
 cmake_minimum_required(VERSION 2.8)
 project(RhIOClient)
 
+set(OpenCV_DIR "/usr/local/include/")
+find_package(OpenCV 3.2.0 REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   RhIOCommon
   ZeroMQ
@@ -19,7 +22,7 @@ catkin_package(
 )
 
 #Include sources directory
-include_directories(src ${catkin_INCLUDE_DIRS})
+include_directories(src ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
 
 #Sources files
 set(SOURCES
@@ -31,6 +34,7 @@ set(SOURCES
 set(RHIO_LIBRARIES
     pthread
     ${catkin_LIBRARIES}
+    ${OpenCV_LIBS}
 )
 
 #Enable C++17
