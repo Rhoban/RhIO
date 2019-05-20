@@ -27,8 +27,6 @@ public:
 
   /**
    * Start and stop player instance.
-   * (The proccess is forked
-   * and a pipe is created).
    */
   void start();
   void stop();

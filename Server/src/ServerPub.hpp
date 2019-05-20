@@ -46,8 +46,7 @@ public:
    * frame data and size.
    * The data is immediatly copied.
    */
-  void publishFrame(const std::string& name, const cv::Mat &frame,
-                    int64_t timestamp);
+  void publishFrame(const std::string& name, const cv::Mat& frame, const std::string& encoding, int64_t timestamp);
 
   /**
    * Switch values buffer and publish to Client

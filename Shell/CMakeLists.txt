@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project (RhIOShell)
 
-set(OpenCV_DIR "/usr/local/include/")
 find_package(OpenCV 3.2.0 REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS

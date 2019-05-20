@@ -2,13 +2,7 @@
 #include "Protocol.hpp"
 #include "DataBuffer.hpp"
 
-#ifdef VISION_COMPONENT
 #define WATERMARK 10
-#pragma message("RHIO WATERMARK=10")
-#else
-#define WATERMARK 0
-#pragma message("RHIO WATERMARK disabled")
-#endif
 
 namespace RhIO
 {
@@ -113,11 +107,12 @@ void ServerPub::publishStream(const std::string& name, const std::string& val, i
   }
 }
 
-void ServerPub::publishFrame(const std::string& name, const cv::Mat& frame, int64_t timestamp)
+void ServerPub::publishFrame(const std::string& name, const cv::Mat& frame, const std::string& encoding,
+                             int64_t timestamp)
 {
   // Encoding image to png
   std::vector<uchar> buffer;
-  cv::imencode(".png", frame, buffer);
+  cv::imencode(encoding.c_str(), frame, buffer);
   unsigned char* data = reinterpret_cast<unsigned char*>(buffer.data());
   int size = buffer.size();
 

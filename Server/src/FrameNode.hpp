@@ -56,7 +56,7 @@ public:
    * Frame width and height size are also given.
    * The given data is immediatly copied.
    */
-  void framePush(const std::string& name, const cv::Mat &frame,
+  void framePush(const std::string& name, const cv::Mat& frame, const std::string& encoding = ".jpg",
                  std::chrono::steady_clock::time_point timestamp = std::chrono::steady_clock::now());
 
   /**

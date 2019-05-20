@@ -64,14 +64,14 @@ const Frame& FrameNode::getFrame(const std::string& name) const
 }
 
 void FrameNode::framePush(const std::string& name, const cv::Mat& frame,
-                          std::chrono::steady_clock::time_point timestamp)
+                          const std::string& encoding, std::chrono::steady_clock::time_point timestamp)
 {
   // Forward to subtree
   std::string tmpName;
   FrameNode* child = BaseNode::forwardFunc(name, tmpName, false);
   if (child != nullptr)
   {
-    child->framePush(tmpName, frame, timestamp);
+    child->framePush(tmpName, frame, encoding, timestamp);
     return;
   }
 
@@ -81,7 +81,7 @@ void FrameNode::framePush(const std::string& name, const cv::Mat& frame,
     if (_frames.at(name).countWatchers > 0)
     {
       ServerStream->publishFrame(
-          BaseNode::pwd + separator + name, frame,
+          BaseNode::pwd + separator + name, frame, encoding,
           std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()).count());
     }
   }
