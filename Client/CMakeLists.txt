@@ -15,8 +15,8 @@ find_package(catkin REQUIRED COMPONENTS
 
 # What is published by the 'RhIOClient package'
 catkin_package(
-  INCLUDE_DIRS src
-  LIBRARIES RhIOClient
+  INCLUDE_DIRS src ${OpenCV_INCLUDE_DIRS}
+  LIBRARIES RhIOClient ${OpenCV_LIBS}
   CATKIN_DEPENDS RhIOCommon ZeroMQ
 )
 
