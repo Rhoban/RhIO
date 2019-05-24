@@ -1451,7 +1451,7 @@ void Shell::setFromString(NodeValue nodeValue, std::string str)
 
   if (auto val = Node::asBool(value))
   {
-    val->value = (str != "0" && str != "false");
+    val->value = (str != "0" && str != "false" && str != "");
   }
   else if (auto val = Node::asInt(value))
   {
