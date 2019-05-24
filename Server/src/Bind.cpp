@@ -26,7 +26,9 @@ std::unique_ptr<ValueBuilderBool> Bind::bindNew(const std::string& name, bool& v
   // Add to bind container
   _bindsBool.push_back({ relativeName(_prefix + name), getChildPtr(_prefix + name), &var, policy });
   // Create new value
-  return RhIO::Root.newBool(_prefix + name);
+  auto valueBuilder = RhIO::Root.newBool(_prefix + name);
+  valueBuilder->callback = [&var](bool value) { var = value; };
+  return valueBuilder;
 }
 std::unique_ptr<ValueBuilderInt> Bind::bindNew(const std::string& name, int& var, Policy policy)
 {
@@ -40,7 +42,9 @@ std::unique_ptr<ValueBuilderInt> Bind::bindNew(const std::string& name, int& var
   // Add to bind container
   _bindsInt.push_back({ relativeName(_prefix + name), getChildPtr(_prefix + name), &var, policy });
   // Create new value
-  return RhIO::Root.newInt(_prefix + name);
+  auto valueBuilder = RhIO::Root.newInt(_prefix + name);
+  valueBuilder->callback = [&var](int value) { var = value; };
+  return valueBuilder;
 }
 std::unique_ptr<ValueBuilderInt> Bind::bindNew(const std::string& name, long& var, Policy policy)
 {
@@ -54,7 +58,9 @@ std::unique_ptr<ValueBuilderInt> Bind::bindNew(const std::string& name, long& va
   // Add to bind container
   _bindsLong.push_back({ relativeName(_prefix + name), getChildPtr(_prefix + name), &var, policy });
   // Create new value
-  return RhIO::Root.newInt(_prefix + name);
+  auto valueBuilder = RhIO::Root.newInt(_prefix + name);
+  valueBuilder->callback = [&var](long value) { var = value; };
+  return valueBuilder;
 }
 std::unique_ptr<ValueBuilderFloat> Bind::bindNew(const std::string& name, float& var, Policy policy)
 {
@@ -68,7 +74,9 @@ std::unique_ptr<ValueBuilderFloat> Bind::bindNew(const std::string& name, float&
   // Add to bind container
   _bindsFloat.push_back({ relativeName(_prefix + name), getChildPtr(_prefix + name), &var, policy });
   // Create new value
-  return RhIO::Root.newFloat(_prefix + name);
+  auto valueBuilder = RhIO::Root.newFloat(_prefix + name);
+  valueBuilder->callback = [&var](float value) { var = value; };
+  return valueBuilder;
 }
 std::unique_ptr<ValueBuilderFloat> Bind::bindNew(const std::string& name, double& var, Policy policy)
 {
@@ -82,7 +90,9 @@ std::unique_ptr<ValueBuilderFloat> Bind::bindNew(const std::string& name, double
   // Add to bind container
   _bindsDouble.push_back({ relativeName(_prefix + name), getChildPtr(_prefix + name), &var, policy });
   // Create new value
-  return RhIO::Root.newFloat(_prefix + name);
+  auto valueBuilder = RhIO::Root.newFloat(_prefix + name);
+  valueBuilder->callback = [&var](float value) { var = value; };
+  return valueBuilder;
 }
 std::unique_ptr<ValueBuilderStr> Bind::bindNew(const std::string& name, std::string& var, Policy policy)
 {
@@ -96,7 +106,9 @@ std::unique_ptr<ValueBuilderStr> Bind::bindNew(const std::string& name, std::str
   // Add to bind container
   _bindsStr.push_back({ relativeName(_prefix + name), getChildPtr(_prefix + name), &var, policy });
   // Create new value
-  return RhIO::Root.newStr(_prefix + name);
+  auto valueBuilder = RhIO::Root.newStr(_prefix + name);
+  valueBuilder->callback = [&var](std::string value) { var = value; };
+  return valueBuilder;
 }
 
 void Bind::bind(const std::string& name, bool& var, Policy policy)
@@ -236,7 +248,7 @@ bool Bind::frameIsStreaming(const std::string& name) const
 {
   return node().frameIsStreaming(name);
 }
-void Bind::framePush(const std::string& name, const cv::Mat &frame)
+void Bind::framePush(const std::string& name, const cv::Mat& frame)
 {
   node().framePush(name, frame);
 }

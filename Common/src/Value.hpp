@@ -1,6 +1,7 @@
 #ifndef RHIO_VALUE_HPP
 #define RHIO_VALUE_HPP
 
+#include <iostream>
 #include <string>
 #include <functional>
 #include <chrono>
@@ -140,6 +141,11 @@ public:
   }
 
   /**
+   * This callback is called when the value builder is finished (destructed)
+   */
+  std::function<void(T)> callback;
+
+  /**
    * Optional parameters setters
    */
   ValueBuilder* comment(const std::string& str)
@@ -164,6 +170,10 @@ public:
     if (!_isExisting)
     {
       _value.value = val;
+      if (callback && !_value.persisted)
+      {
+        callback(val);
+      }
       _value.valuePersisted = val;
     }
     return this;
