@@ -8,7 +8,7 @@ FrameStreamViewer::FrameStreamViewer(const std::string& name) : _name(name)
 
 void FrameStreamViewer::start()
 {
-  cv::namedWindow(_name);
+  cv::namedWindow(_name, cv::WINDOW_NORMAL);
 }
 
 void FrameStreamViewer::stop()
