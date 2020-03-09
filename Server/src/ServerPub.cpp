@@ -155,39 +155,47 @@ void ServerPub::sendToClient()
   std::list<PubValStr>& queueStr = (_isWritingTo1) ? _queue2Str : _queue1Str;
   std::list<PubValStr>& queueStream = (_isWritingTo1) ? _queue2Stream : _queue1Stream;
   std::list<zmq::message_t>& queueFrame = (_isWritingTo1) ? _queue2Frame : _queue1Frame;
+  std::set<std::string> alreadySent;
 
   // Sending values Bool
   while (!queueBool.empty())
   {
-    // Allocate message data
-    zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueBool.front().name.length() + sizeof(int64_t) +
-                          sizeof(uint8_t));
-    DataBuffer pub(packet.data(), packet.size());
-    pub.writeType(MsgStreamBool);
-    pub.writeStr(queueBool.front().name);
-    pub.writeInt(queueBool.front().timestamp);
-    pub.writeBool(queueBool.front().value);
+    if (!alreadySent.count(queueBool.front().name))
+    {
+      alreadySent.insert(queueBool.front().name);
+      // Allocate message data
+      zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueBool.front().name.length() + sizeof(int64_t) +
+                            sizeof(uint8_t));
+      DataBuffer pub(packet.data(), packet.size());
+      pub.writeType(MsgStreamBool);
+      pub.writeStr(queueBool.front().name);
+      pub.writeInt(queueBool.front().timestamp);
+      pub.writeBool(queueBool.front().value);
 
-    // Send packet
-    _socket.send(packet);
-
+      // Send packet
+      _socket.send(packet);
+    }
     // Pop value
     queueBool.pop_front();
   }
   // Sending values Int
   while (!queueInt.empty())
   {
-    // Allocate message data
-    zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueInt.front().name.length() + sizeof(int64_t) +
-                          sizeof(int64_t));
-    DataBuffer pub(packet.data(), packet.size());
-    pub.writeType(MsgStreamInt);
-    pub.writeStr(queueInt.front().name);
-    pub.writeInt(queueInt.front().timestamp);
-    pub.writeInt(queueInt.front().value);
+    if (!alreadySent.count(queueInt.front().name))
+    {
+      alreadySent.insert(queueInt.front().name);
+      // Allocate message data
+      zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueInt.front().name.length() + sizeof(int64_t) +
+                            sizeof(int64_t));
+      DataBuffer pub(packet.data(), packet.size());
+      pub.writeType(MsgStreamInt);
+      pub.writeStr(queueInt.front().name);
+      pub.writeInt(queueInt.front().timestamp);
+      pub.writeInt(queueInt.front().value);
 
-    // Send packet
-    _socket.send(packet);
+      // Send packet
+      _socket.send(packet);
+    }
 
     // Pop value
     queueInt.pop_front();
@@ -195,17 +203,21 @@ void ServerPub::sendToClient()
   // Sending values Float
   while (!queueFloat.empty())
   {
-    // Allocate message data
-    zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueFloat.front().name.length() + sizeof(int64_t) +
-                          sizeof(double));
-    DataBuffer pub(packet.data(), packet.size());
-    pub.writeType(MsgStreamFloat);
-    pub.writeStr(queueFloat.front().name);
-    pub.writeInt(queueFloat.front().timestamp);
-    pub.writeFloat(queueFloat.front().value);
+    if (!alreadySent.count(queueFloat.front().name))
+    {
+      alreadySent.insert(queueFloat.front().name);
+      // Allocate message data
+      zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueFloat.front().name.length() + sizeof(int64_t) +
+                            sizeof(double));
+      DataBuffer pub(packet.data(), packet.size());
+      pub.writeType(MsgStreamFloat);
+      pub.writeStr(queueFloat.front().name);
+      pub.writeInt(queueFloat.front().timestamp);
+      pub.writeFloat(queueFloat.front().value);
 
-    // Send packet
-    _socket.send(packet);
+      // Send packet
+      _socket.send(packet);
+    }
 
     // Pop value
     queueFloat.pop_front();
@@ -213,17 +225,22 @@ void ServerPub::sendToClient()
   // Sending values Str
   while (!queueStr.empty())
   {
-    // Allocate message data
-    zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueStr.front().name.length() + sizeof(int64_t) +
-                          sizeof(int64_t) + queueStr.front().value.length());
-    DataBuffer pub(packet.data(), packet.size());
-    pub.writeType(MsgStreamStr);
-    pub.writeStr(queueStr.front().name);
-    pub.writeInt(queueStr.front().timestamp);
-    pub.writeStr(queueStr.front().value);
+    if (!alreadySent.count(queueStr.front().name))
+    {
+      alreadySent.insert(queueStr.front().name);
 
-    // Send packet
-    _socket.send(packet);
+      // Allocate message data
+      zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueStr.front().name.length() + sizeof(int64_t) +
+                            sizeof(int64_t) + queueStr.front().value.length());
+      DataBuffer pub(packet.data(), packet.size());
+      pub.writeType(MsgStreamStr);
+      pub.writeStr(queueStr.front().name);
+      pub.writeInt(queueStr.front().timestamp);
+      pub.writeStr(queueStr.front().value);
+
+      // Send packet
+      _socket.send(packet);
+    }
 
     // Pop value
     queueStr.pop_front();
@@ -231,17 +248,21 @@ void ServerPub::sendToClient()
   // Sending values Stream
   while (!queueStream.empty())
   {
-    // Allocate message data
-    zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueStream.front().name.length() + sizeof(int64_t) +
-                          sizeof(int64_t) + queueStream.front().value.length());
-    DataBuffer pub(packet.data(), packet.size());
-    pub.writeType(MsgStreamStream);
-    pub.writeStr(queueStream.front().name);
-    pub.writeInt(queueStream.front().timestamp);
-    pub.writeStr(queueStream.front().value);
+    if (!alreadySent.count(queueStream.front().name))
+    {
+      alreadySent.insert(queueStream.front().name);
+      // Allocate message data
+      zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueStream.front().name.length() + sizeof(int64_t) +
+                            sizeof(int64_t) + queueStream.front().value.length());
+      DataBuffer pub(packet.data(), packet.size());
+      pub.writeType(MsgStreamStream);
+      pub.writeStr(queueStream.front().name);
+      pub.writeInt(queueStream.front().timestamp);
+      pub.writeStr(queueStream.front().value);
 
-    // Send packet
-    _socket.send(packet);
+      // Send packet
+      _socket.send(packet);
+    }
 
     // Pop value
     queueStream.pop_front();

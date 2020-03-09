@@ -81,9 +81,9 @@ static void runServerPub()
             .count();
     int64_t duration = tsEnd - tsStart;
     // Streaming value at 50Hz
-    if (duration < 20)
+    if (duration < 10)
     {
-      std::this_thread::sleep_for(std::chrono::milliseconds(20 - duration));
+      std::this_thread::sleep_for(std::chrono::milliseconds(10 - duration));
     }
   }
 }
