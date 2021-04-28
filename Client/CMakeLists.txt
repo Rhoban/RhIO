@@ -1,7 +1,3 @@
-###
-### Rhoban Input Output Libray
-### Rhoban 2015
-###
 cmake_minimum_required(VERSION 3.16.3)
 project(RhIOClient)
 
@@ -10,9 +6,14 @@ add_library(RhIOClient SHARED
     src/ClientReq.cpp
     src/ClientSub.cpp
 )
-target_include_directories(RhIOClient PRIVATE ${OpenCV_INCLUDE_DIRS})
-target_link_libraries(RhIOClient PRIVATE
+
+target_include_directories(RhIOClient PUBLIC
+  ${OpenCV_INCLUDE_DIRS}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+)
+target_link_libraries(RhIOClient PUBLIC
     ${OpenCV_LIBS}
-    libzmq
+    cppzmq
     Threads::Threads
+    RhIOCommon
 )

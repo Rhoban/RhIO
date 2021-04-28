@@ -1,17 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16.3)
 project (RhIOShell)
-
-find_package(OpenCV 3.2.0 REQUIRED)
-
-find_package(catkin REQUIRED COMPONENTS
-  RhIOClient
-  jsoncpp
-  )
-
-catkin_package(
-  INCLUDE_DIRS .
-  CATKIN_DEPENDS RhIOClient jsoncpp
-)
 
 # Enable colors ?
 option (COLORS "Enable colors" ON)
@@ -22,7 +10,15 @@ option (CURSES "Enable curses (libncurses5-dev)" ON)
 # Enable log img
 option (LOGIMG "Enable log img (libgd-dev required)" OFF)
 
-set (SOURCES
+add_executable(rhio)
+target_include_directories(rhio PRIVATE ${OpenCV_INCLUDE_DIRS} src/)
+target_link_libraries(rhio PRIVATE
+  jsoncpp_lib
+  Threads::Threads
+  RhIOClient
+  ${OpenCV_LIBS}
+)
+target_sources(rhio PRIVATE
     src/commands/Command.cpp
     src/commands/ClearCommand.cpp
     src/commands/HelpCommand.cpp
@@ -57,51 +53,25 @@ set (SOURCES
     src/main.cpp
 )
 
-include_directories (src ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-
-set (EXTRA_LIBS
-    pthread 
-    ${catkin_LIBRARIES}
-    ${OpenCV_LIBS}
-)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall -Wno-reorder")
-
 if (COLORS)
-    add_definitions(-DHAS_COLORS)
+    target_compile_definitions(rhio PRIVATE -DHAS_COLORS)
 endif ()
 
 # Logging img
 if (LOGIMG)
-    add_definitions(-DHAS_LOGIMG)
-    set (SOURCES
-        ${SOURCES}
-        src/commands/LogImgCommand.cpp
-        )
-    set (EXTRA_LIBS
-        ${EXTRA_LIBS}
-        gd
-    )
+    target_compile_definitions(rhio PRIVATE -DHAS_LOGIMG)
+    target_sources(rhio PRIVATE src/commands/LogImgCommand.cpp)
+    target_link_libraries(rhio PRIVATE gd)
 endif ()
 
 # Adding curses sources and library
 if (CURSES)
-    add_definitions(-DHAS_CURSES)
-    set (SOURCES
-        ${SOURCES}
+    target_compile_definitions(rhio PRIVATE -DHAS_CURSES)
+    target_sources(rhio PRIVATE
         src/commands/TuneCommand.cpp
         src/Curse.cpp
     )
-    set (EXTRA_LIBS
-        ${EXTRA_LIBS}
-        ncurses form panel
-    )
+    target_link_libraries(rhio PRIVATE ncurses form panel)
 endif ()
 
-# Adding shell binary
-add_executable(rhio ${SOURCES})
-target_link_libraries (rhio jsoncpp_lib${EXTRA_LIBS})
-
 install(TARGETS rhio DESTINATION bin)
-

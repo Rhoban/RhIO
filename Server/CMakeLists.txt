@@ -1,43 +1,28 @@
-###
-### Rhoban Input Output Libray
-### Rhoban 2015
-###
-
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.16.3)
 project(RhIOServer)
-
-find_package(OpenCV 3.2.0 REQUIRED)
-
-find_package(catkin REQUIRED COMPONENTS
-  RhIOCommon
-  ZeroMQ
-  )
-
-# What is published by the 'RhIOServer package'
-catkin_package(
-  INCLUDE_DIRS src
-  LIBRARIES RhIO
-  CATKIN_DEPENDS RhIOCommon ZeroMQ
-)
-
-#Option for compiling Examples
-option(BUILD_RHIO_EXAMPLES "Build RhIO Examples" OFF)
 
 #The server automatically start on program startup (RhIO::start())
 option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" OFF)
-
-#
 option (BUILD_KID_SIZE_VISION "Build the Vision" ON)
+
+add_library(RhIO SHARED)
+target_link_libraries(RhIO PUBLIC
+  RhIOCommon
+  jsoncpp_lib
+  cppzmq
+  Threads::Threads
+  ${OpenCV_LIBS}
+)
+target_include_directories(RhIO PUBLIC
+  ${OpenCV_INCLUDE_DIRS}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+)
+
 if (BUILD_KID_SIZE_VISION)
-   add_definitions(-DVISION_COMPONENT)
+   target_compile_definitions(RhIO PRIVATE -DVISION_COMPONENT)
 endif ()
 
-
-#Include sources directory
-include_directories(src ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
-
-#Sources files
-set(SOURCES
+target_sources(RhIO PRIVATE
     src/Bind.cpp
     src/CommandNode.cpp
     src/IONode.cpp
@@ -51,40 +36,11 @@ set(SOURCES
     src/ValueNode.cpp
 )
 
-#Needed Libraries
-set(RHIO_LIBRARIES
-    pthread
-    ${catkin_LIBRARIES}
-    ${OpenCV_LIBS}
-)
-
 if(RHIO_SERVER_AUTOSTART)
-    set (SOURCES ${SOURCES} src/autostart.cpp)
+  target_sources(RhIO PRIVATE src/autostart.cpp)
 endif()
 
-#Enable C++17
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
-#Enable compiler Warning
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
-
-#Build Server and Client as shared library
-add_library(RhIO SHARED ${SOURCES})
-target_link_libraries(RhIO ${RHIO_LIBRARIES})
-
 #Build Examples
-if (BUILD_RHIO_EXAMPLES)
-    add_executable(exampleIntro Examples/exampleIntro.cpp)
-    target_link_libraries(exampleIntro RhIO)
-
-    add_executable(exampleValues Examples/exampleValues.cpp)
-    target_link_libraries(exampleValues RhIO)
-
-    add_executable(exampleStreamsAndCommands Examples/exampleStreamsAndCommands.cpp)
-    target_link_libraries(exampleStreamsAndCommands RhIO)
-
-    add_executable(exampleFrames Examples/exampleFrames.cpp)
-    target_link_libraries(exampleFrames RhIO)
-
-    add_executable(exampleBind Examples/exampleBind.cpp)
-    target_link_libraries(exampleBind RhIO)
-endif (BUILD_RHIO_EXAMPLES)
+if(RHIO_BUILD_EXAMPLES)
+  add_subdirectory(Examples)
+endif()
