@@ -25,6 +25,8 @@ ServerPub* ServerStream = nullptr;
  */
 static std::atomic<int> initServerCount;
 
+std::mutex rep_mutex;
+
 /**
  * Server Pub and Rep thread instance
  * and quit state
@@ -40,7 +42,7 @@ static bool serverStarting = false;
  * Reply Server main loop handling
  * incomming Client request
  */
-static void runServerRep()
+static void runServerRep(bool use_mutex = false, bool non_blocking = false)
 {
   std::stringstream ss;
   ss << "tcp://*:" << (port + 1);
@@ -51,7 +53,13 @@ static void runServerRep()
 
   while (!serverThreadRepOver)
   {
-    server.handleRequest();
+    if(use_mutex)
+      rep_mutex.lock();
+
+    server.handleRequest(non_blocking);
+
+    if(use_mutex)
+      rep_mutex.unlock();
   }
 }
 
@@ -93,7 +101,7 @@ bool started()
   return serverStarting;
 }
 
-void start(unsigned int port_)
+void start(unsigned int port_, bool use_rep_mutex, bool non_blocking_rep)
 {
   serverStarting = true;
   port = port_;
@@ -103,7 +111,7 @@ void start(unsigned int port_)
   // Start Server threads
   serverThreadRepOver = false;
   serverThreadPubOver = false;
-  serverThreadRep = new std::thread(runServerRep);
+  serverThreadRep = new std::thread(runServerRep, use_rep_mutex, non_blocking_rep);
   serverThreadPub = new std::thread(runServerPub);
 
   // Wait until both Server are initialized

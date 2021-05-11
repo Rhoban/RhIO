@@ -4,6 +4,8 @@
 #include "Protocol.hpp"
 #include "IONode.hpp"
 #include "Bind.hpp"
+#include <zmq.hpp>
+#include <mutex>
 
 namespace RhIO
 {
@@ -12,6 +14,8 @@ namespace RhIO
  * Root of ParameterNode tree
  */
 extern IONode Root;
+
+extern std::mutex rep_mutex;
 
 /**
  * Internal pointer to the instance of
@@ -23,7 +27,9 @@ extern ServerPub* ServerStream;
 /**
  * Starts the RhIO server
  */
-void start(unsigned int port = ServersPortBase);
+void start(unsigned int port = ServersPortBase,
+           bool use_rep_mutex = false,
+           bool non_blocking_rep = false);
 void stop();
 /**
  * Has RhIO started?

@@ -23,11 +23,14 @@ ServerRep::ServerRep(std::string endpoint) : _context(1), _socket(_context, ZMQ_
   _socket.setsockopt(ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
 }
 
-void ServerRep::handleRequest()
+void ServerRep::handleRequest(bool non_blocking)
 {
+  auto recv_flag = (non_blocking) ? zmq::recv_flags::dontwait : zmq::recv_flags::none;
+  auto send_flag = (non_blocking) ? zmq::send_flags::dontwait : zmq::send_flags::none;
+
   // Wait for client request
   zmq::message_t request;
-  bool success = _socket.recv(&request);
+  auto success = _socket.recv(request, recv_flag);
 
   // Return if the socket read timeout
   if (!success)
@@ -43,7 +46,7 @@ void ServerRep::handleRequest()
     // Check empty message
     if (req.size() == 0)
     {
-      error("Empty message");
+      error("Empty message", send_flag);
       return;
     }
     // Select answer with message type
@@ -51,125 +54,125 @@ void ServerRep::handleRequest()
     switch (type)
     {
       case MsgAskChildren:
-        listChildren(req);
+        listChildren(req, send_flag);
         return;
       case MsgAskValuesBool:
-        listValuesBool(req);
+        listValuesBool(req, send_flag);
         return;
       case MsgAskValuesInt:
-        listValuesInt(req);
+        listValuesInt(req, send_flag);
         return;
       case MsgAskValuesFloat:
-        listValuesFloat(req);
+        listValuesFloat(req, send_flag);
         return;
       case MsgAskValuesStr:
-        listValuesStr(req);
+        listValuesStr(req, send_flag);
         return;
       case MsgGetBool:
-        getBool(req);
+        getBool(req, send_flag);
         return;
       case MsgGetInt:
-        getInt(req);
+        getInt(req, send_flag);
         return;
       case MsgGetFloat:
-        getFloat(req);
+        getFloat(req, send_flag);
         return;
       case MsgGetStr:
-        getStr(req);
+        getStr(req, send_flag);
         return;
       case MsgSetBool:
-        setBool(req);
+        setBool(req, send_flag);
         return;
       case MsgSetInt:
-        setInt(req);
+        setInt(req, send_flag);
         return;
       case MsgSetFloat:
-        setFloat(req);
+        setFloat(req, send_flag);
         return;
       case MsgSetStr:
-        setStr(req);
+        setStr(req, send_flag);
         return;
       case MsgAskMetaBool:
-        valMetaBool(req);
+        valMetaBool(req, send_flag);
         return;
       case MsgAskMetaInt:
-        valMetaInt(req);
+        valMetaInt(req, send_flag);
         return;
       case MsgAskMetaFloat:
-        valMetaFloat(req);
+        valMetaFloat(req, send_flag);
         return;
       case MsgAskMetaStr:
-        valMetaStr(req);
+        valMetaStr(req, send_flag);
         return;
       case MsgEnableStreamingValue:
-        enableStreamingValue(req);
+        enableStreamingValue(req, send_flag);
         return;
       case MsgDisableStreamingValue:
-        disableStreamingValue(req);
+        disableStreamingValue(req, send_flag);
         return;
       case MsgEnableStreamingStream:
-        enableStreamingStream(req);
+        enableStreamingStream(req, send_flag);
         return;
       case MsgDisableStreamingStream:
-        disableStreamingStream(req);
+        disableStreamingStream(req, send_flag);
         return;
       case MsgEnableStreamingFrame:
-        enableStreamingFrame(req);
+        enableStreamingFrame(req, send_flag);
         return;
       case MsgDisableStreamingFrame:
-        disableStreamingFrame(req);
+        disableStreamingFrame(req, send_flag);
         return;
       case MsgAskSave:
-        save(req);
+        save(req, send_flag);
         return;
       case MsgAskLoad:
-        load(req);
+        load(req, send_flag);
         return;
       case MsgAskCommands:
-        listCommands(req);
+        listCommands(req, send_flag);
         return;
       case MsgAskAllCommands:
-        listAllCommands(req);
+        listAllCommands(req, send_flag);
         return;
       case MsgAskCommandDescription:
-        commandDescription(req);
+        commandDescription(req, send_flag);
         return;
       case MsgAskCall:
-        callResult(req);
+        callResult(req, send_flag);
         return;
       case MsgAskStreams:
-        listStreams(req);
+        listStreams(req, send_flag);
         return;
       case MsgAskDescriptionStream:
-        descriptionStream(req);
+        descriptionStream(req, send_flag);
         return;
       case MsgAskFrames:
-        listFrames(req);
+        listFrames(req, send_flag);
         return;
       case MsgAskMetaFrame:
-        valMetaFrame(req);
+        valMetaFrame(req, send_flag);
         return;
       default:
         // Unknown message type
-        error("Message type not implemented");
+        error("Message type not implemented", send_flag);
         return;
     }
   }
   catch (const std::logic_error& e)
   {
-    error("RhIOServer logic exception: " + std::string(e.what()));
+    error("RhIOServer logic exception: " + std::string(e.what()), send_flag);
   }
   catch (const std::runtime_error& e)
   {
-    error("RhIOServer runtime exception: " + std::string(e.what()));
+    error("RhIOServer runtime exception: " + std::string(e.what()), send_flag);
   }
 }
 
-void ServerRep::listChildren(DataBuffer& buffer)
+void ServerRep::listChildren(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -193,14 +196,14 @@ void ServerRep::listChildren(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::listValuesBool(DataBuffer& buffer)
+void ServerRep::listValuesBool(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -224,13 +227,13 @@ void ServerRep::listValuesBool(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::listValuesInt(DataBuffer& buffer)
+void ServerRep::listValuesInt(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -254,13 +257,13 @@ void ServerRep::listValuesInt(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::listValuesFloat(DataBuffer& buffer)
+void ServerRep::listValuesFloat(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -284,13 +287,13 @@ void ServerRep::listValuesFloat(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::listValuesStr(DataBuffer& buffer)
+void ServerRep::listValuesStr(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -314,17 +317,17 @@ void ServerRep::listValuesStr(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::getBool(DataBuffer& buffer)
+void ServerRep::getBool(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeBool)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -335,16 +338,16 @@ void ServerRep::getBool(DataBuffer& buffer)
   rep.writeBool(RhIO::Root.getBool(name));
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::getInt(DataBuffer& buffer)
+void ServerRep::getInt(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeInt)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -355,16 +358,16 @@ void ServerRep::getInt(DataBuffer& buffer)
   rep.writeInt(RhIO::Root.getInt(name));
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::getFloat(DataBuffer& buffer)
+void ServerRep::getFloat(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeFloat)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -375,16 +378,16 @@ void ServerRep::getFloat(DataBuffer& buffer)
   rep.writeFloat(RhIO::Root.getFloat(name));
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::getStr(DataBuffer& buffer)
+void ServerRep::getStr(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeStr)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -396,17 +399,17 @@ void ServerRep::getStr(DataBuffer& buffer)
   rep.writeStr(str);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::setBool(DataBuffer& buffer)
+void ServerRep::setBool(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeBool)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -419,16 +422,16 @@ void ServerRep::setBool(DataBuffer& buffer)
   rep.writeType(MsgSetOk);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::setInt(DataBuffer& buffer)
+void ServerRep::setInt(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeInt)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -441,16 +444,16 @@ void ServerRep::setInt(DataBuffer& buffer)
   rep.writeType(MsgSetOk);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::setFloat(DataBuffer& buffer)
+void ServerRep::setFloat(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeFloat)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -463,16 +466,16 @@ void ServerRep::setFloat(DataBuffer& buffer)
   rep.writeType(MsgSetOk);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::setStr(DataBuffer& buffer)
+void ServerRep::setStr(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeStr)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -485,17 +488,17 @@ void ServerRep::setStr(DataBuffer& buffer)
   rep.writeType(MsgSetOk);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::valMetaBool(DataBuffer& buffer)
+void ServerRep::valMetaBool(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeBool)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -517,16 +520,16 @@ void ServerRep::valMetaBool(DataBuffer& buffer)
   rep.writeBool(val.valuePersisted);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::valMetaInt(DataBuffer& buffer)
+void ServerRep::valMetaInt(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeInt)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -548,16 +551,16 @@ void ServerRep::valMetaInt(DataBuffer& buffer)
   rep.writeInt(val.valuePersisted);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::valMetaFloat(DataBuffer& buffer)
+void ServerRep::valMetaFloat(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeFloat)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -579,16 +582,16 @@ void ServerRep::valMetaFloat(DataBuffer& buffer)
   rep.writeFloat(val.valuePersisted);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::valMetaStr(DataBuffer& buffer)
+void ServerRep::valMetaStr(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
   // Check value name
   if (RhIO::Root.getValueType(name) != TypeStr)
   {
-    error("Unknown value name: " + name);
+    error("Unknown value name: " + name, send_flag);
     return;
   }
 
@@ -611,10 +614,10 @@ void ServerRep::valMetaStr(DataBuffer& buffer)
   rep.writeStr(val.valuePersisted);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::enableStreamingValue(DataBuffer& buffer)
+void ServerRep::enableStreamingValue(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked value name
   std::string name = buffer.readStr();
@@ -627,9 +630,9 @@ void ServerRep::enableStreamingValue(DataBuffer& buffer)
   rep.writeType(MsgStreamingOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::disableStreamingValue(DataBuffer& buffer)
+void ServerRep::disableStreamingValue(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked value name
   std::string name = buffer.readStr();
@@ -642,10 +645,10 @@ void ServerRep::disableStreamingValue(DataBuffer& buffer)
   rep.writeType(MsgStreamingOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::enableStreamingStream(DataBuffer& buffer)
+void ServerRep::enableStreamingStream(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked stream name
   std::string name = buffer.readStr();
@@ -658,9 +661,9 @@ void ServerRep::enableStreamingStream(DataBuffer& buffer)
   rep.writeType(MsgStreamingOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::disableStreamingStream(DataBuffer& buffer)
+void ServerRep::disableStreamingStream(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked stream name
   std::string name = buffer.readStr();
@@ -673,10 +676,10 @@ void ServerRep::disableStreamingStream(DataBuffer& buffer)
   rep.writeType(MsgStreamingOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::enableStreamingFrame(DataBuffer& buffer)
+void ServerRep::enableStreamingFrame(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked frame name
   std::string name = buffer.readStr();
@@ -689,9 +692,9 @@ void ServerRep::enableStreamingFrame(DataBuffer& buffer)
   rep.writeType(MsgStreamingOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::disableStreamingFrame(DataBuffer& buffer)
+void ServerRep::disableStreamingFrame(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked frame name
   std::string name = buffer.readStr();
@@ -704,10 +707,10 @@ void ServerRep::disableStreamingFrame(DataBuffer& buffer)
   rep.writeType(MsgStreamingOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::save(DataBuffer& buffer)
+void ServerRep::save(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
@@ -715,7 +718,7 @@ void ServerRep::save(DataBuffer& buffer)
   std::string path = buffer.readStr();
 
   // Get asked node
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -728,9 +731,9 @@ void ServerRep::save(DataBuffer& buffer)
   rep.writeType(MsgPersistOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::load(DataBuffer& buffer)
+void ServerRep::load(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
@@ -738,7 +741,7 @@ void ServerRep::load(DataBuffer& buffer)
   std::string path = buffer.readStr();
 
   // Get asked node
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -751,14 +754,14 @@ void ServerRep::load(DataBuffer& buffer)
   rep.writeType(MsgPersistOK);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::listCommands(DataBuffer& buffer)
+void ServerRep::listCommands(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -782,10 +785,10 @@ void ServerRep::listCommands(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::listAllCommands(DataBuffer& buffer)
+void ServerRep::listAllCommands(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   (void)buffer;
 
@@ -857,17 +860,17 @@ void ServerRep::listAllCommands(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::commandDescription(DataBuffer& buffer)
+void ServerRep::commandDescription(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked command name
   std::string name = buffer.readStr();
   // Check value name
   if (!RhIO::Root.commandExist(name))
   {
-    error("Unknown command name: " + name);
+    error("Unknown command name: " + name, send_flag);
     return;
   }
 
@@ -879,16 +882,16 @@ void ServerRep::commandDescription(DataBuffer& buffer)
   rep.writeStr(str);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
-void ServerRep::callResult(DataBuffer& buffer)
+void ServerRep::callResult(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked command name
   std::string name = buffer.readStr();
   // Check value name
   if (!RhIO::Root.commandExist(name))
   {
-    error("Unknown command name: " + name);
+    error("Unknown command name: " + name, send_flag);
     return;
   }
 
@@ -909,14 +912,14 @@ void ServerRep::callResult(DataBuffer& buffer)
   rep.writeStr(result);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::listStreams(DataBuffer& buffer)
+void ServerRep::listStreams(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -940,17 +943,17 @@ void ServerRep::listStreams(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::descriptionStream(DataBuffer& buffer)
+void ServerRep::descriptionStream(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked stream name
   std::string name = buffer.readStr();
   // Check stream name
   if (!RhIO::Root.streamExist(name))
   {
-    error("Unknown stream name: " + name);
+    error("Unknown stream name: " + name, send_flag);
     return;
   }
 
@@ -963,14 +966,14 @@ void ServerRep::descriptionStream(DataBuffer& buffer)
   rep.writeStr(comment);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::listFrames(DataBuffer& buffer)
+void ServerRep::listFrames(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked node name
   std::string name = buffer.readStr();
-  RhIO::IONode* node = getNode(name);
+  RhIO::IONode* node = getNode(name, send_flag);
   if (node == nullptr)
     return;
 
@@ -994,17 +997,17 @@ void ServerRep::listFrames(DataBuffer& buffer)
   }
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::valMetaFrame(DataBuffer& buffer)
+void ServerRep::valMetaFrame(DataBuffer& buffer, zmq::send_flags send_flag)
 {
   // Get asked stream name
   std::string name = buffer.readStr();
   // Check stream name
   if (!RhIO::Root.frameExist(name))
   {
-    error("Unknown frame name: " + name);
+    error("Unknown frame name: " + name, send_flag);
     return;
   }
 
@@ -1018,10 +1021,10 @@ void ServerRep::valMetaFrame(DataBuffer& buffer)
   rep.writeInt(frame.countWatchers);
 
   // Send reply
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-void ServerRep::error(const std::string& msg)
+void ServerRep::error(const std::string& msg, zmq::send_flags send_flag)
 {
   // Initialize message data
   zmq::message_t reply(sizeof(MsgType) + sizeof(int64_t) + msg.length());
@@ -1035,10 +1038,10 @@ void ServerRep::error(const std::string& msg)
   std::cerr << "RhIOServer error: " << msg << std::endl;
 
   // Send
-  _socket.send(reply);
+  _socket.send(reply, send_flag);
 }
 
-RhIO::IONode* ServerRep::getNode(const std::string& name)
+RhIO::IONode* ServerRep::getNode(const std::string& name, zmq::send_flags send_flag)
 {
   RhIO::IONode* node = &RhIO::Root;
   if (name != "" && name != "ROOT" && name != "/")
@@ -1049,7 +1052,7 @@ RhIO::IONode* ServerRep::getNode(const std::string& name)
     }
     else
     {
-      error("Unknown node name: " + name);
+      error("Unknown node name: " + name, send_flag);
       return nullptr;
     }
   }
