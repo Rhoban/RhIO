@@ -9,7 +9,7 @@ add_library(RhIO SHARED)
 target_link_libraries(RhIO PUBLIC
   RhIOCommon
   jsoncpp_lib
-  cppzmq
+  libzmq
   Threads::Threads
   ${OpenCV_LIBS}
 )
@@ -17,7 +17,6 @@ target_include_directories(RhIO PUBLIC
   ${OpenCV_INCLUDE_DIRS}
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
 )
-set_target_properties(RhIO PROPERTIES UNITY_BUILD ON)
 
 
 if (BUILD_KID_SIZE_VISION)

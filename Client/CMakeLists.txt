@@ -13,7 +13,7 @@ target_include_directories(RhIOClient PUBLIC
 )
 target_link_libraries(RhIOClient PUBLIC
     ${OpenCV_LIBS}
-    cppzmq
+    libzmq
     Threads::Threads
     RhIOCommon
 )
