@@ -7,7 +7,7 @@ project(RhIO
 option(RHIO_BUILD_TESTS "Build RhIO Tests" OFF)
 option(RHIO_BUILD_EXAMPLES "Build RhIO Examples" OFF)
 
-find_package(OpenCV 4.2.0 REQUIRED)
+find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
 
 #Enable C++17
