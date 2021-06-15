@@ -10,6 +10,7 @@ target_link_libraries(RhIO PUBLIC
   RhIOCommon
   jsoncpp_lib
   libzmq
+  cppzmq
   Threads::Threads
   ${OpenCV_LIBS}
 )

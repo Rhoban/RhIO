@@ -2,4 +2,4 @@
 deps:
   - rhobandeps/jsoncpp#cmake_only
   - rhobandeps/libzmq#wks
-  - rhobandeps/zmqpp
+  - rhobandeps/cppzmq
