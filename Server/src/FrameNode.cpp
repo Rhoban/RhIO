@@ -63,8 +63,8 @@ const Frame& FrameNode::getFrame(const std::string& name) const
   }
 }
 
-void FrameNode::framePush(const std::string& name, const cv::Mat& frame,
-                          const std::string& encoding, std::chrono::steady_clock::time_point timestamp)
+void FrameNode::framePush(const std::string& name, const cv::Mat& frame, const std::string& encoding,
+                          std::chrono::steady_clock::time_point timestamp)
 {
   // Forward to subtree
   std::string tmpName;

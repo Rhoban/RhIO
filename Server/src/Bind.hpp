@@ -104,7 +104,7 @@ public:
    */
   void newFrame(const std::string& name, const std::string& comment);
   bool frameIsStreaming(const std::string& name) const;
-  void framePush(const std::string& name, const cv::Mat &frame);
+  void framePush(const std::string& name, const cv::Mat& frame);
 
   /**
    * Import RhIO global values to

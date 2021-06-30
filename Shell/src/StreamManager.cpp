@@ -141,7 +141,7 @@ void StreamManager::streamHandler(const std::string& name, long timestamp, const
   }
 }
 
-void StreamManager::frameHandler(const std::string& name, long timestamp, const cv::Mat &frame)
+void StreamManager::frameHandler(const std::string& name, long timestamp, const cv::Mat& frame)
 {
   (void)timestamp;
   if (handlerFrame)

@@ -36,7 +36,7 @@ public:
    * Raw image data and its size are given.
    * Image width and height size are given.
    */
-  void pushFrame(const cv::Mat &frame);
+  void pushFrame(const cv::Mat& frame);
 
 private:
   /**
