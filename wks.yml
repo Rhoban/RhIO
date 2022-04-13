@@ -1,5 +1,5 @@
 
 deps:
   - rhobandeps/jsoncpp#cmake_only
-  - rhobandeps/libzmq#wks
+  - rhobandeps/libzmq
   - rhobandeps/cppzmq
