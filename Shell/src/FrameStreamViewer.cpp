@@ -18,6 +18,7 @@ void FrameStreamViewer::stop()
 
 void FrameStreamViewer::pushFrame(const cv::Mat& frame)
 {
+  cv::resizeWindow(_name, frame.cols, frame.rows);
   cv::imshow(_name, frame);
   cv::imwrite("/tmp/out.png", frame);
   cv::waitKey(1);
