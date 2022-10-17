@@ -3,6 +3,8 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":rhio_client",
+        ":rhio_common",
+        ":rhio_server",
     ],
 )
 
