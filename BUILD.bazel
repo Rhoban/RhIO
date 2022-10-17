@@ -73,6 +73,7 @@ cc_library(
         "@opencv",
     ],
     strip_include_prefix = "Server/src",
+    linkopts = ["-pthread"],
 )
 
 cc_library(
