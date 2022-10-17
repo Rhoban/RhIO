@@ -1,44 +1,10 @@
+licenses(["unencumbered"])  # Public Domain or MIT
+
+exports_files(["LICENSE"])
+
 cc_library(
-    name = "rhio",
     visibility = ["//visibility:public"],
-    deps = [
-        # ":rhio_client",
-        ":rhio_common",
-        ":rhio_server",
-    ],
-)
-
-cc_library(
-    name = "rhio_client",
-    srcs = [
-        "Client/src/ClientReq.cpp",
-        "Client/src/ClientSub.cpp",
-    ],
-    hdrs = [
-        "Client/src/ClientReq.hpp",
-        "Client/src/ClientSub.hpp",
-        "Client/src/RhIOClient.hpp",
-    ],
-)
-
-cc_library(
-    name = "rhio_common",
-    srcs = [
-        "Common/src/DataBuffer.cpp",
-        "Common/src/Protocol.cpp",
-    ],
-    hdrs = [
-        "Common/src/DataBuffer.hpp",
-        "Common/src/Frame.hpp",
-        "Common/src/Protocol.hpp",
-        "Common/src/Stream.hpp",
-        "Common/src/Value.hpp",
-    ],
-    strip_include_prefix = "Common/src",
-)
-
-cc_library(
-    name = "rhio_server",
+    name = "rhio",
     srcs = [
         "Server/src/Bind.cpp",
         "Server/src/CommandNode.cpp",
@@ -77,100 +43,17 @@ cc_library(
 )
 
 cc_library(
-    name = "rhio_shell_commands",
+    name = "rhio_common",
     srcs = [
-        "Server/src/commands/CatCommand.cpp",
-        "Server/src/commands/CdCommand.cpp",
-        "Server/src/commands/ClearCommand.cpp",
-        "Server/src/commands/Command.cpp",
-        "Server/src/commands/DelayCommand.cpp",
-        "Server/src/commands/DiffCommand.cpp",
-        "Server/src/commands/HelpCommand.cpp",
-        "Server/src/commands/LoadCommand.cpp",
-        "Server/src/commands/LogCommand.cpp",
-        "Server/src/commands/LogImgCommand.cpp",
-        "Server/src/commands/LsCommand.cpp",
-        "Server/src/commands/PadCommand.cpp",
-        "Server/src/commands/Plot2DCommand.cpp",
-        "Server/src/commands/Plot3DCommand.cpp",
-        "Server/src/commands/PlotCommand.cpp",
-        "Server/src/commands/RemoteCommand.cpp",
-        "Server/src/commands/RepeatCommand.cpp",
-        "Server/src/commands/SaveCommand.cpp",
-        "Server/src/commands/SyncCommand.cpp",
-        "Server/src/commands/TreeCommand.cpp",
-        "Server/src/commands/TuneCommand.cpp",
-        "Server/src/commands/ViewCommand.cpp",
-        "Server/src/commands/WatchCommand.cpp",
+        "Common/src/DataBuffer.cpp",
+        "Common/src/Protocol.cpp",
     ],
     hdrs = [
-        "Server/src/commands/CatCommand.hpp",
-        "Server/src/commands/CdCommand.hpp",
-        "Server/src/commands/ClearCommand.hpp",
-        "Server/src/commands/Command.hpp",
-        "Server/src/commands/DelayCommand.hpp",
-        "Server/src/commands/DiffCommand.hpp",
-        "Server/src/commands/HelpCommand.hpp",
-        "Server/src/commands/LoadCommand.hpp",
-        "Server/src/commands/LogCommand.hpp",
-        "Server/src/commands/LogImgCommand.hpp",
-        "Server/src/commands/LsCommand.hpp",
-        "Server/src/commands/PadCommand.hpp",
-        "Server/src/commands/Plot2DCommand.hpp",
-        "Server/src/commands/Plot3DCommand.hpp",
-        "Server/src/commands/PlotCommand.hpp",
-        "Server/src/commands/RemoteCommand.hpp",
-        "Server/src/commands/RepeatCommand.hpp",
-        "Server/src/commands/SaveCommand.hpp",
-        "Server/src/commands/SyncCommand.hpp",
-        "Server/src/commands/TreeCommand.hpp",
-        "Server/src/commands/TuneCommand.hpp",
-        "Server/src/commands/ViewCommand.hpp",
-        "Server/src/commands/WatchCommand.hpp",
+        "Common/src/DataBuffer.hpp",
+        "Common/src/Frame.hpp",
+        "Common/src/Protocol.hpp",
+        "Common/src/Stream.hpp",
+        "Common/src/Value.hpp",
     ],
-)
-
-cc_library(
-    name = "rhio_shell_joystick",
-    srcs = [
-        "Server/src/joystick/Joystick.cpp",
-    ],
-    hdrs = [
-        "Server/src/joystick/Joystick.h",
-    ],
-)
-
-cc_library(
-    name = "rhio_shell",
-    srcs = [
-        "Server/src/Completion.cpp",
-        "Server/src/CSV.cpp",
-        "Server/src/Curse.cpp",
-        "Server/src/FrameStreamViewer.cpp",
-        "Server/src/GnuPlot.cpp",
-        "Server/src/main.cpp",
-        "Server/src/Node.cpp",
-        "Server/src/NodePool.cpp",
-        "Server/src/Shell.cpp",
-        "Server/src/StreamManager.cpp",
-        "Server/src/Terminal.cpp",
-    ],
-    hdrs = [
-        "Server/src/Client.h",
-        "Server/src/Completion.h",
-        "Server/src/CSV.h",
-        "Server/src/Curse.h",
-        "Server/src/FrameStreamViewer.hpp",
-        "Server/src/GnuPlot.h",
-        "Server/src/Node.h",
-        "Server/src/NodePool.h",
-        "Server/src/Shell.h",
-        "Server/src/StreamManager.h",
-        "Server/src/Terminal.h",
-        "Server/src/utils.h",
-    ],
-    deps = [
-        ":rhio_shell_commands",
-        ":rhio_shell_joystick",
-    ],
+    strip_include_prefix = "Common/src",
 )
