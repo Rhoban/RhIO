@@ -173,7 +173,7 @@ cc_library(
     ],
 )
 
-new_local_repository(
+native.new_local_repository(
     name = "opencv",
     path = "/usr/include",
     build_file_content = """
