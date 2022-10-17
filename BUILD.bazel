@@ -1,0 +1,59 @@
+licenses(["unencumbered"])  # Public Domain or MIT
+
+exports_files(["LICENSE"])
+
+cc_library(
+    visibility = ["//visibility:public"],
+    name = "rhio",
+    srcs = [
+        "Server/src/Bind.cpp",
+        "Server/src/CommandNode.cpp",
+        "Server/src/Filesystem.cpp",
+        "Server/src/FrameNode.cpp",
+        "Server/src/IONode.cpp",
+        "Server/src/RhIO.cpp",
+        "Server/src/ServerPub.cpp",
+        "Server/src/ServerRep.cpp",
+        "Server/src/Stream.cpp",
+        "Server/src/StreamNode.cpp",
+        "Server/src/ValueNode.cpp",
+        "Server/src/autostart.cpp",
+    ],
+    hdrs = [
+        "Server/src/BaseNode.hpp",
+        "Server/src/Bind.hpp",
+        "Server/src/BindFunction.hpp",
+        "Server/src/CommandNode.hpp",
+        "Server/src/Filesystem.hpp",
+        "Server/src/FrameNode.hpp",
+        "Server/src/IONode.hpp",
+        "Server/src/RhIO.hpp",
+        "Server/src/ServerPub.hpp",
+        "Server/src/ServerRep.hpp",
+        "Server/src/StreamNode.hpp",
+        "Server/src/ValueNode.hpp",
+    ],
+    deps = [
+        ":rhio_common",
+        "@cppzmq",
+        "@opencv",
+    ],
+    strip_include_prefix = "Server/src",
+    linkopts = ["-pthread"],
+)
+
+cc_library(
+    name = "rhio_common",
+    srcs = [
+        "Common/src/DataBuffer.cpp",
+        "Common/src/Protocol.cpp",
+    ],
+    hdrs = [
+        "Common/src/DataBuffer.hpp",
+        "Common/src/Frame.hpp",
+        "Common/src/Protocol.hpp",
+        "Common/src/Stream.hpp",
+        "Common/src/Value.hpp",
+    ],
+    strip_include_prefix = "Common/src",
+)
