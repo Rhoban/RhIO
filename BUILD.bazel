@@ -2,7 +2,7 @@ cc_library(
     name = "rhio",
     visibility = ["//visibility:public"],
     deps = [
-        ":rhio_client",
+        # ":rhio_client",
         ":rhio_common",
         ":rhio_server",
     ],
@@ -70,6 +70,7 @@ cc_library(
     deps = [
         ":rhio_common",
     ],
+    strip_include_prefix = "Server/src",
 )
 
 cc_library(
