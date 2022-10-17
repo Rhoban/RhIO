@@ -69,6 +69,7 @@ cc_library(
     ],
     deps = [
         ":rhio_common",
+        "@cppzmq",
         "@opencv",
     ],
     strip_include_prefix = "Server/src",
