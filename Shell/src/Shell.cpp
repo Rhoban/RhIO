@@ -92,7 +92,7 @@ void Shell::displayPrompt()
   if (unreadErrors.size() > 0)
   {
     Terminal::setColor("red", true);
-    std::cout << "[" << unreadErrors.size() << "] ";
+    std::cout << "[!] ";
   }
 
   Terminal::setColor("yellow", true);
