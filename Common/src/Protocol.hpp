@@ -327,6 +327,11 @@ enum MsgType : uint8_t
    * config update
    */
   MsgStreamingOK,
+  /**
+   * Server.
+   * Sends an error message
+   */
+  MsgErrorMessage,
 };
 
 }  // namespace RhIO

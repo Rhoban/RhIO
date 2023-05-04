@@ -89,6 +89,12 @@ void Shell::writeHistory(std::string line)
 
 void Shell::displayPrompt()
 {
+  if (unreadErrors.size() > 0)
+  {
+    Terminal::setColor("red", true);
+    std::cout << "[" << unreadErrors.size() << "] ";
+  }
+
   Terminal::setColor("yellow", true);
   std::cout << hostname;
   Terminal::clear();
@@ -284,6 +290,19 @@ std::string Shell::getLine()
   int print_len = 0;
   int cursorpos = 0;
   unsigned int completion_select = 0;
+
+  clientSub->setHandlerError([this, &line](std::string error) {
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    std::ostringstream oss;
+    oss << "[" << std::put_time(&tm, "%d/%m/%Y %H:%M:%S") << "] " << error;
+
+    std::lock_guard<std::mutex> lock(this->errorsMutex);
+    this->unreadErrors.push_back(oss.str());
+    Terminal::clearLine();
+    displayPrompt();
+    std::cout << line << std::flush;
+  });
 
   while (!done)
   {
@@ -1507,5 +1526,15 @@ bool Shell::hasInput()
   select(STDIN_FILENO + 1, &fds, NULL, NULL, &tv);
 
   return (FD_ISSET(0, &fds));
+}
+
+std::vector<std::string> Shell::getUnreadErrors()
+{
+  std::lock_guard<std::mutex> lock(errorsMutex);
+
+  std::vector<std::string> errors = unreadErrors;
+  unreadErrors.clear();
+
+  return errors;
 }
 }  // namespace RhIO

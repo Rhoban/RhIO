@@ -22,12 +22,15 @@ ServerPub::ServerPub(std::string endpoint)
   , _queue2Str()
   , _queue2Stream()
   , _queue2Frame()
+  , _queue1Errors()
+  , _queue2Errors()
   , _mutexQueueBool()
   , _mutexQueueInt()
   , _mutexQueueFloat()
   , _mutexQueueStr()
   , _mutexQueueStream()
   , _mutexQueueFrame()
+  , _mutexQueueError()
 {
   if (endpoint == "")
   {
@@ -142,6 +145,20 @@ void ServerPub::publishFrame(const std::string& name, const cv::Mat& frame, cons
   }
 }
 
+void ServerPub::publishError(const std::string& message)
+{
+  std::lock_guard<std::mutex> lock(_mutexQueueError);
+
+  if (_isWritingTo1)
+  {
+    _queue1Errors.push_back(message);
+  }
+  else
+  {
+    _queue2Errors.push_back(message);
+  }
+}
+
 void ServerPub::sendToClient()
 {
   // Swap double buffer
@@ -155,6 +172,7 @@ void ServerPub::sendToClient()
   std::list<PubValStr>& queueStr = (_isWritingTo1) ? _queue2Str : _queue1Str;
   std::list<PubValStr>& queueStream = (_isWritingTo1) ? _queue2Stream : _queue1Stream;
   std::list<zmq::message_t>& queueFrame = (_isWritingTo1) ? _queue2Frame : _queue1Frame;
+  std::list<std::string>& queueErrors = (_isWritingTo1) ? _queue2Errors : _queue1Errors;
   std::set<std::string> alreadySent;
 
   // Sending values Bool
@@ -276,6 +294,20 @@ void ServerPub::sendToClient()
     // Pop value
     queueFrame.pop_front();
   }
+  // Sending error messages
+  while (!queueErrors.empty())
+  {
+    zmq::message_t packet(sizeof(MsgType) + sizeof(int64_t) + queueErrors.front().length());
+
+    DataBuffer pub(packet.data(), packet.size());
+    pub.writeType(MsgErrorMessage);
+    pub.writeStr(queueErrors.front());
+
+    // Send packet
+    _socket.send(packet);
+
+    queueErrors.pop_back();
+  }
 }
 
 void ServerPub::swapBuffer()
@@ -287,6 +319,7 @@ void ServerPub::swapBuffer()
   std::lock_guard<std::mutex> lockStr(_mutexQueueStr);
   std::lock_guard<std::mutex> lockStream(_mutexQueueStream);
   std::lock_guard<std::mutex> lockFrame(_mutexQueueFrame);
+  std::lock_guard<std::mutex> lockError(_mutexQueueError);
   // Swap buffer
   _isWritingTo1 = !_isWritingTo1;
 }

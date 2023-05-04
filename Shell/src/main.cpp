@@ -1,6 +1,7 @@
 #include <signal.h>
 #include "commands/HelpCommand.h"
 #include "commands/LsCommand.h"
+#include "commands/ErrCommand.h"
 #include "commands/WatchCommand.h"
 #include "commands/CdCommand.h"
 #include "commands/ClearCommand.h"
@@ -70,6 +71,7 @@ int main(int argc, char* argv[])
   shell->registerCommand(new TreeCommand);
   shell->registerCommand(new CatCommand);
   shell->registerCommand(new ViewCommand);
+  shell->registerCommand(new ErrCommand);
 #ifdef HAS_LOGIMG
   shell->registerCommand(new LogImgCommand);
 #endif

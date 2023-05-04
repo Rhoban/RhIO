@@ -59,6 +59,11 @@ void ClientSub::setHandlerFrame(StreamFrameHandler handler)
   std::lock_guard<std::mutex> lock(_mutex);
   _handlerFrame = handler;
 }
+void ClientSub::setHandlerError(StreamErrorHandler handler)
+{
+  std::lock_guard<std::mutex> lock(_mutex);
+  _handlerError = handler;
+}
 
 void ClientSub::subscriberThread(const std::string& endpoint)
 {
@@ -173,6 +178,16 @@ void ClientSub::subscriberThread(const std::string& endpoint)
         _handlerFrame(name, timestamp, frame);
       }
       continue;
+    }
+    else if (type == MsgErrorMessage)
+    {
+      std::string message = sub.readStr();
+
+      std::lock_guard<std::mutex> lock(_mutex);
+      if (_handlerError)
+      {
+        _handlerError(message);
+      }
     }
     else
     {

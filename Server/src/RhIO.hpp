@@ -30,6 +30,11 @@ void stop();
  */
 bool started();
 
+/**
+ * Publish an error message
+ */
+void errorMessage(const std::string& message);
+
 }  // namespace RhIO
 
 #endif

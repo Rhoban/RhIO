@@ -144,4 +144,12 @@ static void __attribute__((destructor)) stopThreadServer()
   }
 }
 
+void errorMessage(const std::string& message)
+{
+  if (ServerStream != nullptr)
+  {
+    ServerStream->publishError(message);
+  }
+}
+
 }  // namespace RhIO

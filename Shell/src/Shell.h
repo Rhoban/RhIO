@@ -137,6 +137,8 @@ public:
 
   bool hasInput();
 
+  std::vector<std::string> getUnreadErrors();
+
 protected:
   std::vector<char> chars;
   Command* currentCommand;
@@ -149,5 +151,8 @@ protected:
   std::map<std::string, Command*> commands;
   std::list<std::string> path;
   std::string server;
+
+  std::mutex errorsMutex;
+  std::vector<std::string> unreadErrors;
 };
 }  // namespace RhIO

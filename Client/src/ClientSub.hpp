@@ -24,6 +24,7 @@ public:
   typedef std::function<void(const std::string& name, int64_t timestamp, double val)> StreamFloatHandler;
   typedef std::function<void(const std::string& name, int64_t timestamp, const std::string& val)> StreamStrHandler;
   typedef std::function<void(const std::string& name, int64_t timestamp, const cv::Mat& frame)> StreamFrameHandler;
+  typedef std::function<void(const std::string& message)> StreamErrorHandler;
 
   /**
    * Initialization with the bind
@@ -48,6 +49,7 @@ public:
   void setHandlerStr(StreamStrHandler handler = StreamStrHandler());
   void setHandlerStream(StreamStrHandler handler = StreamStrHandler());
   void setHandlerFrame(StreamFrameHandler handler = StreamFrameHandler());
+  void setHandlerError(StreamErrorHandler handler = StreamErrorHandler());
 
 private:
   /**
@@ -70,6 +72,7 @@ private:
   StreamStrHandler _handlerStr;
   StreamStrHandler _handlerStream;
   StreamFrameHandler _handlerFrame;
+  StreamErrorHandler _handlerError;
 
   /**
    * Receiver thread

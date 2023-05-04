@@ -49,6 +49,11 @@ public:
   void publishFrame(const std::string& name, const cv::Mat& frame, const std::string& encoding, int64_t timestamp);
 
   /**
+   * Publishes some error message
+   */
+  void publishError(const std::string& message);
+
+  /**
    * Switch values buffer and publish to Client
    * all registered values in former writing buffer.
    */
@@ -116,6 +121,12 @@ private:
   std::list<zmq::message_t> _queue2Frame;
 
   /**
+   * Error messages queue
+   */
+  std::list<std::string> _queue1Errors;
+  std::list<std::string> _queue2Errors;
+
+  /**
    * Mutex protecting external values container
    * from concurent access for each type
    */
@@ -125,6 +136,7 @@ private:
   std::mutex _mutexQueueStr;
   std::mutex _mutexQueueStream;
   std::mutex _mutexQueueFrame;
+  std::mutex _mutexQueueError;
 
   /**
    * Swap double buffer for publishing values

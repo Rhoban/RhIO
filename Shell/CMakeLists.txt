@@ -23,6 +23,7 @@ target_sources(rhio PRIVATE
     src/commands/ClearCommand.cpp
     src/commands/HelpCommand.cpp
     src/commands/LsCommand.cpp
+    src/commands/ErrCommand.cpp
     src/commands/WatchCommand.cpp
     src/commands/CdCommand.cpp
     src/commands/LogCommand.cpp
