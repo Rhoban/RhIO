@@ -5,6 +5,8 @@ project(RhIOServer)
 option(RHIO_SERVER_AUTOSTART "Autostart RhIO server" OFF)
 option (BUILD_KID_SIZE_VISION "Build the Vision" ON)
 
+find_package(jsoncpp REQUIRED)
+
 add_library(RhIO SHARED)
 target_link_libraries(RhIO PUBLIC
   RhIOCommon

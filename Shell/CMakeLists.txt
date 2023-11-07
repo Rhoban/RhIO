@@ -10,6 +10,8 @@ option (CURSES "Enable curses (libncurses5-dev)" ON)
 # Enable log img
 option (LOGIMG "Enable log img (libgd-dev required)" OFF)
 
+find_package(jsoncpp REQUIRED)
+
 add_executable(rhio)
 target_include_directories(rhio PRIVATE ${OpenCV_INCLUDE_DIRS} src/)
 target_link_libraries(rhio PRIVATE
