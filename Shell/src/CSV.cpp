@@ -42,7 +42,8 @@ void CSV::produceHeader()
 {
   for (unsigned int index = 0; index < columnIndexes.size(); index++)
   {
-    *os << "# " << (index + 1) << ": " << columnIndexes[index] << std::endl;
+    *os << "#" << (index + 1) << ":" << columnIndexes[index] << " ";
   }
+  *os << std::endl;
 }
 }  // namespace RhIO

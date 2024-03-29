@@ -37,7 +37,7 @@ void LogCommand::process(std::vector<std::string> args)
 
 void LogCommand::update(CSV* csv, NodePool* pool)
 {
-  csv->push("t", pool->timestamp);
+  csv->push("timestamp", pool->timestamp);
   for (auto val : *pool)
   {
     csv->push(val.getName(), Node::toNumber(val.value));
