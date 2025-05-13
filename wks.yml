@@ -1,4 +1,3 @@
 
 deps:
-  - rhobandeps/libzmq
   - rhobandeps/cppzmq
