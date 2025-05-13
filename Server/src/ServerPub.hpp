@@ -22,7 +22,7 @@ public:
    * Initialization with the bind
    * endpoint string
    */
-  ServerPub(std::string endpoint = "");
+  ServerPub(std::string endpoint = "",zmq::context_t *context=nullptr);
 
   /**
    * Append to publish buffer value for type
@@ -83,7 +83,7 @@ private:
   /**
    * ZMQ context
    */
-  zmq::context_t _context;
+  zmq::context_t *_context;
 
   /**
    * ZMQ socket

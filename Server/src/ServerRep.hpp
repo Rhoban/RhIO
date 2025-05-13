@@ -23,7 +23,7 @@ public:
    * Initialization with the bind
    * endpoint string
    */
-  ServerRep(std::string endpoint = "");
+  ServerRep(std::string endpoint = "",zmq::context_t *context=nullptr);
 
   /**
    * Wait for next Client request
@@ -35,7 +35,7 @@ private:
   /**
    * ZMQ context
    */
-  zmq::context_t _context;
+  zmq::context_t *_context;
 
   /**
    * ZMQ socket

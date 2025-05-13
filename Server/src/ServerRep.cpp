@@ -7,7 +7,7 @@
 
 namespace RhIO
 {
-ServerRep::ServerRep(std::string endpoint) : _context(1), _socket(_context, ZMQ_REP)
+ServerRep::ServerRep(std::string endpoint,zmq::context_t *context) : _context(context), _socket(*_context, ZMQ_REP)
 {
   if (endpoint == "")
   {

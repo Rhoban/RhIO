@@ -31,6 +31,8 @@ static std::atomic<int> initServerCount;
  */
 static std::thread* serverThreadRep = nullptr;
 static std::thread* serverThreadPub = nullptr;
+static zmq::context_t *serverRepContext = nullptr;
+static zmq::context_t *serverPubContext = nullptr;
 static bool serverThreadRepOver = false;
 static bool serverThreadPubOver = false;
 static unsigned int port = ServersPortBase;
@@ -44,7 +46,7 @@ static void runServerRep()
 {
   std::stringstream ss;
   ss << "tcp://*:" << (port + 1);
-  ServerRep server(ss.str());
+  ServerRep server(ss.str(),serverRepContext);
   // Notify main thread
   // for initialization ready
   initServerCount++;
@@ -64,7 +66,7 @@ static void runServerPub()
   // Allocating ServerStream
   std::stringstream ss;
   ss << "tcp://*:" << port;
-  ServerPub server(ss.str());
+  ServerPub server(ss.str(),serverPubContext);
   ServerStream = &server;
   // Notify main thread
   // for initialization ready
@@ -103,6 +105,8 @@ void start(unsigned int port_)
   // Start Server threads
   serverThreadRepOver = false;
   serverThreadPubOver = false;
+  serverPubContext = new zmq::context_t(1);
+  serverRepContext = new zmq::context_t(1);
   serverThreadRep = new std::thread(runServerRep);
   serverThreadPub = new std::thread(runServerPub);
 
@@ -124,6 +128,12 @@ void stop()
     serverThreadRep->join();
     delete serverThreadPub;
     delete serverThreadRep;
+    serverPubContext->shutdown();
+    serverPubContext->close();
+    serverRepContext->shutdown();
+    serverRepContext->close();
+    delete serverPubContext;
+    delete serverRepContext;
   }
 }
 

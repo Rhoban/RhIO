@@ -6,9 +6,9 @@
 
 namespace RhIO
 {
-ServerPub::ServerPub(std::string endpoint)
-  : _context(1)
-  , _socket(_context, ZMQ_PUB)
+ServerPub::ServerPub(std::string endpoint,zmq::context_t *context)
+  : _context(context)
+  , _socket(*_context, ZMQ_PUB)
   , _isWritingTo1(true)
   , _queue1Bool()
   , _queue1Int()
