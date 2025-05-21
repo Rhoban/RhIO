@@ -1,3 +1,6 @@
 
 deps:
   - rhobandeps/cppzmq
+
+requirements:
+  - bash scripts/requirements.sh
