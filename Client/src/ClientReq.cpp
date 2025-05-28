@@ -6,8 +6,8 @@ namespace RhIO
 ClientReq::ClientReq(const std::string& endpoint) : _context(1), _socket(_context, ZMQ_REQ)
 {
   _socket.connect(endpoint.c_str());
-  _socket.setsockopt(ZMQ_RCVTIMEO, 500);
-  _socket.setsockopt(ZMQ_SNDTIMEO, 500);
+  // _socket.setsockopt(ZMQ_RCVTIMEO, 500);
+  // _socket.setsockopt(ZMQ_SNDTIMEO, 500);
 }
 
 std::vector<std::string> ClientReq::listChildren(const std::string& name)
