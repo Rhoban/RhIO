@@ -1,6 +1,7 @@
 #ifndef RHIO_PROTOCOL_HPP
 #define RHIO_PROTOCOL_HPP
 
+#include <cstdint>
 #include <vector>
 #include <string>
 

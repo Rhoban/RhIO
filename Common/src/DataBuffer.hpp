@@ -1,6 +1,7 @@
 #ifndef RHIO_DATABUFFER_HPP
 #define RHIO_DATABUFFER_HPP
 
+#include <cstdint>
 #include <string>
 
 namespace RhIO
