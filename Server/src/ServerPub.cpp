@@ -119,29 +119,23 @@ void ServerPub::publishFrame(const std::string& name, const cv::Mat& frame, cons
   unsigned char* data = reinterpret_cast<unsigned char*>(buffer.data());
   int size = buffer.size();
 
-  // Directly allocate message data
+  // Build the message
+  zmq::message_t msg(sizeof(MsgType) + sizeof(int64_t) + name.length() + 2 * sizeof(int64_t) + size);
+  DataBuffer pub(msg.data(), msg.size());
+  pub.writeType(MsgStreamFrame);
+  pub.writeStr(name);
+  pub.writeInt(timestamp);
+  pub.writeData(data, size);
+
+  // Store latest frame per name (keeps one slot per stream, doesn't drop other streams)
   std::lock_guard<std::mutex> lock(_mutexQueueFrame);
   if (_isWritingTo1)
   {
-    _queue1Frame.clear();
-    _queue1Frame.push_back(
-        zmq::message_t(sizeof(MsgType) + sizeof(int64_t) + name.length() + 2 * sizeof(int64_t) + size));
-    DataBuffer pub(_queue1Frame.back().data(), _queue1Frame.back().size());
-    pub.writeType(MsgStreamFrame);
-    pub.writeStr(name);
-    pub.writeInt(timestamp);
-    pub.writeData(data, size);
+    _queue1Frame[name] = std::move(msg);
   }
   else
   {
-    _queue2Frame.clear();
-    _queue2Frame.push_back(
-        zmq::message_t(sizeof(MsgType) + sizeof(int64_t) + name.length() + 2 * sizeof(int64_t) + size));
-    DataBuffer pub(_queue2Frame.back().data(), _queue2Frame.back().size());
-    pub.writeType(MsgStreamFrame);
-    pub.writeStr(name);
-    pub.writeInt(timestamp);
-    pub.writeData(data, size);
+    _queue2Frame[name] = std::move(msg);
   }
 }
 
@@ -171,7 +165,7 @@ void ServerPub::sendToClient()
   std::list<PubValFloat>& queueFloat = (_isWritingTo1) ? _queue2Float : _queue1Float;
   std::list<PubValStr>& queueStr = (_isWritingTo1) ? _queue2Str : _queue1Str;
   std::list<PubValStr>& queueStream = (_isWritingTo1) ? _queue2Stream : _queue1Stream;
-  std::list<zmq::message_t>& queueFrame = (_isWritingTo1) ? _queue2Frame : _queue1Frame;
+  std::map<std::string, zmq::message_t>& queueFrame = (_isWritingTo1) ? _queue2Frame : _queue1Frame;
   std::list<std::string>& queueErrors = (_isWritingTo1) ? _queue2Errors : _queue1Errors;
   std::set<std::string> alreadySent;
 
@@ -286,14 +280,11 @@ void ServerPub::sendToClient()
     queueStream.pop_front();
   }
   // Sending values Frame
-  while (!queueFrame.empty())
+  for (auto it = queueFrame.begin(); it != queueFrame.end(); ++it)
   {
-    // Send packet
-    _socket.send(queueFrame.front());
-
-    // Pop value
-    queueFrame.pop_front();
+    _socket.send(it->second);
   }
+  queueFrame.clear();
   // Sending error messages
   while (!queueErrors.empty())
   {

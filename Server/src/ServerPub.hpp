@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <map>
 #include <mutex>
 #include <zmq.hpp>
 #include "RhIO.hpp"
@@ -107,7 +108,7 @@ private:
   std::list<PubValFloat> _queue1Float;
   std::list<PubValStr> _queue1Str;
   std::list<PubValStr> _queue1Stream;
-  std::list<zmq::message_t> _queue1Frame;
+  std::map<std::string, zmq::message_t> _queue1Frame;
 
   /**
    * Second double buffer values to
@@ -118,7 +119,7 @@ private:
   std::list<PubValFloat> _queue2Float;
   std::list<PubValStr> _queue2Str;
   std::list<PubValStr> _queue2Stream;
-  std::list<zmq::message_t> _queue2Frame;
+  std::map<std::string, zmq::message_t> _queue2Frame;
 
   /**
    * Error messages queue
