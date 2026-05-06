@@ -43,6 +43,18 @@ private:
    * Windows name
    */
   std::string _name;
+
+  // Window is created lazily on the streaming thread (the one that calls
+  // pushFrame) because OpenCV HighGUI is not thread-safe — all GUI calls
+  // must happen on the same thread.
+  bool _created = false;
+  bool _shouldStop = false;
+
+public:
+  bool isStopped() const
+  {
+    return !_created;
+  }
 };
 
 }  // namespace RhIO

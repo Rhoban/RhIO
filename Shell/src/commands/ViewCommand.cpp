@@ -1,4 +1,6 @@
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include "Shell.h"
 #include "ViewCommand.h"
 #include "CSV.h"
@@ -46,6 +48,25 @@ void ViewCommand::process(std::vector<std::string> args)
 
     stream->setFrameCallback(std::bind(&ViewCommand::update, this, _1, _2));
     shell->wait(this);
+
+    // Ask viewers to tear down their windows on the streaming thread, then
+    // wait briefly for the next frame callback to honor the request before
+    // unhooking the callback.
+    for (auto& v : _viewers)
+      v.second.stop();
+
+    auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(500);
+    while (std::chrono::steady_clock::now() < deadline)
+    {
+      bool allDone = true;
+      for (auto& v : _viewers)
+        if (!v.second.isStopped())
+          allDone = false;
+      if (allDone)
+        break;
+      std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    }
+
     stream->unsetFrameCallback();
     clearStream();
 
@@ -53,7 +74,6 @@ void ViewCommand::process(std::vector<std::string> args)
     {
       auto nodeFrame = shell->getNodeFrame(args[i]);
       client->disableStreamingFrame(nodeFrame.getName());
-      _viewers[i].second.stop();
     }
   }
 }
