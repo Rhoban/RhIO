@@ -9,6 +9,8 @@ option(RHIO_BUILD_EXAMPLES "Build RhIO Examples" OFF)
 
 find_package(OpenCV REQUIRED)
 find_package(Threads REQUIRED)
+find_package(JPEG REQUIRED)
+link_libraries(${JPEG_LIBRARIES})
 
 #Enable C++17
 set(CMAKE_CXX_STANDARD 17)
